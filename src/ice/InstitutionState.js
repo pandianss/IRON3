@@ -12,7 +12,8 @@ export class InstitutionState {
             temporal: { day: 0, cycle: 'NONE' },
             behavioral: { breaches: 0 },
             authority: { locks: [], surfaces: {} },
-            mandates: { surfaces: [], motion: {}, narrative: {} }
+            mandates: { surfaces: [], motion: {}, narrative: {} },
+            session: { status: 'IDLE', activeContractId: null, startTime: null, venue: null }
         };
     }
 

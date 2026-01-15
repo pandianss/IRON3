@@ -5,6 +5,7 @@ import { ContractEngine } from './engines/ContractEngine.js';
 import { StandingEngine } from './engines/StandingEngine.js';
 import { AuthorityEngine } from './engines/AuthorityEngine.js';
 import { MandateEngine } from './engines/MandateEngine.js';
+import { SessionEngine } from './engines/SessionEngine.js';
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
 
 /**
@@ -22,13 +23,33 @@ export class InstitutionalKernel {
             contract: new ContractEngine(this),
             standing: new StandingEngine(this),
             authority: new AuthorityEngine(this),
-            mandate: new MandateEngine(this)
+            mandate: new MandateEngine(this),
+            session: new SessionEngine(this)
         };
 
         // Initialize Cycle Controller
         this.cycle = new InstitutionalCycle(this);
 
+        // React Bridge Support (Observer)
+        this.subscribers = new Set();
+
         console.log("ICE: Kernel Initialized (v1.0 Sovereignty).");
+    }
+
+    /**
+     * Subscribe to Kernel updates (Post-Cycle).
+     * @param {function} callback 
+     * @returns {function} unsubscribe
+     */
+    subscribe(callback) {
+        this.subscribers.add(callback);
+        return () => this.subscribers.delete(callback);
+    }
+
+    notify() {
+        if (!this.subscribers) return;
+        const snapshot = this.getSnapshot();
+        this.subscribers.forEach(cb => cb(snapshot));
     }
 
     /**
@@ -55,7 +76,9 @@ export class InstitutionalKernel {
      * This is the "Cycle".
      */
     evaluate() {
-        return this.cycle.run();
+        const result = this.cycle.run();
+        this.notify();
+        return result;
     }
 
     /**

@@ -40,6 +40,13 @@ export class AuthorityEngine {
             profile.surfaces['OBLIGATION_CORRIDOR'] = 'FULL';
         }
 
+        // 3.5 Session Override
+        const session = this.kernel.state.getDomain('session');
+        if (session && (session.status === 'ACTIVE' || session.status === 'PENDING')) {
+            profile.surfaces['EVIDENCE_CAPTURE'] = 'FULL';
+            profile.surfaces['OBLIGATION_CORRIDOR'] = 'HIDDEN'; // Focus Mode
+        }
+
         // 4. Apply Contract Effects (The Law)
         // Iterate active contracts and apply 'authorityEffects' (onActivation)
         // This is complex. For MVP, we'll check Obligations.

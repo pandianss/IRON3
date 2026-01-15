@@ -5,6 +5,7 @@ import '../../ui/styles/InstitutionalTheme.css';
 
 // Primitives
 import { StandingBanner } from '../../ui/components/authority/StandingBanner';
+import { VerdictPanel } from '../../ui/components/authority/VerdictPanel';
 import { ObligationStack } from '../../ui/components/obligation/ObligationStack';
 import { ContinuityBand } from '../../ui/components/temporal/ContinuityBand';
 
@@ -19,44 +20,49 @@ export const SystemState = (props) => {
     const interpretation = useStanding(); // Subscribes to interpreted state
     const { standingBand } = interpretation;
 
+    // Domain Abstraction (Configurable via Context in future)
+    const domain = {
+        // Fitness
+        name: 'IRON PROTOCOL',
+        unit: 'DAILY PRACTICE',
+        action: 'EXECUTE'
+
+        // Exam Example:
+        // name: 'GATE PREPARATION',
+        // unit: 'MOCK TEST',
+        // action: 'ATTEMPT'
+    };
+
     // Derived content for MVP
-    // In a real app, 'contracts' would come from the engine/ledger.
-    // For now, we hardcode the "Daily Practice" contract.
     const contracts = [
         {
-            id: 'daily_practice',
-            title: 'DAILY PRACTICE',
-            type: 'PRACTICE',
+            id: 'daily_obligation',
+            title: domain.unit,
+            type: 'OBLIGATION',
             riskWeight: standingBand === 'RISK' ? 0.8 : 0
         }
     ];
 
     const handleContractAction = async (contract) => {
-        // Navigate to Compliance Chamber (Action Screen)
-        // For MVP, we might just declare direct success if we don't have routing yet,
-        // BUT the plan says "Home -> Obligation Hall" and "Action -> Compliance Chambers".
-        // The Shell renders SurfaceId.OBLIGATION_CORRIDOR for action.
-        // We probably need a way to 'enter' the corridor from here.
-        // For now, let's assume the Shell triggers OBLIGATION_CORRIDOR on a separate state, 
-        // OR we just execute here for simplicity in this step.
-
-        // Let's adhere to the "Refactor" plan:
-        // "Action feels binding... Completion triggers institutional response."
-        // If we click here, we strictly should go to the "Execution Mode".
-        // But for this specific task, let's allow 'Completing' via the stack for now 
-        // until we wire up the Navigation between Hall and Chamber.
-
-        await declare('PRACTICE_COMPLETE');
+        // Phase 2.5: Declare Intent (Opens the Intake Surface)
+        await declare('SESSION_INTENT', {
+            contractId: contract.id
+        });
     };
 
     return (
-        <div className="surface-authority" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
             {/* AUTHORITY HEADER */}
             <StandingBanner
                 standing={institutionalState.standing}
                 era={institutionalState.currentEra}
             />
+
+            {/* MANDATE VOICEOVER */}
+            <div style={{ maxWidth: 600, margin: '0 auto', width: '100%', marginTop: 'var(--iron-space-lg)' }}>
+                <VerdictPanel />
+            </div>
 
             {/* TEMPORAL CONTEXT (Mini) */}
             <div style={{ padding: '0 var(--iron-space-lg)' }}>

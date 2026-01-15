@@ -14,13 +14,32 @@ export const InstitutionalShell = ({ institutionalState, loading }) => {
     if (loading) return <div className="loading">CONNECTING TO LEDGER...</div>;
     if (!institutionalState) return <div className="error">NO INSTITUTIONAL STATE</div>;
 
-    const { requiredSurface } = institutionalState;
-    const { id, props } = requiredSurface;
+    // Determine Surface (Routing Logic)
+    // Priority: Induction > Evidence > Obligation > SystemState
+    let surfaceId = SurfaceId.SYSTEM_STATE;
+    let surfaceProps = {};
+
+    const authority = institutionalState.authority;
+    const standing = institutionalState.standing;
+    const session = institutionalState.session;
+
+    if (standing.state === 'PRE_INDUCTION') {
+        surfaceId = SurfaceId.INDUCTION;
+    } else if (authority.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
+        surfaceId = SurfaceId.EVIDENCE_CAPTURE;
+        // Pass session props
+        surfaceProps = { startTime: session.startTime, venue: session.venue };
+    } else if (authority.surfaces['OBLIGATION_CORRIDOR'] === 'FULL') {
+        // In this MVP, we might show SystemState which contains the contracts?
+        // Or if we have a dedicated Corridor view.
+        // For now, let's keep SystemState as the main hub unless strictly in Corridor mode.
+        surfaceId = SurfaceId.SYSTEM_STATE;
+    }
 
     const renderSurface = () => {
-        switch (id) {
+        switch (surfaceId) {
             case SurfaceId.INDUCTION:
-                return <Induction {...props} />;
+                return <Induction {...surfaceProps} />;
 
             case SurfaceId.SYSTEM_STATE:
                 return <SystemState
@@ -32,23 +51,23 @@ export const InstitutionalShell = ({ institutionalState, loading }) => {
             case SurfaceId.OBLIGATION_CORRIDOR:
                 return <ObligationCorridor
                     obligations={institutionalState.obligations}
-                    mode={props.mode} // Pass mode (RECOVERY etc)
+                    mode={surfaceProps.mode} // Pass mode (RECOVERY etc)
                 />;
 
             case SurfaceId.EVIDENCE_CAPTURE:
-                return <EvidenceCapture {...props} />;
+                return <EvidenceCapture {...surfaceProps} />;
 
             case SurfaceId.LEDGER_CLOSURE:
-                return <LedgerClosure {...props} />;
+                return <LedgerClosure {...surfaceProps} />;
 
             case SurfaceId.CONSEQUENCE_HALL:
-                return <ConsequenceHall {...props} scars={institutionalState.scars} />;
+                return <ConsequenceHall {...surfaceProps} scars={institutionalState.scars} />;
 
             default:
                 return (
                     <div className="surface-error">
                         <h1>UNKNOWN SURFACE ASSIGNMENT</h1>
-                        <pre>{id}</pre>
+                        <pre>{surfaceId}</pre>
                     </div>
                 );
         }

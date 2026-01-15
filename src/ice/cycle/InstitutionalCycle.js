@@ -21,6 +21,9 @@ export class InstitutionalCycle {
         try {
             // Step 0: Ledger is already updated by Kernel.ingest()
 
+            // Step 0.5: Session Tracking (Is the user acting now?)
+            this.kernel.engines.session.process();
+
             // Step 1: Legal Evaluation (Contracts)
             // Contracts activate/retire based on new conditions
             this.kernel.engines.contract.evaluateActivations();

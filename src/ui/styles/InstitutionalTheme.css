@@ -1,6 +1,7 @@
 /* Institutional Theme Aggregator */
 
-/* 1. Core Foundation */
+/* 1. Chromatic System & Core Tokens */
+@import './design-tokens.css';
 @import './core.css';
 
 /* 2. Authority & Standing */

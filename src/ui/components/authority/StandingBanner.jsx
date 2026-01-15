@@ -10,8 +10,13 @@ export const StandingBanner = ({ standing, era }) => {
     // standing: { state, entropy, streak, since }
     // era: { id, status, start } (Optional)
 
-    const stateLabel = standing.state.replace('_', ' ');
-    const eraLabel = era ? `ERA ${era.id.split('_')[1]}` : 'PRE-ERA';
+    const getDisplayState = (s) => {
+        if (s === 'INSTITUTIONAL') return 'SOVEREIGN'; // More meaningful than "Institutional"
+        return s.replace('_', ' ');
+    };
+
+    const stateLabel = getDisplayState(standing.state);
+    const eraLabel = era ? `ERA ${era.id.split('_')[1]}` : 'GENESIS ERA';
 
     return (
         <div className="surface-authority" style={{
@@ -26,7 +31,7 @@ export const StandingBanner = ({ standing, era }) => {
                 marginBottom: 'var(--iron-space-sm)',
                 opacity: 0.7
             }}>
-                INSTITUTIONAL CONDITION
+                CURRENT STANDING
             </div>
 
             {/* 2. The Verdict (State) */}

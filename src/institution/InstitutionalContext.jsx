@@ -102,3 +102,9 @@ export const useInstitutionalMandate = (type) => {
 
     return context.snapshot.mandates;
 };
+
+export const useInstitutionalSnapshot = () => {
+    const context = useContext(InstitutionalContext);
+    if (!context) throw new Error("useInstitutionalSnapshot must be used within InstitutionalProvider");
+    return context.snapshot;
+};
