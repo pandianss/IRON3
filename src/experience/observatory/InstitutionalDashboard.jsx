@@ -27,8 +27,21 @@ export const InstitutionalDashboard = ({ snapshot }) => {
             background: 'var(--iron-surface-authority)',
             color: 'var(--iron-text-primary)',
             maxHeight: '100vh',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            position: 'relative'
         }}>
+            {/* Degradation Pulse Overlay */}
+            {status === 'CONFLICT' && (
+                <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'var(--iron-brand-breach)',
+                    zIndex: 0,
+                    pointerEvents: 'none',
+                    animation: 'iron-pulse-breach 4s infinite ease-in-out'
+                }} />
+            )}
+
             {/* A. Header */}
             <InstitutionalHeader identity={identity} status={status} />
 
