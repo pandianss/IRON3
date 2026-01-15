@@ -132,5 +132,11 @@ export function transition(current, event) {
             break;
     }
 
+    // Global Events (Apply to any state)
+    if (event === 'AUTHORITY_REALIGNED') {
+        // Increment entropy by 20 (Penalty for terminal incoherence)
+        return { entropy: Math.min(100, current.entropy + 20) };
+    }
+
     return null; // No state change
 }
