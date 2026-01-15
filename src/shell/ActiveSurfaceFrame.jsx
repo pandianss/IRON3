@@ -32,51 +32,37 @@ export function ActiveSurfaceFrame({ institution }) {
         return <DiagnosticSurface institution={institution} />;
     }
 
-    // 3. No Institution Fallback
-    if (!institution || institution.status === 'NO_INSTITUTION') {
-        return <NoInstitutionSurface />;
-    }
-
-    // 4. Boot Phase
-    if (institution.status === 'BOOTING') {
-        return <BootSurface />;
-    }
-
-    // 5. Alive / Operational Phase
-    const { standing, authority, session } = institution;
-
+    // 3. Operational or Absence Phase
+    // The Dashboard is the "Always-on" surface, even for Orphans.
     const renderRealSurface = () => {
         try {
-            if (!standing || !authority) {
-                return <FailureSurface error="STATE CORRUPTION: MISSING DOMAINS" />;
-            }
-
-            if (standing.state === 'PRE_INDUCTION' || standing.state === 'INDUCTION') {
+            // Priority 1: Induction
+            if (institution?.standing?.state === 'PRE_INDUCTION' || institution?.standing?.state === 'INDUCTION') {
                 return <Induction />;
             }
 
-            if (authority.surfaces && authority.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
-                return <EvidenceCapture startTime={session?.startTime} venue={session?.venue} />;
+            // Priority 2: Active Session
+            if (institution?.authority?.surfaces && institution?.authority?.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
+                return <EvidenceCapture startTime={institution?.session?.startTime} venue={institution?.session?.venue} />;
             }
 
-            // DEFAULT GOVERNED SURFACE: THE OBSERVATORY
-            // We pass the full institution state as the snapshot
+            // DEFAULT: THE OBSERVATORY (Handles ALIVE, BOOTING, and NO_INSTITUTION)
             return (
                 <InstitutionalDashboard snapshot={{
-                    identity: { id: 'SIGMA-9', epoch: '2025' },
-                    phase: institution.status,
-                    standing: standing,
-                    authority: authority,
+                    identity: institution?.identity || { id: 'ORPHAN-GATE', epoch: 'N/A' },
+                    phase: institution?.status || 'ABSENT',
+                    standing: institution?.standing || { state: 'VOID', integrity: 0 },
+                    authority: institution?.authority || { surfaces: {}, interactionLevel: 'RESTRICTED' },
                     contracts: {
-                        active: institution.obligations || [],
-                        breaches: institution.scars || []
+                        active: institution?.obligations || [],
+                        breaches: institution?.scars || []
                     },
-                    ledger: institution.ledger || [],
+                    ledger: institution?.ledger || [],
                     diagnostics: {
-                        cycles: institution.cycleCount || 0,
-                        memory: '1.2MB',
-                        errors: 0,
-                        orphans: 'NONE'
+                        cycles: institution?.cycleCount || 0,
+                        memory: '0.0MB',
+                        errors: institution?.status === 'NO_INSTITUTION' ? 1 : 0,
+                        orphans: institution?.status === 'NO_INSTITUTION' ? 'UNBOUND' : 'NONE'
                     }
                 }} />
             );
@@ -84,6 +70,7 @@ export function ActiveSurfaceFrame({ institution }) {
             return <FailureSurface error={err.message} />;
         }
     };
+
 
     return (
         <StandingThemeAdapter institutionalState={institution}>

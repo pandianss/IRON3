@@ -6,6 +6,7 @@ import { StandingEngine } from './engines/StandingEngine.js';
 import { AuthorityEngine } from './engines/AuthorityEngine.js';
 import { MandateEngine } from './engines/MandateEngine.js';
 import { SessionEngine } from './engines/SessionEngine.js';
+import { PhysiologicalEngine } from './engines/fitness/PhysiologicalEngine.js';
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
 
 /**
@@ -17,6 +18,7 @@ export class InstitutionalKernel {
     constructor(config = {}) {
         this.ledger = new MemoryLedger(config.initialEvents || []);
         this.state = new InstitutionState();
+        this.state.physiology = { capacity: 100, load: 0, status: 'OPTIMAL', law: { isAuthorized: true, mandates: [] } };
 
         // Initialize Engines with reference to Kernel
         this.engines = {
@@ -24,8 +26,10 @@ export class InstitutionalKernel {
             standing: new StandingEngine(this),
             authority: new AuthorityEngine(this),
             mandate: new MandateEngine(this),
-            session: new SessionEngine(this)
+            session: new SessionEngine(this),
+            physiology: new PhysiologicalEngine(this)
         };
+
 
         // Initialize Cycle Controller
         this.cycle = new InstitutionalCycle(this);
