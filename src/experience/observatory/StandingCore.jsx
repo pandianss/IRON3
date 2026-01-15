@@ -1,4 +1,5 @@
 import React from 'react';
+import { HeatMap } from './HeatMap';
 
 /**
  * Region B: Standing Core
@@ -6,6 +7,7 @@ import React from 'react';
  */
 export const StandingCore = ({ standing }) => {
     const integrity = standing?.integrity || 0;
+    const streak = standing?.streak || 0;
     const color = integrity < 50 ? 'var(--iron-brand-breach)' : (integrity < 80 ? 'var(--iron-accent)' : 'var(--iron-brand-stable)');
 
     return (
@@ -34,7 +36,9 @@ export const StandingCore = ({ standing }) => {
                 </div>
             </div>
 
-            <div>
+            <HeatMap streak={streak} />
+
+            <div style={{ marginTop: '20px' }}>
                 <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '8px' }}>RISK VECTORS</div>
                 {standing?.risks?.length > 0 ? (
                     standing.risks.map((risk, i) => (

@@ -13,7 +13,8 @@ export class InstitutionState {
             behavioral: { breaches: 0 },
             authority: { locks: [], surfaces: {} },
             mandates: { surfaces: [], motion: {}, narrative: {} },
-            session: { status: 'IDLE', activeContractId: null, startTime: null, venue: null }
+            session: { status: 'IDLE', activeContractId: null, startTime: null, venue: null },
+            foundation: { brokenPromise: null, startTime: null, anchorHabits: [], nonNegotiable: null, why: null }
         };
     }
 

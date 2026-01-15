@@ -23,16 +23,25 @@ export const EventTypes = {
 
     // Admin/Cycle
     CONTINUE_CYCLE: 'CONTINUE_CYCLE',
-    MODULE_ACTIVATED: 'MODULE_ACTIVATED' // Added
+    MODULE_ACTIVATED: 'MODULE_ACTIVATED',
+
+    // The Forge: Onboarding
+    ASSESSMENT_COMPLETED: 'ASSESSMENT_COMPLETED',
+    CALIBRATION_SET: 'CALIBRATION_SET',
+    OATH_TAKEN: 'OATH_TAKEN',
+    RESOLVE_COMMITTED: 'RESOLVE_COMMITTED'
 };
 
 // Schema Validation (Stub for MVP)
 const RequiredPayloads = {
     [EventTypes.SESSION_INTENT]: ['contractId'],
     [EventTypes.SESSION_STARTED]: ['venue'],
-    [EventTypes.SESSION_ENDED]: ['tags', 'evidence'],
     [EventTypes.EVIDENCE_SUBMITTED]: ['venue', 'evidenceType'],
-    [EventTypes.MODULE_ACTIVATED]: ['moduleId']
+    [EventTypes.MODULE_ACTIVATED]: ['moduleId'],
+    [EventTypes.ASSESSMENT_COMPLETED]: ['brokenPromise'],
+    [EventTypes.CALIBRATION_SET]: ['startTime', 'anchorHabits'],
+    [EventTypes.OATH_TAKEN]: ['nonNegotiable'],
+    [EventTypes.RESOLVE_COMMITTED]: ['why', 'evidence']
 };
 
 export class EventRegistry {
