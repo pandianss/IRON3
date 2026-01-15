@@ -1,5 +1,12 @@
 import { StandingState } from './types.js';
 
+const isSameDay = (d1, d2) => {
+    if (!d1 || !d2) return false;
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+    return date1.toDateString() === date2.toDateString();
+};
+
 /** @typedef {import('./types').Standing} Standing */
 /** @typedef {import('./types').BehaviorEvent} BehaviorEvent */
 
@@ -24,9 +31,14 @@ export function transition(current, event) {
 
         // 1. INDUCTED (Trial Phase)
         case StandingState.INDUCTED:
-            if (event === 'PRACTICE_COMPLETE' || event === 'FIRST_COMPLIANCE') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED' || event === 'FIRST_COMPLIANCE') {
+                // Check Idempotency
+                if (isSameDay(current.lastPracticeDate, new Date())) {
+                    // Already practiced today. No streak change.
+                    return { lastPracticeDate: new Date().toISOString() };
+                }
                 // "FIRST_COMPLIANCE -> COMPLIANT"
-                return { state: StandingState.COMPLIANT, entropy: 0, streak: 1 };
+                return { state: StandingState.COMPLIANT, entropy: 0, streak: 1, lastPracticeDate: new Date().toISOString() };
             }
             if (event === 'PRACTICE_MISSED') {
                 // "FIRST_BREACH -> VIOLATED"
@@ -41,16 +53,21 @@ export function transition(current, event) {
         case StandingState.COMPLIANT:
         case StandingState.RECONSTITUTED:
         case StandingState.INSTITUTIONAL:
-            if (event === 'PRACTICE_COMPLETE') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED') {
+                // Check Idempotency
+                if (isSameDay(current.lastPracticeDate, new Date())) {
+                    return { lastPracticeDate: new Date().toISOString() };
+                }
+
                 const newStreak = current.streak + 1;
 
                 // Promotion Rule: 30 Days of COMPLIANT -> INSTITUTIONAL
                 // Only if coming from COMPLIANT (not Reconstituted? Constitution is vague, implies "Long-standing members")
                 // "LONG_CONTINUITY -> INSTITUTIONAL"
                 if (current.state === StandingState.COMPLIANT && newStreak >= 30) {
-                    return { state: StandingState.INSTITUTIONAL, entropy: 0, streak: newStreak };
+                    return { state: StandingState.INSTITUTIONAL, entropy: 0, streak: newStreak, lastPracticeDate: new Date().toISOString() };
                 }
-                return { streak: newStreak, entropy: 0 };
+                return { streak: newStreak, entropy: 0, lastPracticeDate: new Date().toISOString() };
             }
             if (event === 'REST_TAKEN') {
                 // Authorized rest maintains streak but adds no count.
@@ -67,7 +84,7 @@ export function transition(current, event) {
 
         // 3. STRAINED (Warning State)
         case StandingState.STRAINED:
-            if (event === 'PRACTICE_COMPLETE') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED') {
                 // "RECOVERY_COMPLIANCE -> COMPLIANT"
                 return { state: StandingState.COMPLIANT, entropy: 0, streak: current.streak + 1 };
             }
@@ -87,7 +104,7 @@ export function transition(current, event) {
 
         // 6. RECOVERY
         case StandingState.RECOVERY:
-            if (event === 'PRACTICE_COMPLETE') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED') {
                 const newStreak = current.streak + 1;
                 // "RECOVERY_COMPLETED -> RECONSTITUTED"
                 // Rule: 3 Days of Recovered Practice
@@ -104,7 +121,7 @@ export function transition(current, event) {
 
         // 4. BREACH_RISK
         case StandingState.BREACH_RISK:
-            if (event === 'PRACTICE_COMPLETE') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED') {
                 // "EMERGENCY_COMPLIANCE -> STRAINED" (or Compliant)
                 return { state: StandingState.STRAINED, entropy: 50, streak: current.streak };
             }

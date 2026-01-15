@@ -25,7 +25,7 @@ export const SystemState = (props) => {
         // Fitness
         name: 'IRON PROTOCOL',
         unit: 'DAILY PRACTICE',
-        action: 'EXECUTE'
+        action: 'INITIATE'
 
         // Exam Example:
         // name: 'GATE PREPARATION',
@@ -42,6 +42,15 @@ export const SystemState = (props) => {
             riskWeight: standingBand === 'RISK' ? 0.8 : 0
         }
     ];
+
+    const isDailyComplete = () => {
+        if (!institutionalState.standing.lastPracticeDate) return false;
+        const last = new Date(institutionalState.standing.lastPracticeDate);
+        const now = new Date();
+        return last.toDateString() === now.toDateString();
+    };
+
+    const actionLabel = isDailyComplete() ? 'ADDITIONAL EFFORT' : domain.action;
 
     const handleContractAction = async (contract) => {
         // Phase 2.5: Declare Intent (Opens the Intake Surface)
@@ -91,6 +100,8 @@ export const SystemState = (props) => {
                 <ObligationStack
                     contracts={contracts}
                     onSelect={handleContractAction}
+                    onSelect={handleContractAction}
+                    actionLabel={actionLabel}
                 />
             </div>
 

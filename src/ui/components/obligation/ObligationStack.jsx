@@ -7,7 +7,7 @@ import '../../styles/InstitutionalTheme.css';
  * Role: Displays today’s active behavioral contracts.
  * Visual Law: Vertical pressure, Ordered by consequence.
  */
-export const ObligationStack = ({ contracts = [], onSelect }) => {
+export const ObligationStack = ({ contracts = [], onSelect, actionLabel }) => {
     // contracts: Array of { id, title, type, status, riskWeight }
 
     if (!contracts || contracts.length === 0) {
@@ -37,6 +37,7 @@ export const ObligationStack = ({ contracts = [], onSelect }) => {
                         // or we might just link to the Compliance Chamber.
                         // For MVP, passing completion handlers directly if provided, or selection.
                         onComplete={onSelect ? () => onSelect(contract) : undefined}
+                        actionLabel={onSelect ? actionLabel : undefined}
                     />
                 </div>
             ))}

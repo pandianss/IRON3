@@ -7,7 +7,7 @@ import '../../styles/InstitutionalTheme.css';
  * Role: A single binding requirement.
  * Visual Law: Framed, Progression visible.
  */
-export const ContractCard = ({ title, type, onComplete, onFail, onRest }) => {
+export const ContractCard = ({ title, type, onComplete, onFail, onRest, actionLabel }) => {
     // type: 'PRACTICE' | 'CHECKIN'
 
     return (
@@ -45,7 +45,7 @@ export const ContractCard = ({ title, type, onComplete, onFail, onRest }) => {
 
             <div className="space-y-sm">
                 <ComplianceControl
-                    label="CONFIRM EXECUTION"
+                    label={actionLabel || "CONFIRM EXECUTION"}
                     variant="standard"
                     onComplete={onComplete}
                 />

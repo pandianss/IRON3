@@ -37,7 +37,7 @@ export class SessionEngine {
             if (currentSession.status === 'PENDING' || currentSession.status === 'IDLE') {
                 this.kernel.state.update('session', {
                     status: 'ACTIVE',
-                    startTime: lastEvent.timestamp,
+                    startTime: lastEvent.payload.timestamp || lastEvent.meta.timestamp,
                     venue: lastEvent.payload.venue,
                     intakeEvidence: lastEvent.payload.evidence // Before Selfie
                 });

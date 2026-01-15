@@ -8,6 +8,7 @@
 export const EventTypes = {
     // Lifecycle
     CONTRACT_CREATED: 'CONTRACT_CREATED',
+    SESSION_INTENT: 'SESSION_INTENT', // Added
     SESSION_STARTED: 'SESSION_STARTED',
     SESSION_ENDED: 'SESSION_ENDED',
 
@@ -26,8 +27,9 @@ export const EventTypes = {
 
 // Schema Validation (Stub for MVP)
 const RequiredPayloads = {
+    [EventTypes.SESSION_INTENT]: ['contractId'],
     [EventTypes.SESSION_STARTED]: ['venue'],
-    [EventTypes.SESSION_ENDED]: ['evidence'],
+    [EventTypes.SESSION_ENDED]: ['tags', 'evidence'],
     [EventTypes.EVIDENCE_SUBMITTED]: ['venue', 'evidenceType']
 };
 

@@ -26,7 +26,25 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
 
     // Outtake State
     const [outtakePhoto, setOuttakePhoto] = useState(null);
-    const [tags, setTags] = useState('');
+    const [tags, setTags] = useState([]);
+    const [currentTag, setCurrentTag] = useState('');
+
+    // Staging state for new evidence (Active Phase)
+    const [stagingPhoto, setStagingPhoto] = useState(null);
+    const [stagingDesc, setStagingDesc] = useState('');
+
+    const commitStaging = () => {
+        if (!stagingPhoto) return;
+        const newRecord = {
+            id: Date.now(),
+            photo: stagingPhoto,
+            description: stagingDesc || "NO DESCRIPTION",
+            timestamp: new Date().toISOString()
+        };
+        setAdditionalEvidence([...additionalEvidence, newRecord]);
+        setStagingPhoto(null);
+        setStagingDesc('');
+    };
 
     // Sync Mode with Backend Status
     useEffect(() => {
@@ -75,12 +93,12 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
     };
 
     const handleSubmit = async () => {
-        if (!outtakePhoto || !tags) {
+        if (!outtakePhoto || tags.length === 0) {
             alert("PROTOCOL VIOLATION: VISUAL CHECK-OUT AND TAGS REQUIRED.");
             return;
         }
         await declare('SESSION_ENDED', {
-            tags: tags.split(',').map(t => t.trim()),
+            tags: tags,
             evidence: outtakePhoto,
             additionalEvidence,
             endedAt: new Date().toISOString()
@@ -168,15 +186,63 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
 
             <div style={{ marginBottom: 'var(--iron-space-xl)', textAlign: 'left' }}>
                 <div className="text-sm-caps" style={{ marginBottom: 'var(--iron-space-sm)', opacity: 0.7 }}>
-                    HOC EVIDENCE (OPTIONAL)
+                    HOC EVIDENCE (OPTIONAL - MAX 3)
                 </div>
-                {/* Quick add photo button */}
-                <CameraButton
-                    label="ADD ACTION SHOT"
-                    onCapture={(p) => setAdditionalEvidence([...additionalEvidence, p])}
-                    value={null}
-                />
-                <div style={{ fontSize: '0.7rem', opacity: 0.5 }}>{additionalEvidence.length} RECORDS SECURED</div>
+
+                {/* List of Captured Evidence */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                    {additionalEvidence.map(record => (
+                        <div key={record.id} style={{
+                            background: 'var(--iron-surface-2)',
+                            padding: '8px',
+                            border: '1px solid var(--iron-border)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px'
+                        }}>
+                            <div style={{ width: '40px', height: '40px', background: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>IMG</div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>{record.description}</div>
+                                <div style={{ fontSize: '0.6rem', opacity: 0.5 }}>{new Date(record.timestamp).toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Add New Evidence Form */}
+                {additionalEvidence.length < 3 && (
+                    <div style={{ border: '1px dashed var(--iron-border)', padding: '12px' }}>
+                        {!stagingPhoto ? (
+                            <CameraButton
+                                label="ADD ACTION SHOT"
+                                onCapture={setStagingPhoto}
+                                value={null}
+                            />
+                        ) : (
+                            <div style={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--iron-brand-stable)' }}>IMAGE CAPTURED</div>
+                                <input
+                                    type="text"
+                                    placeholder="DESCRIPTION (e.g. SET 3 WEIGHT)"
+                                    value={stagingDesc}
+                                    onChange={e => setStagingDesc(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        background: 'transparent',
+                                        border: '1px solid var(--iron-border)',
+                                        padding: '8px',
+                                        color: 'var(--iron-text-primary)',
+                                        fontFamily: 'var(--font-primary)'
+                                    }}
+                                />
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button onClick={commitStaging} style={{ flex: 1, padding: '8px', background: 'var(--iron-brand-stable)', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-authority)', fontSize: '0.8rem' }}>CONFIRM</button>
+                                    <button onClick={() => { setStagingPhoto(null); setStagingDesc(''); }} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid var(--iron-border)', color: '#fff', cursor: 'pointer', fontFamily: 'var(--font-authority)', fontSize: '0.8rem' }}>CANCEL</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <ComplianceControl
@@ -186,6 +252,18 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
             />
         </div>
     );
+
+    const handleAddTag = () => {
+        if (!currentTag.trim()) return;
+        if (!tags.includes(currentTag.trim().toUpperCase())) {
+            setTags([...tags, currentTag.trim().toUpperCase()]);
+        }
+        setCurrentTag('');
+    };
+
+    const handleRemoveTag = (tagToRemove) => {
+        setTags(tags.filter(t => t !== tagToRemove));
+    };
 
     const renderOuttake = () => (
         <div className="surface-obligation">
@@ -199,28 +277,70 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
                 value={outtakePhoto}
             />
 
-            <input
-                type="text"
-                placeholder="TAGS (e.g. LEGS, HEAVY)"
-                value={tags}
-                onChange={e => setTags(e.target.value)}
-                style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: '1px solid var(--iron-border)',
-                    padding: '8px 0',
-                    color: 'var(--iron-text-primary)',
-                    fontFamily: 'var(--font-primary)',
-                    marginBottom: 'var(--iron-space-lg)',
-                    textTransform: 'uppercase'
-                }}
-            />
+            {/* Keyword Input Area */}
+            <div style={{ marginBottom: 'var(--iron-space-lg)' }}>
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                    <input
+                        type="text"
+                        placeholder="ADD TAG (e.g. LEGS)"
+                        value={currentTag}
+                        onChange={e => setCurrentTag(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleAddTag()}
+                        style={{
+                            flex: 1,
+                            background: 'transparent',
+                            border: 'none',
+                            borderBottom: '1px solid var(--iron-border)',
+                            padding: '8px 0',
+                            color: 'var(--iron-text-primary)',
+                            fontFamily: 'var(--font-primary)',
+                            textTransform: 'uppercase'
+                        }}
+                    />
+                    <button
+                        onClick={handleAddTag}
+                        style={{
+                            background: 'var(--iron-surface-2)',
+                            border: '1px solid var(--iron-border)',
+                            color: 'var(--iron-text-primary)',
+                            padding: '0 16px',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-mono)'
+                        }}
+                    >
+                        +
+                    </button>
+                </div>
+
+                {/* Chips Container */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {tags.map(tag => (
+                        <div key={tag} style={{
+                            background: 'rgba(255,255,255,0.1)',
+                            border: '1px solid var(--iron-border)',
+                            padding: '4px 8px',
+                            fontSize: '0.7rem',
+                            fontFamily: 'var(--font-mono)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}>
+                            {tag}
+                            <span
+                                onClick={() => handleRemoveTag(tag)}
+                                style={{ cursor: 'pointer', opacity: 0.5, fontWeight: 'bold' }}
+                            >
+                                x
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
 
             <ComplianceControl
                 label="SUBMIT RECORDS"
-                variant={outtakePhoto && tags ? 'standard' : 'disabled'}
-                disabled={!outtakePhoto || !tags}
+                variant={outtakePhoto && tags.length > 0 ? 'standard' : 'disabled'}
+                disabled={!outtakePhoto || tags.length === 0}
                 onComplete={handleSubmit}
             />
         </div>

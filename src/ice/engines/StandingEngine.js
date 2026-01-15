@@ -16,7 +16,8 @@ export class StandingEngine {
             state: 'PRE_INDUCTION',
             integrity: 100, // Entropy inverted? Or Integrity raw?
             entropy: 0,
-            streak: 0
+            streak: 0,
+            lastPracticeDate: null
         };
     }
 
@@ -30,7 +31,8 @@ export class StandingEngine {
         let state = {
             state: 'PRE_INDUCTION',
             entropy: 0,
-            streak: 0
+            streak: 0,
+            lastPracticeDate: null
         };
 
         // Replay
@@ -48,7 +50,8 @@ export class StandingEngine {
         this.kernel.state.update('standing', {
             state: state.state,
             integrity: 100 - state.entropy, // Derived Integrity
-            streak: state.streak
+            streak: state.streak,
+            lastPracticeDate: state.lastPracticeDate
         });
 
         console.log(`ICE: Standing Computed -> ${state.state} (Streak: ${state.streak})`);
