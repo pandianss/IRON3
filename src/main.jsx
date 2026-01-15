@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './ui/styles/InstitutionalTheme.css'
 
@@ -26,7 +27,6 @@ class GlobalSpineGuard extends React.Component {
 
     render() {
         if (this.state.hasError) {
-            // Even when EVERYTHING fails, we render a Spine with a Failure Surface
             return (
                 <IronAppShell institution={{ status: 'DEGRADED' }}>
                     <FailureSurface error={this.state.error} />
@@ -39,8 +39,10 @@ class GlobalSpineGuard extends React.Component {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <GlobalSpineGuard>
-            <App />
-        </GlobalSpineGuard>
+        <BrowserRouter>
+            <GlobalSpineGuard>
+                <App />
+            </GlobalSpineGuard>
+        </BrowserRouter>
     </React.StrictMode>,
 )

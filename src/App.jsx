@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { InstitutionalProvider } from './institution/InstitutionalContext';
 import { GovernanceProvider, useGovernance } from './context/GovernanceContext';
 import { IronAppShell } from './shell/IronAppShell';
 
+// Public Pages
+import { LandingPage } from './public/pages/LandingPage';
+import { WhatIsIron } from './public/pages/WhatIsIron';
+import { InstitutionalProductivity } from './public/pages/InstitutionalProductivity';
+import { PersonalInstitution } from './public/pages/PersonalInstitution';
+
 /**
  * THE SOVEREIGN SPINE CONNECTOR
- * This component lives inside the providers and feeds state UP to the Spine.
- * Wait, feeding UP is hard in React.
- * Better: App.jsx wraps Providers around its INTERNAL content, but the 
- * Spine itself is provided a 'setInstitution' hook or similar.
  */
-
 const InstitutionalBridge = ({ onStateSync }) => {
     const { institutionalState, loading } = useGovernance();
 
@@ -27,10 +29,14 @@ const InstitutionalBridge = ({ onStateSync }) => {
         });
     }, [institutionalState, loading, onStateSync]);
 
-    return null; // Invisible bridge
+    return null;
 };
 
-export default function App() {
+/**
+ * THE GOVERNED APP
+ * Only accessible via /app route. Fully wrapped in the Spine.
+ */
+const GovernedApp = () => {
     const [institution, setInstitution] = useState(null);
 
     return (
@@ -39,14 +45,27 @@ export default function App() {
                 <InstitutionalProvider>
                     <GovernanceProvider>
                         <InstitutionalBridge onStateSync={setInstitution} />
-                        {/* 
-                            Content routing is now handled by the Spine's 
-                            ActiveSurfaceFrame which receives the sync'd state.
-                        */}
                     </GovernanceProvider>
                 </InstitutionalProvider>
             </AuthProvider>
         </IronAppShell>
     );
-}
+};
 
+export default function App() {
+    return (
+        <Routes>
+            {/* Public SEO Root Site */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/what-is-iron" element={<WhatIsIron />} />
+            <Route path="/institutional-productivity" element={<InstitutionalProductivity />} />
+            <Route path="/personal-institution" element={<PersonalInstitution />} />
+
+            {/* Governed Application Spine */}
+            <Route path="/app/*" element={<GovernedApp />} />
+
+            {/* Redirects */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+    );
+}
