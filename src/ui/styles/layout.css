@@ -1,0 +1,108 @@
+/* ------------------------------------------------------------------
+   GEOMETRY & SPATIAL LAW
+   ------------------------------------------------------------------ */
+
+/* Base Reset for Rectilinear System */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--iron-infra-void);
+    color: var(--iron-text-primary);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Surfaces */
+.surface-authority {
+    background-color: var(--iron-infra-base);
+    border-bottom: 1px solid var(--iron-infra-border);
+    padding: var(--iron-space-lg);
+}
+
+.surface-obligation {
+    background-color: var(--iron-infra-panel);
+    border: 1px solid var(--iron-infra-border);
+    border-radius: var(--iron-radius-sm);
+    padding: var(--iron-space-lg);
+    margin-bottom: var(--iron-space-md);
+}
+
+.surface-temporal {
+    opacity: 0.8;
+}
+
+/* Utilities */
+.rect-border {
+    border: 1px solid var(--iron-infra-border);
+    border-radius: var(--iron-radius-sm);
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.space-y-sm>*+* {
+    margin-top: var(--iron-space-sm);
+}
+
+.space-y-md>*+* {
+    margin-top: var(--iron-space-md);
+}
+
+.space-y-lg>*+* {
+    margin-top: var(--iron-space-lg);
+}
+
+/* Buttons - Input Gravity */
+.btn-institutional {
+    font-family: var(--font-authority);
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--iron-infra-border);
+    color: var(--iron-text-primary);
+    padding: var(--iron-space-md) var(--iron-space-lg);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border-radius: var(--iron-radius-sm);
+    width: 100%;
+    text-align: center;
+}
+
+.btn-institutional:hover {
+    background: var(--iron-infra-raised);
+    border-color: var(--iron-text-secondary);
+}
+
+.btn-institutional:active {
+    background: var(--iron-text-primary);
+    color: var(--iron-infra-base);
+}
+
+.btn-start-action {
+    border-color: var(--iron-brand-stable);
+    color: var(--iron-brand-stable);
+}
+
+.btn-start-action:hover {
+    background: var(--iron-brand-stable-dim);
+}
+
+.btn-breach-action {
+    border-color: var(--iron-brand-breach);
+    color: var(--iron-brand-breach);
+}
+
+.btn-breach-action:hover {
+    background: var(--iron-brand-breach-dim);
+}

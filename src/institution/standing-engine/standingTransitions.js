@@ -58,13 +58,10 @@ export function transition(current, event) {
                 return { entropy: 0 };
             }
             if (event === 'PRACTICE_MISSED') {
-                // "HARD_FAILURE -> VIOLATED"
-                // Or "SOFT_FAILURE -> STRAINED". 
-                // For MVP Strictness: A miss is a HARD FAILURE unless defined as Soft.
-                // Let's implement Strict MVP: Miss = Violated.
-                // Wait, Constitution says "SOFT_FAILURE -> STRAINED". 
-                // Let's assume PRACTICE_MISSED is HARD for now (no soft logic yet).
-                return { state: StandingState.VIOLATED, entropy: 100, streak: 0 };
+                // TUNE: Soft Failure.
+                // Instead of immediate Violation, we enter STRAINED state.
+                // "SOFT_FAILURE -> STRAINED"
+                return { state: StandingState.STRAINED, entropy: 50, streak: current.streak };
             }
             break;
 

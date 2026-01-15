@@ -1,0 +1,56 @@
+/* motion.css - Kinetic Tier */
+:root {
+    /* Durations */
+    --iron-motion-fast: 200ms;
+    --iron-motion-base: 400ms;
+    --iron-motion-slow: 800ms;
+    --iron-motion-glacial: 1500ms;
+
+    /* Easings - "Mechanical, not organic" */
+    --iron-ease-authority: cubic-bezier(0.2, 0.0, 0.2, 1);
+    /* Sharp, decisive */
+    --iron-ease-decay: cubic-bezier(0.6, 0.04, 0.98, 0.335);
+    /* Slow start, heavy drop */
+    --iron-ease-fracture: cubic-bezier(0.1, 0.9, 0.2, 1);
+    /* Quick snap */
+
+    /* Animation Primitives */
+    --iron-motion-intensity: 1;
+    /* Multiplier controlled by JS */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInTop {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulseRisk {
+    0% {
+        box-shadow: 0 0 5px var(--iron-brand-risk-dim);
+    }
+
+    50% {
+        box-shadow: 0 0 15px var(--iron-brand-risk-dim);
+    }
+
+    100% {
+        box-shadow: 0 0 5px var(--iron-brand-risk-dim);
+    }
+}

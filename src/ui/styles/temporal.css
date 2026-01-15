@@ -1,0 +1,16 @@
+/* temporal.css - Time Tier */
+:root {
+    /* Aging Factors */
+    --iron-age-fresh: 1;
+    --iron-age-settled: 0.8;
+    --iron-age-historic: 0.5;
+    --iron-age-ancient: 0.3;
+
+    /* Decay Signals */
+    --iron-decay-color: #524030;
+    /* Rot */
+
+    /* Scar Geometry */
+    --iron-scar-width: 2px;
+    --iron-scar-opacity: 0.8;
+}

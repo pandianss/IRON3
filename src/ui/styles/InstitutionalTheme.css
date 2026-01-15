@@ -1,43 +1,23 @@
+/* Institutional Theme Aggregator */
+
+/* 1. Core Foundation */
+@import './core.css';
+
+/* 2. Authority & Standing */
+@import './standing.css';
+
+/* 3. Time & Physics */
+@import './temporal.css';
+@import './motion.css';
+
+/* 4. Typography (Existing) */
+@import './typography.css';
+
+/* 5. Layout Primitives (Existing) */
+@import './layout.css';
+
+/* Legacy Compat Layer (Deprecated - Remove in Phase 3) */
 :root {
-    /* Base Palette - Neutral / Institutional */
-    --civil-bg: #1a1a1a;
-    --civil-paper: #222222;
-    --civil-surface-hover: #2a2a2a;
-    
-    /* Text Hierarchy */
-    --civil-text-primary: #e0e0e0;
-    --civil-text-secondary: #888888;
-    --civil-text-muted: #555555;
-
-    /* Semantic Accents - Low Saturation */
-    --civil-accent-alert: #d9534f;   /* Muted Red for Risk/Fracture */
-    --civil-accent-stable: #5bc0de;  /* Muted Blue for Stability */
-    --civil-accent-success: #5cb85c; /* Muted Green for Completion */
-    --civil-accent-action: #f0ad4e;  /* Muted Orange for Required Action */
-
-    /* Structural */
-    --civil-border: 1px solid rgba(255,255,255,0.08);
-    --civil-border-strong: 1px solid rgba(255,255,255,0.15);
-    
-    /* Typography */
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: 'Roboto Mono', monospace; /* For Ledger/Codes */
-}
-
-body {
-    background-color: var(--civil-bg);
-    color: var(--civil-text-primary);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-}
-
-.civil-card {
-    background: var(--civil-paper);
-    border: var(--civil-border);
-    padding: 24px;
-}
-
-.civil-text-mono {
-    font-family: var(--font-mono);
-    letter-spacing: -0.5px;
+    --civil-bg: var(--iron-bg-primary);
+    --civil-text-primary: var(--iron-text-primary);
 }

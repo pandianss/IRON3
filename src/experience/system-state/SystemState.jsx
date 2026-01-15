@@ -1,66 +1,102 @@
 import React from 'react';
-import NarrativeCard from '../../ui/components/institutional/NarrativeCard';
+import { useGovernance } from '../../context/GovernanceContext';
+import { useStanding } from '../../ui/hooks/useStanding';
 import '../../ui/styles/InstitutionalTheme.css';
-import { NarrativeRegistry } from '../../core/protocols/NarrativeRegistry';
 
-export const SystemState = ({ state }) => {
-    // state is the 'Standing' object: { state, entropy, streak, since }
+// Primitives
+import { StandingBanner } from '../../ui/components/authority/StandingBanner';
+import { ObligationStack } from '../../ui/components/obligation/ObligationStack';
+import { ContinuityBand } from '../../ui/components/temporal/ContinuityBand';
 
-    // Mapping condition to visual severity
-    const getConditionColor = () => {
-        if (state.state === 'VIOLATED') return 'var(--civil-accent-alert)';
-        if (state.state === 'BREACH_RISK') return 'var(--civil-accent-action)';
-        return 'var(--civil-text-primary)';
+/**
+ * Phase 2.1: Obligation Hall (formerly SystemState)
+ * Role: Forward-looking view of what is owed.
+ */
+export const SystemState = (props) => {
+    // We ignore legacy props (state, era) and use the Hook, 
+    // ensuring "Unidirectional Data Flow" (Design-to-Code Spec).
+    const { institutionalState, declare } = useGovernance();
+    const interpretation = useStanding(); // Subscribes to interpreted state
+    const { standingBand } = interpretation;
+
+    // Derived content for MVP
+    // In a real app, 'contracts' would come from the engine/ledger.
+    // For now, we hardcode the "Daily Practice" contract.
+    const contracts = [
+        {
+            id: 'daily_practice',
+            title: 'DAILY PRACTICE',
+            type: 'PRACTICE',
+            riskWeight: standingBand === 'RISK' ? 0.8 : 0
+        }
+    ];
+
+    const handleContractAction = async (contract) => {
+        // Navigate to Compliance Chamber (Action Screen)
+        // For MVP, we might just declare direct success if we don't have routing yet,
+        // BUT the plan says "Home -> Obligation Hall" and "Action -> Compliance Chambers".
+        // The Shell renders SurfaceId.OBLIGATION_CORRIDOR for action.
+        // We probably need a way to 'enter' the corridor from here.
+        // For now, let's assume the Shell triggers OBLIGATION_CORRIDOR on a separate state, 
+        // OR we just execute here for simplicity in this step.
+
+        // Let's adhere to the "Refactor" plan:
+        // "Action feels binding... Completion triggers institutional response."
+        // If we click here, we strictly should go to the "Execution Mode".
+        // But for this specific task, let's allow 'Completing' via the stack for now 
+        // until we wire up the Navigation between Hall and Chamber.
+
+        await declare('PRACTICE_COMPLETE');
     };
 
     return (
-        <div className="state-mirror" style={{ padding: '40px 20px', maxWidth: '600px', margin: '0 auto' }}>
+        <div className="surface-authority" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
-            {/* 1. STATE HEADER */}
-            <header style={{ marginBottom: '40px', borderBottom: 'var(--civil-border)', paddingBottom: '20px' }}>
-                <div style={{ fontSize: '0.8rem', letterSpacing: '2px', color: 'var(--civil-text-muted)', marginBottom: '8px' }}>
-                    CURRENT CONDITION
-                </div>
-                <h1 style={{
-                    fontSize: '2rem',
-                    fontWeight: '400',
-                    color: getConditionColor(),
-                    margin: 0
+            {/* AUTHORITY HEADER */}
+            <StandingBanner
+                standing={institutionalState.standing}
+                era={institutionalState.currentEra}
+            />
+
+            {/* TEMPORAL CONTEXT (Mini) */}
+            <div style={{ padding: '0 var(--iron-space-lg)' }}>
+                <ContinuityBand streak={institutionalState.standing.streak} />
+            </div>
+
+            {/* OBLIGATION HALL MAIN FLOOR */}
+            <div style={{
+                flex: 1,
+                padding: 'var(--iron-space-lg)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                maxWidth: '600px',
+                margin: '0 auto',
+                width: '100%'
+            }}>
+                <div className="text-sm-caps" style={{
+                    marginBottom: 'var(--iron-space-md)',
+                    opacity: 0.7,
+                    textAlign: 'center'
                 }}>
-                    {state.state.replace('_', ' ')}
-                </h1>
-                <p style={{ marginTop: '12px', color: 'var(--civil-text-secondary)', fontSize: '0.9rem' }}>
-                    Days in state: {state.streak}
-                </p>
-            </header>
-
-            {/* 2. LAWFUL ACTS - REMOVED, as this is now handled by ObligationCorridor or Shell switching */}
-            <section style={{ marginBottom: '40px' }}>
-                <p style={{ color: 'var(--civil-text-muted)' }}>
-                    System operational. No immediate obligations active on this surface.
-                </p>
-            </section>
-
-            {/* 3. RECORD MONITOR */}
-            <section>
-                <div style={{ fontSize: '0.8rem', letterSpacing: '2px', color: 'var(--civil-text-muted)', marginBottom: '16px' }}>
-                    SYSTEM RECORD
+                    PENDING CONTRACTS
                 </div>
 
-                <div className="stats-row" style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
-                    <div>
-                        <div style={{ fontSize: '2rem', fontWeight: '300' }}>{state.streak}</div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--civil-text-secondary)' }}>CONTINUITY DAYS</div>
-                    </div>
-                </div>
-
-                <NarrativeCard
-                    type="NOTICE"
-                    date="TODAY"
-                    content={NarrativeRegistry.STATUS.INDUCTION}
+                <ObligationStack
+                    contracts={contracts}
+                    onSelect={handleContractAction}
                 />
-            </section>
+            </div>
 
+            {/* HUMAN LAYER (Footer) */}
+            <div style={{
+                padding: 'var(--iron-space-md)',
+                textAlign: 'center',
+                opacity: 0.4,
+                fontSize: '0.7rem'
+            }}>
+                IRON INSTITUTION | v3.0
+            </div>
         </div>
     );
 };

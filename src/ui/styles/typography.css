@@ -1,0 +1,76 @@
+/* ------------------------------------------------------------------
+   TYPOGRAPHY CHARTER
+   ------------------------------------------------------------------ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@300;400;500;700&display=swap');
+
+/* A. INSTITUTIONAL VOICE 
+   Neutral, Uppercase, High Clarity.
+   Used for: Section Headers, Status, Law.
+*/
+.font-authority,
+h1,
+h2,
+h3,
+h4,
+.inst-header {
+    font-family: var(--font-authority);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.text-sm-caps {
+    font-family: var(--font-authority);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--iron-text-secondary);
+}
+
+/* B. NUMERIC AUTHORITY 
+   Massive, Tabular, Dominant.
+   Used for: Counts, Streaks, Money/Values.
+*/
+.font-numeric {
+    font-family: var(--font-authority);
+    font-variant-numeric: tabular-nums;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.num-massive {
+    font-size: 4rem;
+    letter-spacing: -2px;
+}
+
+.num-large {
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+}
+
+.num-medium {
+    font-size: 1.5rem;
+}
+
+/* C. HUMAN LAYER 
+   Soft, Readable, Supportive.
+   Used for: Body text, Explanations, Quotes.
+*/
+.font-human,
+p,
+.body-text {
+    font-family: var(--font-human);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.text-body {
+    font-size: 1rem;
+    color: var(--iron-text-secondary);
+}
+
+.text-muted {
+    font-size: 0.875rem;
+    color: var(--iron-text-tertiary);
+}

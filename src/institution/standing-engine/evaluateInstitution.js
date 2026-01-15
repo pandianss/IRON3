@@ -75,71 +75,69 @@ export function evaluateInstitution(ledger, now) {
         }
     }
 
-    // 2. Determine Obligations & Daily Status (The "Now" Check)
+    // 2. Determine Obligations & Status
     let obligations = getObligations(standing.state);
 
-    // Check if today's obligations are met
     const today = now.split('T')[0];
     const todaysEvents = ledger.filter(e => e.timestamp.startsWith(today));
 
-    const practiceDone = todaysEvents.some(e => e.type === 'PRACTICE_COMPLETE');
+    const practiceDeclared = todaysEvents.some(e => e.type === 'PRACTICE_COMPLETE');
+    const evidenceSubmitted = todaysEvents.some(e => e.type === 'EVIDENCE_SUBMITTED');
+    const dayAcknowledged = todaysEvents.some(e => e.type === 'CONTINUE_CYCLE');
     const restDone = todaysEvents.some(e => e.type === 'REST_TAKEN');
 
-    if (practiceDone || restDone) {
+    // Obligation is met if Evidence Submitted or Rest Taken
+    if (evidenceSubmitted || restDone) {
         obligations = obligations.filter(o => o !== 'DAILY_PRACTICE');
     }
 
     // 3. Determine Required Surface
-    // Default: If obligations exist, show Corridor. Else, System State.
     let requiredSurface = { id: SurfaceId.SYSTEM_STATE, props: {} };
 
-    switch (standing.state) {
-        case StandingState.PRE_INDUCTION:
-            requiredSurface = { id: SurfaceId.INDUCTION, props: { day: 1 } };
-            break;
-
-        case StandingState.VIOLATED:
-            requiredSurface = { id: SurfaceId.CONSEQUENCE_HALL, props: { reason: "Fracture Detected" } };
-            break;
-
-        case StandingState.RECOVERY:
-            // Recovery allows practice, so check obligations
-            if (obligations.includes('REDUCED_PRACTICE') && !practiceDone) {
-                requiredSurface = { id: SurfaceId.OBLIGATION_CORRIDOR, props: { mode: 'RECOVERY' } };
-            } else {
-                requiredSurface = { id: SurfaceId.SYSTEM_STATE, props: { mode: 'RECOVERY' } };
-            }
-            break;
-
-        case StandingState.INDUCTED:
-            // Special Case: Day 1 Induction
-            // If we just Inducted (Protocol Created), we still need to practice?
-            // "Required outcome: first governed day must resolve."
-            if (obligations.length > 0) {
-                requiredSurface = { id: SurfaceId.OBLIGATION_CORRIDOR, props: {} };
-            }
-            break;
-
-        case StandingState.COMPLIANT:
-        case StandingState.RECONSTITUTED:
-        case StandingState.INSTITUTIONAL:
-        case StandingState.STRAINED:
-        case StandingState.BREACH_RISK:
-            if (obligations.length > 0) {
-                requiredSurface = { id: SurfaceId.OBLIGATION_CORRIDOR, props: {} };
-            } else {
-                requiredSurface = { id: SurfaceId.SYSTEM_STATE, props: {} };
-            }
-            break;
+    // A. PRE_INDUCTION
+    if (standing.state === StandingState.PRE_INDUCTION) {
+        return { ...baseResult(standing, obligations, scars, eras, currentEra), requiredSurface: { id: SurfaceId.INDUCTION, props: { day: 1 } } };
     }
 
-    return {
-        standing,
-        obligations,
-        scars,
-        eras,
-        currentEra,
-        violations: [],
-        requiredSurface
-    };
+    // B. VIOLATED
+    if (standing.state === StandingState.VIOLATED) {
+        return { ...baseResult(standing, obligations, scars, eras, currentEra), requiredSurface: { id: SurfaceId.CONSEQUENCE_HALL, props: { reason: "Fracture Detected" } } };
+    }
+
+    // C. DAILY FLOW (Inducted/Compliant/etc)
+    // 1. If Practice Declared but No Evidence -> CAPTURE EVIDENCE
+    if (practiceDeclared && !evidenceSubmitted) {
+        return {
+            ...baseResult(standing, obligations, scars, eras, currentEra),
+            requiredSurface: { id: SurfaceId.EVIDENCE_CAPTURE, props: {} }
+        };
+    }
+
+    // 2. If Evidence Submitted but Not Acknowledged -> DAILY VERDICT
+    if (evidenceSubmitted && !dayAcknowledged) {
+        return {
+            ...baseResult(standing, obligations, scars, eras, currentEra),
+            requiredSurface: { id: SurfaceId.LEDGER_CLOSURE, props: {} }
+        };
+    }
+
+    // 3. Recovery Special Logic
+    if (standing.state === StandingState.RECOVERY) {
+        if (obligations.includes('REDUCED_PRACTICE') && !evidenceSubmitted) {
+            return { ...baseResult(standing, obligations, scars, eras, currentEra), requiredSurface: { id: SurfaceId.OBLIGATION_CORRIDOR, props: { mode: 'RECOVERY' } } };
+        }
+    }
+
+    // 4. Standard Obligation
+    if (obligations.length > 0) {
+        return { ...baseResult(standing, obligations, scars, eras, currentEra), requiredSurface: { id: SurfaceId.OBLIGATION_CORRIDOR, props: {} } };
+    }
+
+    // 5. Default -> SYSTEM STATE (Obligation Hall)
+    // return default...
+    return { ...baseResult(standing, obligations, scars, eras, currentEra), requiredSurface: { id: SurfaceId.SYSTEM_STATE, props: {} } };
+}
+
+function baseResult(standing, obligations, scars, eras, currentEra) {
+    return { standing, obligations, scars, eras, currentEra, violations: [] };
 }

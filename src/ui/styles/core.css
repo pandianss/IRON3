@@ -1,0 +1,33 @@
+/* core.css - Foundation Tier */
+:root {
+    /* 1. Chromatic System: Core Neutrals (The Void) */
+    --iron-core-void: #0a0a0a;
+    --iron-core-surface-low: #141414;
+    --iron-core-surface-mid: #1f1f1f;
+    --iron-core-surface-high: #2a2a2a;
+
+    /* 2. Text System */
+    --iron-text-primary: #e5e5e5;
+    --iron-text-secondary: #a3a3a3;
+    --iron-text-muted: #525252;
+    --iron-text-inactive: #404040;
+
+    /* 3. Semantic Utils */
+    --iron-bg-primary: var(--iron-core-void);
+    --iron-bg-secondary: var(--iron-core-surface-low);
+    --iron-surface: var(--iron-core-surface-mid);
+    --iron-border: var(--iron-core-surface-high);
+
+    /* 4. Geometry & Spacing */
+    --iron-space-xs: 4px;
+    --iron-space-sm: 8px;
+    --iron-space-md: 16px;
+    --iron-space-lg: 24px;
+    --iron-space-xl: 32px;
+    --iron-space-2xl: 48px;
+    --iron-space-3xl: 80px;
+
+    --iron-radius-sm: 2px;
+    --iron-radius-md: 4px;
+    --iron-radius-lg: 8px;
+}

@@ -1,0 +1,115 @@
+:root {
+    /* ------------------------------------------------------------------
+       1. CHROMATIC SYSTEM (COLOR LAW)
+       ------------------------------------------------------------------ */
+
+    /* 1.1 CORE NEUTRALS (Infrastructure Layer) */
+    /* Dark, cold, low-saturation. The building. */
+    --iron-infra-void: #0a0a0a;
+    /* Deepest background */
+    --iron-infra-base: #111111;
+    /* Standard background */
+    --iron-infra-panel: #161616;
+    /* Surface level 1 */
+    --iron-infra-raised: #1c1c1c;
+    /* Surface level 2 */
+
+    --iron-infra-border: #333333;
+    /* Structural dividers */
+    --iron-infra-border-dim: #222222;
+    /* Subtle dividers */
+
+    --iron-text-primary: #e0e0e0;
+    /* High legibility */
+    --iron-text-secondary: #909090;
+    /* Supporting data */
+    --iron-text-tertiary: #505050;
+    /* De-emphasized */
+
+    /* 1.2 STANDING OVERLAYS (State Layer) */
+    /* These define the "mood" of the institution. 
+       Used for accents, glows, and key indicators. */
+
+    /* STABLE: Cool, controlled (Cyan/Teal) */
+    --iron-brand-stable: #5bc0de;
+    --iron-brand-stable-dim: rgba(91, 192, 222, 0.15);
+
+    /* ASCENDING: Fresh, luminous (White/Mint) */
+    --iron-brand-ascending: #e0f7fa;
+    --iron-brand-ascending-dim: rgba(224, 247, 250, 0.15);
+
+    /* RISK: Heated, unstable (Amber/Orange) */
+    --iron-brand-risk: #f0ad4e;
+    --iron-brand-risk-dim: rgba(240, 173, 78, 0.15);
+
+    /* BREACH: Sharp, high contrast (Red) */
+    --iron-brand-breach: #d9534f;
+    --iron-brand-breach-dim: rgba(217, 83, 79, 0.2);
+
+    /* RECOVERY: Dim, reconstructive (Purple/Grey) */
+    --iron-brand-recovery: #a29bfe;
+    --iron-brand-recovery-dim: rgba(162, 155, 254, 0.1);
+
+    /* 1.3 SEMANTIC CHANNELS */
+    --iron-signal-success: #5cb85c;
+    --iron-signal-scar: #555555;
+    /* Scars are dead matter */
+    --iron-signal-obligation: #ffffff;
+    /* Pure white demand */
+
+    /* ------------------------------------------------------------------
+       2. GEOMETRY & SPACING
+       ------------------------------------------------------------------ */
+    --iron-radius-sm: 2px;
+    --iron-radius-md: 2px;
+    /* Controlled radius (no bubbly) */
+    --iron-radius-lg: 4px;
+
+    --iron-space-xs: 4px;
+    --iron-space-sm: 8px;
+    --iron-space-md: 16px;
+    --iron-space-lg: 24px;
+    --iron-space-xl: 48px;
+    --iron-space-xxl: 96px;
+
+    /* ------------------------------------------------------------------
+       3. TYPOGRAPHY BASE
+       ------------------------------------------------------------------ */
+    --font-authority: 'Roboto Mono', 'Courier New', monospace;
+    /* Tech/Code/Inst */
+    --font-human: 'Inter', -apple-system, sans-serif;
+    /* Readable/Soft */
+}
+
+/* THEME MAPPINGS */
+.theme-stable {
+    --theme-accent: var(--iron-brand-stable);
+    --theme-accent-dim: var(--iron-brand-stable-dim);
+}
+
+.theme-ascending {
+    --theme-accent: var(--iron-brand-ascending);
+    --theme-accent-dim: var(--iron-brand-ascending-dim);
+}
+
+.theme-risk {
+    --theme-accent: var(--iron-brand-risk);
+    --theme-accent-dim: var(--iron-brand-risk-dim);
+}
+
+.theme-breach {
+    --theme-accent: var(--iron-brand-breach);
+    --theme-accent-dim: var(--iron-brand-breach-dim);
+}
+
+.theme-recovery {
+    --theme-accent: var(--iron-brand-recovery);
+    --theme-accent-dim: var(--iron-brand-recovery-dim);
+}
+
+/* Global Tint */
+.app-shell {
+    min-height: 100vh;
+    border-top: 4px solid var(--theme-accent, var(--iron-brand-stable));
+    transition: border-color 0.5s ease;
+}
