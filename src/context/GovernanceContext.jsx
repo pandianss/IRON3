@@ -1,151 +1,93 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { EngineService } from '../services/engine/EngineService';
 import { useAuth } from '../App';
-import { CivilState, CivilCode } from '../core/protocols/CivilCode';
+import { evaluateInstitution } from '../institution/standing-engine/evaluateInstitution';
 
-// Initial State Template for new users
-const INITIAL_CIVIL_STATE = (uid) => ({
-    uid,
-    civil_state: CivilState.INDUCTION, // Default start
-    induction_day: 1,
-    risk_level: 'LOW', // LOW, MODERATE, HIGH
-    history: {
-        fractures: 0,
-        recoveries: 0
-    },
-    today: {
-        status: 'PENDING', // PENDING, COMPLETED, EXCUSED, MISSED
-        last_action: null
-    },
-    streak: { count: 0 } // Added for local simulation
-});
+
 
 export const GovernanceContext = createContext(null);
 
 export const GovernanceProvider = ({ children }) => {
     const { currentUser: user } = useAuth();
-    const [civilContext, setCivilContext] = useState(null);
+    const [institutionalState, setInstitutionalState] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Subscribe to Local Mock State
+    // Initial Load
     useEffect(() => {
         if (!user) {
-            setCivilContext(null);
             setLoading(false);
             return;
         }
 
-        // SIMULATING NETWORK LOAD
-        const timer = setTimeout(() => {
-            console.log("Governance: Loaded local state for", user.uid);
-
-            // Check if we have state in localStorage for persistence across reloads
-            const saved = localStorage.getItem(`iron_state_${user.uid}`);
-            if (saved) {
-                setCivilContext(JSON.parse(saved));
-            } else {
-                const initial = INITIAL_CIVIL_STATE(user.uid);
-                setCivilContext(initial);
-                localStorage.setItem(`iron_state_${user.uid}`, JSON.stringify(initial));
-            }
-
-            setLoading(false);
-        }, 800);
-
-        return () => clearTimeout(timer);
+        loadLedger();
     }, [user]);
 
-    // Action: Declare (Check-in / Practice)
-    const declarePractice = async (type = 'PRACTICE_COMPLETE', payload = {}) => {
-        if (!user) return { status: 'error', error: "Identity required." };
-
+    const loadLedger = async () => {
         try {
-            // Adjudicate first (optimistic check)
-            const judgment = CivilCode.adjudicate(civilContext?.civil_state, type);
-            if (!judgment.lawful) {
-                return { status: 'denied', reason: judgment.reason };
+            // "Thin Adapter" - only fetches facts.
+            // In MVP, we might mock this fetch.
+            // TODO: Replace with real EngineService.fetchLedger(user.uid)
+            // For now, simulating a ledger from localStorage or creating initial
+
+            console.log("Loading ledger for", user.uid);
+
+            // Mock Ledger for now (or read local)
+            const savedLedger = localStorage.getItem(`iron_ledger_${user.uid}`);
+            let ledger = savedLedger ? JSON.parse(savedLedger) : [];
+
+            if (ledger.length === 0) {
+                // Article III: "The first ledger entry is the act of contract creation."
+                // But we can't auto-create until Induction.
+                // So empty ledger = PRE_INDUCTION.
             }
 
-            // Execute (Mock Engine)
-            await EngineService.processAction(user.uid, {
-                type: type,
-                payload,
-                timestamp: new Date().toISOString()
-            });
+            const now = new Date().toISOString();
+            const state = evaluateInstitution(ledger, now);
 
-            // Update Local State
-            setCivilContext(prev => {
-                let newState = { ...prev };
-                const today = new Date().toISOString().split('T')[0];
-
-                if (type === 'ENTER_RECOVERY') {
-                    newState.civil_state = CivilState.RECOVERING;
-                    newState.risk_level = 'MODERATE';
-                    newState.history.fractures += 1;
-                    newState.today = { status: 'PENDING', last_action: 'RECOVERY_STARTED' };
-                }
-                else if (type === 'PRACTICE_COMPLETE') {
-                    // Check if we were recovering
-                    if (prev.civil_state === CivilState.RECOVERING) {
-                        // Simple logic: 3 days of practice exits recovery
-                        if (prev.streak.count >= 2) {
-                            newState.civil_state = CivilState.CORE_GOVERNANCE;
-                            newState.history.recoveries += 1;
-                        }
-                    }
-                    newState.today = { status: 'COMPLETED', last_action: type };
-                    newState.streak.count += 1;
-                }
-                else if (type === 'REST_TAKEN') {
-                    newState.today = { status: 'EXCUSED', last_action: type };
-                    // Streak maintained but not increased
-                }
-                else if (type === 'PRACTICE_MISSED') {
-                    // Trigger Fracture for demo purposes if in Core
-                    if (prev.civil_state === CivilState.CORE_GOVERNANCE) {
-                        newState.civil_state = CivilState.FRACTURED;
-                        newState.streak.count = 0; // Frozen/Reset
-                    }
-                    newState.today = { status: 'MISSED', last_action: type };
-                }
-
-                localStorage.setItem(`iron_state_${user.uid}`, JSON.stringify(newState));
-                return newState;
-            });
-
-            return { status: 'recorded' };
-        } catch (err) {
-            console.error("Governance declaration failed", err);
-            return { status: 'error', error: err.message };
+            setInstitutionalState(state);
+        } catch (e) {
+            console.error("Ledger Load Failed", e);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Derived Projections
-    const currentCondition = civilContext?.civil_state || CivilState.INDUCTION;
-    const isFractured = currentCondition === CivilState.FRACTURED;
-    const isAtRisk = currentCondition === CivilState.AT_RISK;
-    const isRecovering = currentCondition === CivilState.RECOVERING;
+    // Action: Declare (Write to Ledger)
+    const declare = async (event, payload = {}) => {
+        if (!user) return;
+
+        try {
+            // 1. Write to Ledger (via Service)
+            // await EngineService.appendEvent(user.uid, event, payload);
+
+            // Simulating Write:
+            const newItem = {
+                type: event,
+                payload,
+                timestamp: new Date().toISOString()
+            };
+
+            const savedLedger = localStorage.getItem(`iron_ledger_${user.uid}`);
+            let ledger = savedLedger ? JSON.parse(savedLedger) : [];
+            ledger.push(newItem);
+            localStorage.setItem(`iron_ledger_${user.uid}`, JSON.stringify(ledger));
+
+            // 2. Re-evaluate
+            const newState = evaluateInstitution(ledger, new Date().toISOString());
+            setInstitutionalState(newState);
+
+            return { success: true };
+        } catch (err) {
+            console.error("Declaration failed", err);
+            return { success: false, error: err.message };
+        }
+    };
 
     return (
         <GovernanceContext.Provider value={{
-            // State
-            civilContext,
+            institutionalState,
             loading,
-
-            // Civil Conditions
-            currentCondition,
-            isFractured,
-            isAtRisk,
-            isRecovering,
-
-            // Laws & Rights
-            currentLaws: CivilCode.LAWS[currentCondition] || CivilCode.LAWS[CivilState.INDUCTION],
-
-            // Actions
-            declarePractice,
-
-            // Legacy / Compat
-            streak: civilContext?.streak?.count || 0
+            declare
         }}>
             {children}
         </GovernanceContext.Provider>

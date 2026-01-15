@@ -7,16 +7,16 @@
 export const NarrativeRegistry = {
     BRIEFING: {
         SLIDE_1: {
-            title: "GOVERNED SPACE",
-            content: "IRON is not a productivity tool. It is a behavioral institution. By entering, you submit your daily practice to external adjudication."
+            title: "THE BODY IS THE RECORD",
+            content: "You are entering a governed state of physical operation. Here, fitness is not a hobby, but a daily mandate. Your standing is determined solely by your consistency."
         },
         SLIDE_2: {
-            title: "THE RECORD",
-            content: "Every action—or inaction—becomes part of a permanent behavioral record. This record cannot be edited, only appended to."
+            title: "THE DAILY OBLIGATION",
+            content: "Every 24 hours, you must perform the Required Practice. There are no excuses, only the ledger. If you train, you advance. If you rest when lawful, you sustain."
         },
         SLIDE_3: {
-            title: "RIGHTS & OBLIGATIONS",
-            content: "You have the right to explanation. You have the obligation of consistency. The system has the authority to declare fracture."
+            title: "FAILURE IS PERMANENT",
+            content: "Missing a required practice is a Fracture. It cannot be undone. It remains on your record forever. Build your Era through unbroken continuity."
         }
     },
     ADJUDICATION: {
