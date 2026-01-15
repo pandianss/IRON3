@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SEOHead } from '../SEOHead';
 import { getDisciplineList } from '../../domain/InstitutionalTemplates';
 import { useSovereignKernel } from '../../institution/InstitutionalContext';
 
+// Floating Panels
+import { WhatIsIron } from './WhatIsIron';
+import { InstitutionalProductivity } from './InstitutionalProductivity';
+import { PersonalInstitution } from './PersonalInstitution';
+
 export const LandingPage = () => {
     const disciplines = getDisciplineList();
     const kernel = useSovereignKernel();
+    const [activePanel, setActivePanel] = useState(null);
 
     const handleActivate = async (id) => {
         try {
@@ -17,19 +23,36 @@ export const LandingPage = () => {
         }
     };
 
+    const closePanel = () => setActivePanel(null);
+
     return (
         <div className="public-root" style={{
             maxWidth: '1000px',
             margin: '0 auto',
             padding: '80px 20px',
             color: '#f0f0f0',
-            fontFamily: 'var(--font-human)'
+            fontFamily: 'var(--font-human)',
+            position: 'relative'
         }}>
             <SEOHead
                 title="Sovereign Productivity System"
                 description="IRON is a private discipline system: software that governs behavior using standing, contracts, and internal laws."
                 path="/"
             />
+
+            {/* Overlay Panel UI */}
+            {activePanel && (
+                <div style={overlayContainerStyle} onClick={closePanel}>
+                    <div style={panelWrapperStyle} onClick={e => e.stopPropagation()}>
+                        <button onClick={closePanel} style={closeButtonStyle}>CLOSE_SIG</button>
+                        <div style={panelBodyContainerStyle}>
+                            {activePanel === 'PHILOSOPHY' && <WhatIsIron />}
+                            {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
+                            {activePanel === 'SOVEREIGNTY' && <PersonalInstitution />}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <header style={{ marginBottom: '60px', textAlign: 'center' }}>
                 <h1 style={{ fontFamily: 'var(--font-authority)', fontSize: '4rem', margin: 0, letterSpacing: '8px' }}>IRON</h1>
@@ -71,18 +94,18 @@ export const LandingPage = () => {
                 </section>
 
                 <nav style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '30px', borderTop: '1px solid var(--iron-border)', paddingTop: '40px' }}>
-                    <Link to="/what-is-iron" style={linkStyle}>
+                    <div onClick={() => setActivePanel('PHILOSOPHY')} style={navItemStyle}>
                         <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>01_PHILOSOPHY</span>
                         What is IRON?
-                    </Link>
-                    <Link to="/institutional-productivity" style={linkStyle}>
+                    </div>
+                    <div onClick={() => setActivePanel('SYSTEMS')} style={navItemStyle}>
                         <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>02_SYSTEMS</span>
                         Industrial Strength Productivity?
-                    </Link>
-                    <Link to="/personal-institution" style={linkStyle}>
+                    </div>
+                    <div onClick={() => setActivePanel('SOVEREIGNTY')} style={navItemStyle}>
                         <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>03_SOVEREIGNTY</span>
                         What is a Private Discipline?
-                    </Link>
+                    </div>
                     <Link to="/app" style={actionStyle}>GOTO_DASHBOARD</Link>
                 </nav>
             </main>
@@ -90,12 +113,55 @@ export const LandingPage = () => {
     );
 };
 
-const linkStyle = {
+const navItemStyle = {
     color: 'var(--iron-accent)',
     textDecoration: 'none',
     fontSize: '1.1rem',
     transition: 'opacity 0.2s',
-    display: 'block'
+    display: 'block',
+    cursor: 'pointer'
+};
+
+const overlayContainerStyle = {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: 'rgba(0,0,0,0.85)',
+    backdropFilter: 'blur(8px)',
+    zIndex: 1000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px'
+};
+
+const panelWrapperStyle = {
+    background: 'var(--iron-surface-2)',
+    border: '1px solid var(--iron-border)',
+    maxWidth: '700px',
+    width: '100%',
+    maxHeight: '80vh',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+};
+
+const closeButtonStyle = {
+    position: 'absolute',
+    top: '-30px',
+    right: 0,
+    background: 'transparent',
+    border: 'none',
+    color: 'var(--iron-brand-breach)',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.7rem',
+    cursor: 'pointer',
+    letterSpacing: '2px'
+};
+
+const panelBodyContainerStyle = {
+    padding: '40px',
+    overflowY: 'auto'
 };
 
 const cardStyle = {

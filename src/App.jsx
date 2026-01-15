@@ -7,13 +7,12 @@ import { IronAppShell } from './shell/IronAppShell';
 
 // Public Pages
 import { LandingPage } from './public/pages/LandingPage';
-import { WhatIsIron } from './public/pages/WhatIsIron';
-import { InstitutionalProductivity } from './public/pages/InstitutionalProductivity';
-import { PersonalInstitution } from './public/pages/PersonalInstitution';
-import { InstitutionalCatalog } from './public/pages/InstitutionalCatalog';
+// Public Pages
+import { LandingPage } from './public/pages/LandingPage';
 
 /**
  * THE SOVEREIGN SPINE CONNECTOR
+
  */
 const InstitutionalBridge = ({ onStateSync }) => {
     const { institutionalState, loading } = useGovernance();
@@ -43,10 +42,6 @@ export default function App() {
             <Routes>
                 {/* Public SEO Root Site */}
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/what-is-iron" element={<WhatIsIron />} />
-                <Route path="/institutional-productivity" element={<InstitutionalProductivity />} />
-                <Route path="/personal-institution" element={<PersonalInstitution />} />
-                <Route path="/catalog" element={<InstitutionalCatalog />} />
 
                 {/* Governed Application Spine */}
                 <Route path="/app/*" element={<GovernedApp />} />

@@ -1,14 +1,8 @@
 import React from 'react';
-import { SEOHead } from '../SEOHead';
 
 export const WhatIsIron = () => {
     return (
-        <article className="public-page" style={pageStyle}>
-            <SEOHead
-                title="What is IRON"
-                description="Discover the behavioral governing system that turns consistency into law."
-                path="/what-is-iron"
-            />
+        <div style={panelBodyStyle}>
             <h1 style={titleStyle}>What is IRON?</h1>
             <section style={sectionStyle}>
                 <p>IRON is not an app. It is a <strong>Behavioral Governing System</strong>.</p>
@@ -25,16 +19,17 @@ export const WhatIsIron = () => {
 
             <section style={sectionStyle}>
                 <h2>Core Principles</h2>
-                <ul>
+                <ul style={{ paddingLeft: '20px' }}>
                     <li><strong>Standing:</strong> Your reputation within your own system.</li>
                     <li><strong>Contracts:</strong> Explicit, code-enforced behavioral agreements.</li>
                     <li><strong>Consequences:</strong> Real-time degradation of the experience when law is breached.</li>
                 </ul>
             </section>
-        </article>
+        </div>
     );
 };
 
-const pageStyle = { maxWidth: '800px', margin: '0 auto', padding: '60px 20px', color: '#f0f0f0' };
-const titleStyle = { fontFamily: 'var(--font-authority)', fontSize: '2.5rem', borderBottom: '2px solid var(--iron-brand-stable)', paddingBottom: '10px' };
-const sectionStyle = { lineHeight: '1.7', margin: '40px 0' };
+const panelBodyStyle = { color: '#f0f0f0', maxWidth: '100%' };
+const titleStyle = { fontFamily: 'var(--font-authority)', fontSize: '2rem', borderBottom: '2px solid var(--iron-brand-stable)', paddingBottom: '10px', marginTop: 0 };
+const sectionStyle = { lineHeight: '1.7', margin: '20px 0' };
+
