@@ -16,10 +16,17 @@ const InstitutionalBridge = ({ onStateSync }) => {
     const { institutionalState, loading } = useGovernance();
 
     useEffect(() => {
-        console.log("ICE: State Bridge Syncing", institutionalState);
+        let status = 'ALIVE';
+        if (loading) status = 'BOOTING';
+        if (!institutionalState && !loading) status = 'NO_INSTITUTION';
+
+        // If the kernel has encountered a terminal cycle error
+        if (institutionalState?.error) status = 'DEGRADED';
+
         onStateSync({
             ...institutionalState,
-            status: loading ? 'BOOTING' : (institutionalState ? 'ALIVE' : 'NO_INSTITUTION'),
+            status,
+            error: institutionalState?.error
         });
     }, [institutionalState, loading, onStateSync]);
 
