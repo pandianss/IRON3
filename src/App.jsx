@@ -1,50 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { InstitutionalProvider } from './institution/InstitutionalContext';
 import { GovernanceProvider, useGovernance } from './context/GovernanceContext';
 import { IronAppShell } from './shell/IronAppShell';
 
 /**
- * Connects the React Context world to the Rigid Spine world.
- * Isolates the Shell from Context failures.
+ * THE SOVEREIGN SPINE CONNECTOR
+ * This component lives inside the providers and feeds state UP to the Spine.
+ * Wait, feeding UP is hard in React.
+ * Better: App.jsx wraps Providers around its INTERNAL content, but the 
+ * Spine itself is provided a 'setInstitution' hook or similar.
  */
-const IronConnector = () => {
-    let institution = null;
 
-    try {
-        const { institutionalState, loading } = useGovernance();
+const InstitutionalBridge = ({ onStateSync }) => {
+    const { institutionalState, loading } = useGovernance();
 
-        // 1. Loading State -> Booting
-        if (loading) {
-            institution = { status: 'BOOTING' };
-        }
-        // 2. Real State -> Active
-        else if (institutionalState) {
-            institution = {
-                ...institutionalState,
-                status: 'ALIVE', // Explicit signal for the Spine
-                // Ensure 'standing' string exists for the Status Bar
-                standing: institutionalState.standing?.state || 'UNKNOWN'
-            };
-        }
-        // 3. No State -> Null (Handled by Shell as "No Institution")
+    useEffect(() => {
+        let status = 'ALIVE';
+        if (loading) status = 'BOOTING';
+        if (!institutionalState && !loading) status = 'NO_INSTITUTION';
 
-    } catch (err) {
-        console.error("Governance Bridge Failure:", err);
-        // institution remains null, triggering NoInstitutionSurface
-    }
+        onStateSync({
+            ...institutionalState,
+            status,
+            standing: institutionalState?.standing?.state || 'UNKNOWN'
+        });
+    }, [institutionalState, loading, onStateSync]);
 
-    return <IronAppShell institution={institution} />;
+    return null; // Invisible bridge
 };
 
 export default function App() {
+    const [institution, setInstitution] = useState(null);
+
     return (
-        <AuthProvider>
-            <InstitutionalProvider>
-                <GovernanceProvider>
-                    <IronConnector />
-                </GovernanceProvider>
-            </InstitutionalProvider>
-        </AuthProvider>
+        <IronAppShell institution={institution}>
+            <AuthProvider>
+                <InstitutionalProvider>
+                    <GovernanceProvider>
+                        <InstitutionalBridge onStateSync={setInstitution} />
+                        {/* 
+                            Content routing is now handled by the Spine's 
+                            ActiveSurfaceFrame which receives the sync'd state.
+                        */}
+                    </GovernanceProvider>
+                </InstitutionalProvider>
+            </AuthProvider>
+        </IronAppShell>
     );
 }
+

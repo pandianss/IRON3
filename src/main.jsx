@@ -3,7 +3,14 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './ui/styles/InstitutionalTheme.css'
 
-class ErrorBoundary extends React.Component {
+import { IronAppShell } from './shell/IronAppShell'
+import { FailureSurface } from './surfaces/FailureSurface'
+
+/**
+ * TOP-LEVEL ERROR BOUNDARY
+ * Protects the ultimate user experience from total blankness.
+ */
+class GlobalSpineGuard extends React.Component {
     constructor(props) {
         super(props);
         this.state = { hasError: false, error: null };
@@ -14,16 +21,16 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, errorInfo) {
-        console.error("Uncaught Error:", error, errorInfo);
+        console.error("CRITICAL SPINE BREACH:", error, errorInfo);
     }
 
     render() {
         if (this.state.hasError) {
+            // Even when EVERYTHING fails, we render a Spine with a Failure Surface
             return (
-                <div style={{ color: 'red', padding: 20 }}>
-                    <h1>Application Crash</h1>
-                    <pre>{this.state.error.toString()}</pre>
-                </div>
+                <IronAppShell institution={{ status: 'DEGRADED' }}>
+                    <FailureSurface error={this.state.error} />
+                </IronAppShell>
             );
         }
         return this.props.children;
@@ -32,8 +39,8 @@ class ErrorBoundary extends React.Component {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <ErrorBoundary>
+        <GlobalSpineGuard>
             <App />
-        </ErrorBoundary>
+        </GlobalSpineGuard>
     </React.StrictMode>,
 )
