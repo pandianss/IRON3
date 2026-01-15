@@ -89,10 +89,17 @@ export class InstitutionalKernel {
      * Diagnostic Access
      */
     getSnapshot() {
+        const history = this.ledger.getHistory();
+        const activeModules = history
+            .filter(e => e.type === 'MODULE_ACTIVATED')
+            .map(e => e.payload.moduleId);
+
         return {
-            history: this.ledger.getHistory(),
+            history,
+            activeModules, // Tracking active discipline modules
             state: this.state.getSnapshot(),
             mandates: this.state.getDomain('mandates') || { narrative: { tone: 'GUIDANCE', message: 'SYSTEM OFFLINE' }, motion: {}, surfaces: [] }
         };
     }
 }
+

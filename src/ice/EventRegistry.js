@@ -22,7 +22,8 @@ export const EventTypes = {
     PRACTICE_COMPLETE: 'PRACTICE_COMPLETE', // Legacy/Direct Injection
 
     // Admin/Cycle
-    CONTINUE_CYCLE: 'CONTINUE_CYCLE'
+    CONTINUE_CYCLE: 'CONTINUE_CYCLE',
+    MODULE_ACTIVATED: 'MODULE_ACTIVATED' // Added
 };
 
 // Schema Validation (Stub for MVP)
@@ -30,7 +31,8 @@ const RequiredPayloads = {
     [EventTypes.SESSION_INTENT]: ['contractId'],
     [EventTypes.SESSION_STARTED]: ['venue'],
     [EventTypes.SESSION_ENDED]: ['tags', 'evidence'],
-    [EventTypes.EVIDENCE_SUBMITTED]: ['venue', 'evidenceType']
+    [EventTypes.EVIDENCE_SUBMITTED]: ['venue', 'evidenceType'],
+    [EventTypes.MODULE_ACTIVATED]: ['moduleId']
 };
 
 export class EventRegistry {
