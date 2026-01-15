@@ -1,25 +1,50 @@
 import React from 'react';
-import { GovernanceProvider, useGovernance } from './context/GovernanceContext';
-import { InstitutionalShell } from './institution/InstitutionalShell';
-import { InstitutionalProvider } from './institution/InstitutionalContext';
 import { AuthProvider } from './context/AuthContext';
-import './ui/styles/InstitutionalTheme.css';
+import { InstitutionalProvider } from './institution/InstitutionalContext';
+import { GovernanceProvider, useGovernance } from './context/GovernanceContext';
+import { IronAppShell } from './shell/IronAppShell';
 
-const AppContent = () => {
-    const { institutionalState, loading } = useGovernance();
-    return <InstitutionalShell institutionalState={institutionalState} loading={loading} />;
+/**
+ * Connects the React Context world to the Rigid Spine world.
+ * Isolates the Shell from Context failures.
+ */
+const IronConnector = () => {
+    let institution = null;
+
+    try {
+        const { institutionalState, loading } = useGovernance();
+
+        // 1. Loading State -> Booting
+        if (loading) {
+            institution = { status: 'BOOTING' };
+        }
+        // 2. Real State -> Active
+        else if (institutionalState) {
+            institution = {
+                ...institutionalState,
+                status: 'ALIVE', // Explicit signal for the Spine
+                // Ensure 'standing' string exists for the Status Bar
+                standing: institutionalState.standing?.state || 'UNKNOWN'
+            };
+        }
+        // 3. No State -> Null (Handled by Shell as "No Institution")
+
+    } catch (err) {
+        console.error("Governance Bridge Failure:", err);
+        // institution remains null, triggering NoInstitutionSurface
+    }
+
+    return <IronAppShell institution={institution} />;
 };
 
-function App() {
+export default function App() {
     return (
         <AuthProvider>
             <InstitutionalProvider>
                 <GovernanceProvider>
-                    <AppContent />
+                    <IronConnector />
                 </GovernanceProvider>
             </InstitutionalProvider>
         </AuthProvider>
     );
 }
-
-export default App;
