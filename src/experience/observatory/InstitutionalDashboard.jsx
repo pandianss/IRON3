@@ -14,16 +14,19 @@ import { DiagnosticsStrip } from './DiagnosticsStrip';
  */
 export const InstitutionalDashboard = ({ snapshot }) => {
     // Map Snapshot to Regions
+    const standing = snapshot?.standing || { state: 'BOOTING', integrity: 0 };
     const identity = snapshot?.identity || { id: 'ORPHAN-SYS', epoch: 'VOID' };
-    const phase = snapshot?.phase || 'ABSENT';
+    const phase = standing.state;
 
     // Status Logic
     let status = 'OK';
-    if (phase === 'ABSENT' || phase === 'NO_INSTITUTION') status = 'OFFLINE';
+    if (phase === 'ABSENT' || phase === 'NO_INSTITUTION' || phase === 'BOOTING') status = 'OFFLINE';
     if (snapshot?.diagnostics?.errors > 0 || phase === 'DEGRADED') status = 'CONFLICT';
     if (phase === 'BOOTING') status = 'BOOTING';
 
-    const isGhost = phase === 'ABSENT' || phase === 'NO_INSTITUTION';
+    const isGhost = phase === 'ABSENT' || phase === 'NO_INSTITUTION' || phase === 'BOOTING';
+
+    // The state domain contains the physiological data if FITNESS is active
     const physiology = snapshot?.physiology || { capacity: 100, law: { isAuthorized: true } };
 
     // Feature Gates: Only enabled if the module has been activated in the Kernel
