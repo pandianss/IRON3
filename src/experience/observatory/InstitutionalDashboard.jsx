@@ -12,12 +12,16 @@ import { DiagnosticsStrip } from './DiagnosticsStrip';
  */
 export const InstitutionalDashboard = ({ snapshot }) => {
     // Map Snapshot to Regions
-    const identity = {
-        id: snapshot?.identity?.id || 'SIGMA-9',
-        epoch: snapshot?.identity?.epoch || '2025',
-        phase: snapshot?.phase || 'OPERATIONAL'
-    };
-    const status = snapshot?.diagnostics?.errors > 0 ? 'CONFLICT' : 'OK';
+    const identity = snapshot?.identity || { id: 'ORPHAN-SYS', epoch: 'VOID' };
+    const phase = snapshot?.phase || 'ABSENT';
+
+    // Status Logic
+    let status = 'OK';
+    if (phase === 'ABSENT' || phase === 'NO_INSTITUTION') status = 'OFFLINE';
+    if (snapshot?.diagnostics?.errors > 0 || phase === 'DEGRADED') status = 'CONFLICT';
+    if (phase === 'BOOTING') status = 'BOOTING';
+
+    const isGhost = phase === 'ABSENT' || phase === 'NO_INSTITUTION';
 
     return (
         <div style={{
@@ -28,7 +32,10 @@ export const InstitutionalDashboard = ({ snapshot }) => {
             color: 'var(--iron-text-primary)',
             maxHeight: '100vh',
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
+            filter: isGhost ? 'grayscale(0.8) contrast(1.2)' : 'none',
+            opacity: isGhost ? 0.7 : 1,
+            transition: 'all 1s ease'
         }}>
             {/* Degradation Pulse Overlay */}
             {status === 'CONFLICT' && (
