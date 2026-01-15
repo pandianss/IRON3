@@ -74,7 +74,11 @@ export const InstitutionalDashboard = ({ snapshot }) => {
                     <StandingCore standing={snapshot?.standing} />
                     {isFitness && (
                         <div style={{ padding: '20px', borderTop: '1px solid var(--iron-border)' }}>
-                            <RecoveryTimer law={physiology.law} />
+                            <RecoveryTimer
+                                law={physiology.law}
+                                era={physiology.era}
+                                params={physiology.params}
+                            />
                         </div>
                     )}
                 </div>

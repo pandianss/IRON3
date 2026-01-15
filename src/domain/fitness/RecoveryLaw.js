@@ -7,9 +7,10 @@
 export const RecoveryLaw = {
     /**
      * @param {Object} capacityRecord - From CapacityEngine
-     * @param {number} currentTime - Current timestamp
+     * @param {Object} intent - Current activity intent
+     * @param {Object} params - Active constraints (e.g. durationCap)
      */
-    evaluateIntent: (capacityRecord, intent) => {
+    evaluateIntent: (capacityRecord, intent, params = {}) => {
         const issues = [];
 
         // 1. Capacity Floor
@@ -31,9 +32,19 @@ export const RecoveryLaw = {
             });
         }
 
+        // 3. Deload Duration Cap
+        if (intent.type === 'SESSION_ENDED' && params.durationCap && intent.duration > params.durationCap) {
+            issues.push({
+                severity: 'CRITICAL',
+                type: 'DELOAD_VIOLATION',
+                message: `Active Recovery Protocol limit: ${params.durationCap} mins. Exceeded by ${intent.duration - params.durationCap} mins.`
+            });
+        }
+
         return {
             isAuthorized: issues.every(i => i.severity !== 'CRITICAL'),
             mandates: issues
         };
     }
 };
+
