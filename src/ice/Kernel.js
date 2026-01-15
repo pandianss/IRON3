@@ -65,7 +65,7 @@ export class InstitutionalKernel {
         return {
             history: this.ledger.getHistory(),
             state: this.state.getSnapshot(),
-            mandates: this.state.getDomain('mandates')
+            mandates: this.state.getDomain('mandates') || { narrative: { tone: 'GUIDANCE', message: 'SYSTEM OFFLINE' }, motion: {}, surfaces: [] }
         };
     }
 }

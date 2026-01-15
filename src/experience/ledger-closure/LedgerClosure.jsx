@@ -82,11 +82,7 @@ export const LedgerClosure = (props) => {
                         opacity: phase >= 2 ? 1 : 0,
                         transition: 'all 0.5s var(--iron-ease-authority)'
                     }}>
-                        <VerdictPanel
-                            type={standingBand}
-                            title={verdict.title}
-                            message={verdict.message}
-                        />
+                        <VerdictPanel />
                     </div>
                 </div>
             </div>

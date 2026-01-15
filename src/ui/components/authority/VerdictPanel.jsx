@@ -1,4 +1,5 @@
 import React from 'react';
+import { useInstitutionalMandate } from '../../../institution/InstitutionalContext';
 import '../../styles/InstitutionalTheme.css';
 
 /**
@@ -6,29 +7,34 @@ import '../../styles/InstitutionalTheme.css';
  * Behavior 3.2 Implementation
  * 
  * Role: Institutional explanation.
- * Triggers: Daily pass, Breach declaration, Recovery.
+ * Source: MANDATE ENGINE (useInstitutionalMandate)
  */
-export const VerdictPanel = ({ type, title, message, action }) => {
-    // type: 'PASS' | 'BREACH' | 'RECOVERY' | 'RISK'
+export const VerdictPanel = () => {
+    const narrative = useInstitutionalMandate('NARRATIVE');
 
-    const getVerdictStyle = () => {
-        switch (type) {
-            case 'BREACH':
+    if (!narrative) return null; // Authority is silent
+
+    const { tone, message } = narrative;
+
+    const getToneStyle = () => {
+        switch (tone) {
+            case 'ALARM':
                 return {
                     borderColor: 'var(--iron-brand-breach)',
                     background: 'rgba(217, 83, 79, 0.05)'
                 };
-            case 'RECOVERY':
-                return {
-                    borderColor: 'var(--iron-brand-recovery)',
-                    background: 'rgba(162, 155, 254, 0.05)'
-                };
-            case 'RISK':
+            case 'WARNING':
                 return {
                     borderColor: 'var(--iron-brand-risk)',
                     background: 'rgba(240, 173, 78, 0.05)'
                 };
-            default: // PASS/Standard
+            case 'AUTHORITY':
+                return {
+                    borderColor: 'var(--iron-brand-recovery)',
+                    background: 'rgba(162, 155, 254, 0.05)'
+                };
+            case 'GUIDANCE': // Standard
+            default:
                 return {
                     borderColor: 'var(--iron-brand-stable)',
                     background: 'var(--iron-infra-panel)'
@@ -36,7 +42,7 @@ export const VerdictPanel = ({ type, title, message, action }) => {
         }
     };
 
-    const style = getVerdictStyle();
+    const style = getToneStyle();
 
     return (
         <div style={{
@@ -56,18 +62,13 @@ export const VerdictPanel = ({ type, title, message, action }) => {
                 marginBottom: 'var(--iron-space-md)',
                 color: 'var(--iron-text-primary)'
             }}>
-                {title}
+                {tone}
             </h2>
 
             <p className="font-human text-body" style={{ marginBottom: '0' }}>
                 {message}
             </p>
-
-            {action && (
-                <div style={{ marginTop: 'var(--iron-space-lg)' }}>
-                    {action}
-                </div>
-            )}
         </div>
     );
 };
+

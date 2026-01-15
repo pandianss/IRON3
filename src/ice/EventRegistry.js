@@ -59,7 +59,7 @@ export class EventRegistry {
         }
 
         return {
-            id: crypto.randomUUID(),
+            id: generateId(),
             type,
             payload,
             meta: {
@@ -69,4 +69,8 @@ export class EventRegistry {
             }
         };
     }
+}
+
+function generateId() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }

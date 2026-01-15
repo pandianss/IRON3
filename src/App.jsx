@@ -23,12 +23,16 @@ const AppContent = () => {
     return <InstitutionalShell institutionalState={institutionalState} loading={loading} />;
 };
 
+import { InstitutionalProvider } from './institution/InstitutionalContext';
+
 function App() {
     return (
         <AuthProvider>
-            <GovernanceProvider>
-                <AppContent />
-            </GovernanceProvider>
+            <InstitutionalProvider>
+                <GovernanceProvider>
+                    <AppContent />
+                </GovernanceProvider>
+            </InstitutionalProvider>
         </AuthProvider>
     )
 }
