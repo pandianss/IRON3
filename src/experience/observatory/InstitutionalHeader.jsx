@@ -1,4 +1,6 @@
 import React from 'react';
+import { CapacityMeter } from './fitness/CapacityMeter';
+
 
 /**
  * Region A: Institutional Header

@@ -1,4 +1,6 @@
 import React from 'react';
+import { RecoveryTimer } from './fitness/RecoveryTimer';
+
 import { InstitutionalHeader } from './InstitutionalHeader';
 import { StandingCore } from './StandingCore';
 import { AuthorityMap } from './AuthorityMap';
@@ -50,22 +52,33 @@ export const InstitutionalDashboard = ({ snapshot }) => {
             )}
 
             {/* A. Header */}
-            <InstitutionalHeader identity={identity} status={status} />
+            <InstitutionalHeader
+                identity={identity}
+                status={status}
+                physiology={physiology}
+                isFitness={isFitness}
+            />
 
             {/* Main Content Grid */}
             <div style={{
                 flex: 1,
                 display: 'grid',
-                gridTemplateColumns: 'minmax(300px, 1fr) minmax(300px, 1fr)',
-                gridTemplateRows: 'repeat(2, 1fr)',
+                gridTemplateColumns: isFitness ? 'minmax(300px, 1fr) 1fr 1fr' : 'minmax(300px, 1fr) minmax(300px, 1fr)',
+                gridTemplateRows: isFitness ? '1fr 1fr' : 'repeat(2, 1fr)',
                 gap: '1px',
                 background: 'var(--iron-border)',
                 overflow: 'hidden'
             }}>
                 {/* B. Standing Core */}
-                <div style={{ background: 'var(--iron-surface)' }}>
+                <div style={{ background: 'var(--iron-surface)', gridRow: isFitness ? 'span 2' : 'auto' }}>
                     <StandingCore standing={snapshot?.standing} />
+                    {isFitness && (
+                        <div style={{ padding: '20px', borderTop: '1px solid var(--iron-border)' }}>
+                            <RecoveryTimer law={physiology.law} />
+                        </div>
+                    )}
                 </div>
+
 
                 {/* C. Authority Map */}
                 <div style={{ background: 'var(--iron-surface)' }}>
