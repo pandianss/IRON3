@@ -24,6 +24,8 @@ export const InstitutionalDashboard = ({ snapshot }) => {
     if (phase === 'BOOTING') status = 'BOOTING';
 
     const isGhost = phase === 'ABSENT' || phase === 'NO_INSTITUTION';
+    const physiology = snapshot?.physiology || { capacity: 100, law: { isAuthorized: true } };
+    const isFitness = true; // For now default to true in this surface
 
     return (
         <div style={{
