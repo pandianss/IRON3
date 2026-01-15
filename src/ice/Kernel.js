@@ -7,6 +7,7 @@ import { AuthorityEngine } from './engines/AuthorityEngine.js';
 import { MandateEngine } from './engines/MandateEngine.js';
 import { SessionEngine } from './engines/SessionEngine.js';
 import { PhysiologicalEngine } from './engines/fitness/PhysiologicalEngine.js';
+import { FitnessStandingEngine } from './engines/fitness/FitnessStandingEngine.js';
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
 
 /**
@@ -26,7 +27,8 @@ export class InstitutionalKernel {
             authority: new AuthorityEngine(this),
             mandate: new MandateEngine(this),
             session: new SessionEngine(this),
-            physiology: new PhysiologicalEngine(this)
+            physiology: new PhysiologicalEngine(this),
+            fitnessStanding: new FitnessStandingEngine(this)
         };
 
 

@@ -51,14 +51,6 @@ export class PhysiologicalEngine {
             law: lawResult,
             params: params // Expose params for UI visibility
         });
-
-        // 6. Standing Penalty for "Breaching Rest" or "Exceeding Deload Cap"
-        if (!lawResult.isAuthorized) {
-            const standing = state.getDomain('standing');
-            state.update('standing', {
-                integrity: Math.max(0, (standing?.integrity || 100) - 20)
-            });
-        }
     }
 }
 

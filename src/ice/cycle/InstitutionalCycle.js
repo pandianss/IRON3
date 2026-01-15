@@ -21,9 +21,13 @@ export class InstitutionalCycle {
         try {
             // Step 0: Ledger is already updated by Kernel.ingest()
 
-            // Step 0.5: Session & Physiology Tracking
+            // Step 0.5: Session, Physiology & Specialized Standing
             this.kernel.engines.session.process();
             this.kernel.engines.physiology.process();
+
+            if (this.kernel.engines.fitnessStanding) {
+                this.kernel.engines.fitnessStanding.process();
+            }
 
             // Step 1: Legal Evaluation (Contracts)
             // Contracts activate/retire based on new conditions

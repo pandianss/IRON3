@@ -1,5 +1,6 @@
 import React from 'react';
 import { RecoveryTimer } from './fitness/RecoveryTimer';
+import { StandingRadar } from './fitness/StandingRadar';
 
 import { InstitutionalHeader } from './InstitutionalHeader';
 import { StandingCore } from './StandingCore';
@@ -32,6 +33,8 @@ export const InstitutionalDashboard = ({ snapshot }) => {
     // Feature Gates: Only enabled if the module has been activated in the Kernel
     const activeModules = snapshot?.activeModules || [];
     const isFitness = activeModules.includes('FITNESS_RECOVERY');
+
+    const fitnessVectors = snapshot?.state?.fitnessStanding;
 
     return (
         <div style={{
@@ -80,6 +83,11 @@ export const InstitutionalDashboard = ({ snapshot }) => {
                 {/* B. Standing Core */}
                 <div style={{ background: 'var(--iron-surface)', gridRow: isFitness ? 'span 2' : 'auto' }}>
                     <StandingCore standing={snapshot?.standing} />
+                    {isFitness && (
+                        <div style={{ padding: '20px', borderTop: '1px solid var(--iron-border)' }}>
+                            <StandingRadar vectors={fitnessVectors} />
+                        </div>
+                    )}
                     {isFitness && (
                         <div style={{ padding: '20px', borderTop: '1px solid var(--iron-border)' }}>
                             <RecoveryTimer

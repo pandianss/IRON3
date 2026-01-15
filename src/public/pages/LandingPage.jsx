@@ -8,6 +8,7 @@ import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/
 import { WhatIsIron } from './WhatIsIron';
 import { InstitutionalProductivity } from './InstitutionalProductivity';
 import { PersonalInstitution } from './PersonalInstitution';
+import { FitnessConstitutionPanel } from './FitnessConstitutionPanel';
 
 export const LandingPage = () => {
     const disciplines = getDisciplineList();
@@ -52,6 +53,7 @@ export const LandingPage = () => {
                             {activePanel === 'PHILOSOPHY' && <WhatIsIron />}
                             {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
                             {activePanel === 'SOVEREIGNTY' && <PersonalInstitution />}
+                            {activePanel === 'CONSTITUTION' && <FitnessConstitutionPanel />}
                         </div>
                     </div>
                 </div>
@@ -127,8 +129,12 @@ export const LandingPage = () => {
                         Industrial Strength Productivity?
                     </div>
                     <div onClick={() => setActivePanel('SOVEREIGNTY')} style={navItemStyle}>
-                        <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>03_SOVEREIGNTY</span>
+                        <span style={{ block: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>03_SOVEREIGNTY</span>
                         What is a Private Discipline?
+                    </div>
+                    <div onClick={() => setActivePanel('CONSTITUTION')} style={navItemStyle}>
+                        <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>04_CONSTITUTION</span>
+                        The Fitness Law
                     </div>
                     <Link to="/app" style={actionStyle}>GOTO_DASHBOARD</Link>
                 </nav>
