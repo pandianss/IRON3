@@ -32,6 +32,7 @@ export const LandingPage = () => {
                 </section>
 
                 <nav style={{ display: 'grid', gap: '20px' }}>
+                    <Link to="/catalog" style={{ ...linkStyle, color: 'var(--iron-brand-stable)', fontWeight: 'bold' }}>The Institutional Catalog →</Link>
                     <Link to="/what-is-iron" style={linkStyle}>What is IRON?</Link>
                     <Link to="/institutional-productivity" style={linkStyle}>What is Institutional Productivity?</Link>
                     <Link to="/personal-institution" style={linkStyle}>What is a Personal Institution?</Link>

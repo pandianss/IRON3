@@ -10,6 +10,7 @@ import { LandingPage } from './public/pages/LandingPage';
 import { WhatIsIron } from './public/pages/WhatIsIron';
 import { InstitutionalProductivity } from './public/pages/InstitutionalProductivity';
 import { PersonalInstitution } from './public/pages/PersonalInstitution';
+import { InstitutionalCatalog } from './public/pages/InstitutionalCatalog';
 
 /**
  * THE SOVEREIGN SPINE CONNECTOR
@@ -60,6 +61,7 @@ export default function App() {
             <Route path="/what-is-iron" element={<WhatIsIron />} />
             <Route path="/institutional-productivity" element={<InstitutionalProductivity />} />
             <Route path="/personal-institution" element={<PersonalInstitution />} />
+            <Route path="/catalog" element={<InstitutionalCatalog />} />
 
             {/* Governed Application Spine */}
             <Route path="/app/*" element={<GovernedApp />} />
