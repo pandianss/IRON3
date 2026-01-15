@@ -37,37 +37,41 @@ const InstitutionalBridge = ({ onStateSync }) => {
  * THE GOVERNED APP
  * Only accessible via /app route. Fully wrapped in the Spine.
  */
+export default function App() {
+    return (
+        <InstitutionalProvider>
+            <Routes>
+                {/* Public SEO Root Site */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/what-is-iron" element={<WhatIsIron />} />
+                <Route path="/institutional-productivity" element={<InstitutionalProductivity />} />
+                <Route path="/personal-institution" element={<PersonalInstitution />} />
+                <Route path="/catalog" element={<InstitutionalCatalog />} />
+
+                {/* Governed Application Spine */}
+                <Route path="/app/*" element={<GovernedApp />} />
+
+                {/* Redirects */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </InstitutionalProvider>
+    );
+}
+
+/**
+ * THE GOVERNED APP
+ */
 const GovernedApp = () => {
     const [institution, setInstitution] = useState(null);
 
     return (
         <IronAppShell institution={institution}>
             <AuthProvider>
-                <InstitutionalProvider>
-                    <GovernanceProvider>
-                        <InstitutionalBridge onStateSync={setInstitution} />
-                    </GovernanceProvider>
-                </InstitutionalProvider>
+                <GovernanceProvider>
+                    <InstitutionalBridge onStateSync={setInstitution} />
+                </GovernanceProvider>
             </AuthProvider>
         </IronAppShell>
     );
 };
 
-export default function App() {
-    return (
-        <Routes>
-            {/* Public SEO Root Site */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/what-is-iron" element={<WhatIsIron />} />
-            <Route path="/institutional-productivity" element={<InstitutionalProductivity />} />
-            <Route path="/personal-institution" element={<PersonalInstitution />} />
-            <Route path="/catalog" element={<InstitutionalCatalog />} />
-
-            {/* Governed Application Spine */}
-            <Route path="/app/*" element={<GovernedApp />} />
-
-            {/* Redirects */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-    );
-}
