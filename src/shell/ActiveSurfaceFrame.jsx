@@ -39,8 +39,9 @@ export function ActiveSurfaceFrame({ institution }) {
             // with a status property added.
             const state = institution || {};
 
-            // Priority 1: Induction
-            if (state.standing?.state === 'PRE_INDUCTION' || state.standing?.state === 'INDUCTION') {
+            // Priority 1: Induction (PRE_INDUCTION or INDUCTED states stay in Induction UI until first compliance)
+            const standingState = state.standing?.state;
+            if (standingState === 'PRE_INDUCTION' || standingState === 'INDUCTED') {
                 return <Induction />;
             }
 

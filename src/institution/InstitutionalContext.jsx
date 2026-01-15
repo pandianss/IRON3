@@ -29,14 +29,19 @@ export const InstitutionalProvider = ({ children }) => {
     useEffect(() => {
         if (!kernel) return;
 
+        // Sync initial snapshot even if history is not empty
+        setSnapshot(kernel.getSnapshot());
+
         // Subscribe to Engine Updates
         const unsubscribe = kernel.subscribe((newSnapshot) => {
+            console.log("ICE: State Update Detected", newSnapshot);
             setSnapshot(newSnapshot);
         });
 
         // GENESIS SIMULATION (For MVP)
         // If empty, start the contract so we have something to show
         if (kernel.getSnapshot().history.length === 0) {
+            console.log("ICE: Genesis Ingest - CONTRACT_CREATED");
             kernel.ingest('CONTRACT_CREATED', {}, 'USER_HOST');
         }
 

@@ -16,10 +16,10 @@ const InstitutionalBridge = ({ onStateSync }) => {
     const { institutionalState, loading } = useGovernance();
 
     useEffect(() => {
+        console.log("ICE: State Bridge Syncing", institutionalState);
         onStateSync({
             ...institutionalState,
             status: loading ? 'BOOTING' : (institutionalState ? 'ALIVE' : 'NO_INSTITUTION'),
-            // DO NOT OVERWRITE standing here, the UI needs the full object
         });
     }, [institutionalState, loading, onStateSync]);
 
