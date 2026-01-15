@@ -1,0 +1,71 @@
+import { EventRegistry } from './EventRegistry.js';
+import { MemoryLedger } from './MemoryLedger.js';
+import { InstitutionState } from './InstitutionState.js';
+import { ContractEngine } from './engines/ContractEngine.js';
+import { StandingEngine } from './engines/StandingEngine.js';
+import { AuthorityEngine } from './engines/AuthorityEngine.js';
+import { MandateEngine } from './engines/MandateEngine.js';
+import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
+
+/**
+ * ICE Module 1: Institutional Kernel
+ * Role: Sovereign Coordinator.
+ * The only entry point to the Core Engine.
+ */
+export class InstitutionalKernel {
+    constructor(config = {}) {
+        this.ledger = new MemoryLedger(config.initialEvents || []);
+        this.state = new InstitutionState();
+
+        // Initialize Engines with reference to Kernel
+        this.engines = {
+            contract: new ContractEngine(this),
+            standing: new StandingEngine(this),
+            authority: new AuthorityEngine(this),
+            mandate: new MandateEngine(this)
+        };
+
+        // Initialize Cycle Controller
+        this.cycle = new InstitutionalCycle(this);
+
+        console.log("ICE: Kernel Initialized (v1.0 Sovereignty).");
+    }
+
+    /**
+     * The Single Entry Point.
+     * Ingests a signal, normalizes it, and runs the cycle.
+     * @param {string} eventType 
+     * @param {object} payload 
+     * @param {string} actorId 
+     */
+    async ingest(eventType, payload, actorId) {
+        // 1. Validate & Normalize (Event Registry)
+        const event = EventRegistry.create(eventType, payload, actorId);
+
+        // 2. Append to Memory (Ledger)
+        this.ledger.append(event);
+        console.log(`ICE: Event ${event.type} committed to Ledger [ID: ${event.id.substring(0, 8)}]`);
+
+        // 3. Run Institutional Cycle (Evaluate Consequences)
+        return this.evaluate();
+    }
+
+    /**
+     * Orchestrates the evaluation of the institution based on new memory.
+     * This is the "Cycle".
+     */
+    evaluate() {
+        return this.cycle.run();
+    }
+
+    /**
+     * Diagnostic Access
+     */
+    getSnapshot() {
+        return {
+            history: this.ledger.getHistory(),
+            state: this.state.getSnapshot(),
+            mandates: this.state.getDomain('mandates')
+        };
+    }
+}
