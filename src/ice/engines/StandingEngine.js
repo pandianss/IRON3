@@ -1,4 +1,5 @@
 import { transition } from '../../institution/standing-engine/standingTransitions.js';
+import { PhaseGate } from '../governance/PhaseGate.js';
 // Note: We are reusing the pure transition logic for now, but wrapping it in the Engine class.
 
 /**
@@ -36,10 +37,14 @@ export class StandingEngine {
         };
 
         // Replay
+        const phase = this.kernel.state.getDomain('phase')?.id || 'GENESIS';
+
         for (const event of history) {
             const next = transition(state, event.type);
             if (next) {
-                state = { ...state, ...next };
+                // Apply Phase Gate to potential standing changes
+                const guarded = PhaseGate.guardMutation(phase, next);
+                state = { ...state, ...guarded };
             }
         }
 

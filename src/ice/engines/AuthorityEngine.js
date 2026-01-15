@@ -20,14 +20,28 @@ export class AuthorityEngine {
         const activeContracts = this.kernel.engines.contract.activeContracts; // Set of IDs
 
         // 2. Default Policy (Restrictive)
+        const phase = this.kernel.state.getDomain('phase')?.id || 'GENESIS';
+
         let profile = {
             locks: [],
             surfaces: {
                 'OBLIGATION_CORRIDOR': 'RESTRICTED',
                 'EVIDENCE_CAPTURE': 'HIDDEN',
-                'LEDGER_CLOSURE': 'HIDDEN'
+                'LEDGER_CLOSURE': 'HIDDEN',
+                'OBSERVATORY': 'VISIBLE'
             }
         };
+
+        // Phase Overrides
+        if (phase === 'GENESIS') {
+            profile.surfaces['OBLIGATION_CORRIDOR'] = 'HIDDEN';
+            profile.interactionLevel = 'OBSERVATIONAL';
+        }
+
+        if (phase === 'PROBATION') {
+            profile.surfaces['OBLIGATION_CORRIDOR'] = 'FULL';
+            profile.interactionLevel = 'CALIBRATION';
+        }
 
         // 3. Apply Standing Rules (The Constitution)
         if (standing.state === 'PRE_INDUCTION') {

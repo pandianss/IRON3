@@ -26,11 +26,29 @@ export const EventTypes = {
     MODULE_ACTIVATED: 'MODULE_ACTIVATED',
     AUTHORITY_REALIGNED: 'AUTHORITY_REALIGNED',
 
+    // The Genesis: Institutional Birth (FC-00)
+    BASELINE_DECLARED: 'BASELINE_DECLARED',
+    CAPACITY_DECLARED: 'CAPACITY_DECLARED',
+    INJURY_STATUS_DECLARED: 'INJURY_STATUS_DECLARED',
+    CADENCE_SELECTED: 'CADENCE_SELECTED',
+    GENESIS_VERDICT_SUBMITTED: 'GENESIS_VERDICT_SUBMITTED',
+    INSTITUTION_BORN: 'INSTITUTION_BORN',
+    INSTITUTION_ACTIVATED: 'INSTITUTION_ACTIVATED',
+
     // The Forge: Onboarding
     ASSESSMENT_COMPLETED: 'ASSESSMENT_COMPLETED',
     CALIBRATION_SET: 'CALIBRATION_SET',
     OATH_TAKEN: 'OATH_TAKEN',
-    RESOLVE_COMMITTED: 'RESOLVE_COMMITTED'
+    RESOLVE_COMMITTED: 'RESOLVE_COMMITTED',
+
+    // Simulation / Fitness Specific
+    TRAINING_COMPLETED: 'TRAINING_COMPLETED',
+    RECOVERY_COMPLETED: 'RECOVERY_COMPLETED',
+    INJURY_DECLARED: 'INJURY_DECLARED',
+    DISHONEST_LOG: 'DISHONEST_LOG',
+    SESSION_MISSED: 'SESSION_MISSED',
+    REST_OBSERVED: 'REST_OBSERVED',
+    DAILY_EVALUATION: 'DAILY_EVALUATION'
 };
 
 // Schema Validation (Stub for MVP)
@@ -42,7 +60,19 @@ const RequiredPayloads = {
     [EventTypes.ASSESSMENT_COMPLETED]: ['brokenPromise'],
     [EventTypes.CALIBRATION_SET]: ['startTime', 'anchorHabits'],
     [EventTypes.OATH_TAKEN]: ['nonNegotiable'],
-    [EventTypes.RESOLVE_COMMITTED]: ['why', 'evidence']
+    [EventTypes.RESOLVE_COMMITTED]: ['why', 'evidence'],
+    [EventTypes.DAILY_EVALUATION]: ['day'],
+
+    // FC-00 Specifics
+    [EventTypes.BASELINE_DECLARED]: ['assessment'],
+    [EventTypes.CAPACITY_DECLARED]: ['load'],
+    [EventTypes.CADENCE_SELECTED]: ['cadence'],
+    [EventTypes.GENESIS_VERDICT_SUBMITTED]: ['consent'],
+
+    // Fitness Simulation Specifics
+    [EventTypes.TRAINING_COMPLETED]: ['intensity', 'volume'],
+    [EventTypes.RECOVERY_COMPLETED]: ['quality'],
+    [EventTypes.DISHONEST_LOG]: ['fabricatedIntensity', 'actualLoad']
 };
 
 export class EventRegistry {

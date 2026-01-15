@@ -1,3 +1,6 @@
+import { PhaseGate } from '../../governance/PhaseGate.js';
+import { FC00_CONTRACT } from '../../contract/definitions/FC-00.js';
+
 /**
  * FITNESS STANDING ENGINE
  * 
@@ -7,23 +10,34 @@
 export class FitnessStandingEngine {
     constructor(kernel) {
         this.kernel = kernel;
-        this.state = {
-            continuity: 0.5,
-            stress: 0.1,
-            recovery: 0.5,
-            integrity: 1.0,
-            trajectory: 0.0,
-            standingIndex: 0.5,
-            band: 'STABLE'
+
+        // Weight distribution (scenario overrides)
+        const scenarioWeights = this.kernel.scenario?.weights || {};
+        this.weights = {
+            wC: scenarioWeights.wC ?? 0.3,
+            wR: scenarioWeights.wR ?? 0.2,
+            wI: scenarioWeights.wI ?? 0.3,
+            wS: scenarioWeights.wS ?? 0.3, // Subtracted
+            wT: scenarioWeights.wT ?? 0.1
         };
 
-        // Weights
-        this.weights = {
-            wC: 0.3,
-            wR: 0.2,
-            wI: 0.3,
-            wS: 0.3, // Subtracted
-            wT: 0.1
+        // Initial vector values (Seeded by FC-00)
+        this.vectors = {
+            continuity: FC00_CONTRACT.seeding.continuity,
+            stress: FC00_CONTRACT.seeding.stress,
+            recovery: FC00_CONTRACT.seeding.recovery,
+            integrity: FC00_CONTRACT.seeding.integrity,
+            trajectory: FC00_CONTRACT.seeding.trajectory
+        };
+
+        // Guard the initial state
+        const phase = this.kernel.state.getDomain('phase')?.id || 'GENESIS';
+        this.vectors = PhaseGate.guardMutation(phase, this.vectors);
+
+        this.state = {
+            ...this.vectors,
+            standingIndex: 0.5,
+            band: 'STABLE'
         };
     }
 
@@ -34,9 +48,10 @@ export class FitnessStandingEngine {
         const state = this.kernel.state;
         const physiology = state.getDomain('physiology') || {};
         const history = this.kernel.ledger.getHistory();
+        const scenario = this.kernel.scenario;
 
         const fitnessEvents = history.filter(e =>
-            ['SESSION_ENDED', 'RECOVERY_VALIDATED', 'AUTHORITY_REALIGNED', 'MODULE_ACTIVATED'].includes(e.type)
+            ['SESSION_ENDED', 'RECOVERY_VALIDATED', 'AUTHORITY_REALIGNED', 'MODULE_ACTIVATED', 'TRAINING_COMPLETED', 'RECOVERY_COMPLETED', 'SESSION_MISSED'].includes(e.type)
         );
 
         // 1. Stress Vector (S) - Directly from Physiological Load
@@ -67,18 +82,27 @@ export class FitnessStandingEngine {
                     }
                     break;
                 case 'SESSION_ENDED':
+                case 'TRAINING_COMPLETED':
                     // Continuity grows slowly
                     C = Math.min(1.0, C + 0.05);
                     // Integrity grows slightly with compliant session
                     I = Math.min(1.0, I + 0.01);
                     break;
                 case 'RECOVERY_VALIDATED':
+                case 'RECOVERY_COMPLETED':
                     // Integrity grows with recovery compliance
                     I = Math.min(1.0, I + 0.02);
                     break;
+                case 'SESSION_MISSED':
+                    // Integrity decays on missed session
+                    I = Math.max(0, I - 0.05);
+                    // Continuity decays faster on miss
+                    C = Math.max(0, C - 0.1);
+                    break;
                 case 'AUTHORITY_REALIGNED':
                     // Integrity decays on breach/realignment
-                    I = Math.max(0, I - 0.2);
+                    const decay = scenario?.integrityDecayMultiplier ? (0.2 * scenario.integrityDecayMultiplier) : 0.2;
+                    I = Math.max(0, I - decay);
                     break;
             }
 
@@ -97,12 +121,19 @@ export class FitnessStandingEngine {
 
         const finalSI = Math.max(0, Math.min(1, SI));
 
-        // 5. Institutional Bands
+        // 5. Institutional Bands (Scenario Overrides)
+        const thresholds = scenario?.thresholds || {
+            breached: 0.2,
+            degraded: 0.4,
+            strained: 0.8,
+            ascending: 0.8
+        };
+
         let band = 'STABLE';
-        if (finalSI < 0.2) band = 'BREACHED';
-        else if (finalSI < 0.4) band = 'DEGRADED';
-        else if (S > 0.8) band = 'STRAINED';
-        else if (finalSI > 0.8) band = 'ASCENDING';
+        if (finalSI < thresholds.breached) band = 'BREACHED';
+        else if (finalSI < thresholds.degraded) band = 'DEGRADED';
+        else if (S > thresholds.strained) band = 'STRAINED';
+        else if (finalSI > thresholds.ascending) band = 'ASCENDING';
 
         this.state = {
             continuity: C,

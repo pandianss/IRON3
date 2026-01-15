@@ -27,12 +27,13 @@ export const Induction = () => {
 
     const completeStep1 = () => {
         if (!formData.brokenPromise) return;
-        kernel.ingest('ASSESSMENT_COMPLETED', { brokenPromise: formData.brokenPromise }, 'USER_HOST');
+        kernel.ingest('BASELINE_DECLARED', { assessment: formData.brokenPromise }, 'USER_HOST');
         nextStep();
     };
 
     const completeStep2 = () => {
-        kernel.ingest('CALIBRATION_SET', { startTime: formData.startTime, anchorHabits: formData.anchorHabits }, 'USER_HOST');
+        kernel.ingest('CADENCE_SELECTED', { cadence: formData.startTime }, 'USER_HOST');
+        kernel.ingest('CAPACITY_DECLARED', { load: 0 }, 'USER_HOST');
         nextStep();
     };
 
@@ -44,9 +45,11 @@ export const Induction = () => {
 
     const completeFinal = () => {
         if (!formData.why) return;
-        kernel.ingest('RESOLVE_COMMITTED', { why: formData.why, evidence: 'TEXT_BOND' }, 'USER_HOST');
-        // Final transition to system
-        kernel.ingest('CONTRACT_CREATED', {}, 'USER_HOST');
+        // The Sovereign Signal that births the institution
+        kernel.ingest('GENESIS_VERDICT_SUBMITTED', { consent: true, why: formData.why }, 'USER_HOST');
+
+        // Activate full modules once born
+        kernel.ingest('MODULE_ACTIVATED', { moduleId: 'FITNESS_RECOVERY' }, 'USER_HOST');
     };
 
     return (

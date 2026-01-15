@@ -6,8 +6,8 @@ import { InstitutionalKernel } from '../../ice/Kernel.js';
  * Ensures ICE is treated as a black box.
  */
 export class InstitutionalInterface {
-    constructor() {
-        this.ice = new InstitutionalKernel();
+    constructor(scenario = {}) {
+        this.ice = new InstitutionalKernel({ scenario });
         console.log("HARNESS: ICE Booted.");
     }
 

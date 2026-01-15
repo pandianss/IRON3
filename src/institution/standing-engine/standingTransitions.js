@@ -23,15 +23,15 @@ export function transition(current, event) {
 
         // 0. PRE-INDUCTION -> INDUCTED
         case StandingState.PRE_INDUCTION:
-            // "CONTRACT_CREATED"
-            if (event === 'CONTRACT_CREATED') {
+            // "CONTRACT_CREATED" or "GENESIS_VERDICT_SUBMITTED" (Simulation Induction)
+            if (event === 'CONTRACT_CREATED' || event === 'GENESIS_VERDICT_SUBMITTED') {
                 return { state: StandingState.INDUCTED, entropy: 0, streak: 0 };
             }
             break;
 
         // 1. INDUCTED (Trial Phase)
         case StandingState.INDUCTED:
-            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED' || event === 'FIRST_COMPLIANCE') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED' || event === 'FIRST_COMPLIANCE' || event === 'TRAINING_COMPLETED') {
                 // Check Idempotency
                 if (isSameDay(current.lastPracticeDate, new Date())) {
                     // Already practiced today. No streak change.
@@ -40,7 +40,7 @@ export function transition(current, event) {
                 // "FIRST_COMPLIANCE -> COMPLIANT"
                 return { state: StandingState.COMPLIANT, entropy: 0, streak: 1, lastPracticeDate: new Date().toISOString() };
             }
-            if (event === 'PRACTICE_MISSED') {
+            if (event === 'PRACTICE_MISSED' || event === 'SESSION_MISSED') {
                 // "FIRST_BREACH -> VIOLATED"
                 // Strict law: First day failure in Induction is a Violation? 
                 // Constitution says: "first governed day must resolve."
@@ -53,7 +53,7 @@ export function transition(current, event) {
         case StandingState.COMPLIANT:
         case StandingState.RECONSTITUTED:
         case StandingState.INSTITUTIONAL:
-            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED') {
+            if (event === 'PRACTICE_COMPLETE' || event === 'SESSION_ENDED' || event === 'TRAINING_COMPLETED') {
                 // Check Idempotency
                 if (isSameDay(current.lastPracticeDate, new Date())) {
                     return { lastPracticeDate: new Date().toISOString() };
@@ -69,12 +69,12 @@ export function transition(current, event) {
                 }
                 return { streak: newStreak, entropy: 0, lastPracticeDate: new Date().toISOString() };
             }
-            if (event === 'REST_TAKEN') {
+            if (event === 'REST_TAKEN' || event === 'REST_OBSERVED' || event === 'RECOVERY_COMPLETED') {
                 // Authorized rest maintains streak but adds no count.
                 // Reset entropy.
                 return { entropy: 0 };
             }
-            if (event === 'PRACTICE_MISSED') {
+            if (event === 'PRACTICE_MISSED' || event === 'SESSION_MISSED') {
                 // TUNE: Soft Failure.
                 // Instead of immediate Violation, we enter STRAINED state.
                 // "SOFT_FAILURE -> STRAINED"

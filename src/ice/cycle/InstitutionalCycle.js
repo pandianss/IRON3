@@ -19,7 +19,8 @@ export class InstitutionalCycle {
         console.group("ICE: Institutional Cycle Start");
 
         try {
-            // Step 0: Ledger is already updated by Kernel.ingest()
+            // Step 0: Phase Resolution (Determining Legal Regime)
+            const phase = this.kernel.phaseController.evaluatePhase();
 
             // Step 0.5: Session, Physiology & Specialized Standing
             this.kernel.engines.session.process();

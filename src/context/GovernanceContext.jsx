@@ -11,10 +11,14 @@ export const GovernanceProvider = ({ children }) => {
     const kernel = useSovereignKernel();
     const snapshot = useInstitutionalSnapshot();
 
-    // The 'institutionalState' expected by the Shell is the 'state' domain of the snapshot
-    // Snapshot structure from Kernel: { history, state, mandates }
-    // State structure: { standing, authority, session, ... }
-    const institutionalState = snapshot.state;
+    // The 'institutionalState' expected by the Shell is the full snapshot
+    // Snapshot structure from Kernel: { history, state, mandates, activeModules }
+    const institutionalState = {
+        ...snapshot.state,
+        activeModules: snapshot.activeModules,
+        history: snapshot.history,
+        mandates: snapshot.mandates
+    };
 
     const loading = !institutionalState;
 

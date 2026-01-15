@@ -57,7 +57,9 @@ export function ActiveSurfaceFrame({ institution }) {
                     phase: institution?.status || 'ABSENT',
                     standing: state.standing || { state: 'VOID', integrity: 0 },
                     authority: state.authority || { surfaces: {}, interactionLevel: 'RESTRICTED' },
+                    activeModules: institution?.activeModules || [],
                     physiology: state.physiology || { capacity: 100, load: 0, status: 'OPTIMAL', law: { isAuthorized: true } },
+                    fitnessStanding: state.fitnessStanding,
                     contracts: {
                         active: state.obligations || [],
                         breaches: state.scars || []
@@ -72,7 +74,8 @@ export function ActiveSurfaceFrame({ institution }) {
                 }} />
             );
         } catch (err) {
-            return <FailureSurface error={err.message} />;
+            console.error("SHELL_RENDER_CRASH:", err);
+            return <FailureSurface error={err} />;
         }
     };
 

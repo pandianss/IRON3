@@ -17,15 +17,15 @@ export const InstitutionalDashboard = ({ snapshot }) => {
     // Map Snapshot to Regions
     const standing = snapshot?.standing || { state: 'BOOTING', integrity: 0 };
     const identity = snapshot?.identity || { id: 'ORPHAN-SYS', epoch: 'VOID' };
-    const phase = standing.state;
+    const phase = snapshot?.phase?.id || 'GENESIS';
 
     // Status Logic
     let status = 'OK';
-    if (phase === 'ABSENT' || phase === 'NO_INSTITUTION' || phase === 'BOOTING') status = 'OFFLINE';
-    if (snapshot?.diagnostics?.errors > 0 || phase === 'DEGRADED') status = 'CONFLICT';
-    if (phase === 'BOOTING') status = 'BOOTING';
+    if (phase === 'GENESIS' || phase === 'PROBATION') status = 'CALIBRATION';
+    if (snapshot?.diagnostics?.errors > 0 || standing.state === 'VIOLATED') status = 'CONFLICT';
+    if (standing.state === 'BOOTING') status = 'BOOTING';
 
-    const isGhost = phase === 'ABSENT' || phase === 'NO_INSTITUTION' || phase === 'BOOTING';
+    const isGhost = standing.state === 'BOOTING';
 
     // The state domain contains the physiological data if FITNESS is active
     const physiology = snapshot?.physiology || { capacity: 100, law: { isAuthorized: true } };
@@ -34,7 +34,7 @@ export const InstitutionalDashboard = ({ snapshot }) => {
     const activeModules = snapshot?.activeModules || [];
     const isFitness = activeModules.includes('FITNESS_RECOVERY');
 
-    const fitnessVectors = snapshot?.state?.fitnessStanding;
+    const fitnessVectors = snapshot?.fitnessStanding;
 
     return (
         <div style={{

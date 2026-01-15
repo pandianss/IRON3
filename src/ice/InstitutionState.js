@@ -7,14 +7,13 @@ export class InstitutionState {
     constructor() {
         // Domains
         this.domains = {
-            standing: { state: 'PRE_INDUCTION', integrity: 0 },
-            identity: { role: 'CANDIDATE' },
-            temporal: { day: 0, cycle: 'NONE' },
-            behavioral: { breaches: 0 },
-            authority: { locks: [], surfaces: {} },
-            mandates: { surfaces: [], motion: {}, narrative: {} },
-            session: { status: 'IDLE', activeContractId: null, startTime: null, venue: null },
-            foundation: { brokenPromise: null, startTime: null, anchorHabits: [], nonNegotiable: null, why: null }
+            standing: { state: 'PRE_INDUCTION', integrity: 100, entropy: 0, streak: 0 },
+            authority: { surfaces: {}, interactionLevel: 'RESTRICTED' },
+            mandates: { narrative: { tone: 'GUIDANCE', message: 'SYSTEM BOOTING' }, motion: {}, surfaces: [] },
+            phase: { id: 'GENESIS', label: 'GENESIS', version: '1.0' },
+            session: { status: 'INACTIVE', startTime: null, duration: 0 },
+            physiology: { capacity: 100, load: 0, status: 'OPTIMAL', era: 'PEAK' },
+            foundation: { brokenPromise: '', anchorHabits: [], nonNegotiable: '', why: '' }
         };
     }
 
@@ -23,10 +22,15 @@ export class InstitutionState {
     }
 
     update(domain, data) {
-        if (!this.domains[domain]) {
-            this.domains[domain] = {};
+        if (data === null || data === undefined) {
+            this.domains[domain] = null;
+            return;
         }
-        this.domains[domain] = { ...this.domains[domain], ...data };
+        if (!this.domains[domain] || typeof data !== 'object') {
+            this.domains[domain] = data;
+        } else {
+            this.domains[domain] = { ...this.domains[domain], ...data };
+        }
     }
 
     getSnapshot() {

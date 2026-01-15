@@ -22,7 +22,10 @@ export function FailureSurface({ error, kernel }) {
             </p>
             <div style={{ background: '#000', padding: 20, border: '1px solid #400', marginTop: 20, textAlign: 'left', fontSize: '0.8rem', opacity: 0.5 }}>
                 <div style={{ marginBottom: '10px', color: '#666' }}>DIAGNOSTIC_ERR_SIG:</div>
-                <pre style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{error?.toString() || 'DISCIPLINE_VOID'}</pre>
+                <pre style={{ whiteSpace: 'pre-wrap', margin: 0, maxHeight: '200px', overflowY: 'auto' }}>
+                    {error?.message || error?.toString() || 'INSTITUTIONAL DEGRADATION'}
+                    {error?.stack && `\n\n--- STACK TRACE ---\n${error.stack}`}
+                </pre>
             </div>
 
             <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginTop: 30 }}>

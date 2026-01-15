@@ -9,6 +9,7 @@ import { SessionEngine } from './engines/SessionEngine.js';
 import { PhysiologicalEngine } from './engines/fitness/PhysiologicalEngine.js';
 import { FitnessStandingEngine } from './engines/fitness/FitnessStandingEngine.js';
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
+import { PhaseController } from './governance/PhaseController.js';
 
 /**
  * ICE Module 1: Institutional Kernel
@@ -17,6 +18,7 @@ import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
  */
 export class InstitutionalKernel {
     constructor(config = {}) {
+        this.scenario = config.scenario || {};
         this.ledger = new MemoryLedger(config.initialEvents || []);
         this.state = new InstitutionState();
 
@@ -32,6 +34,9 @@ export class InstitutionalKernel {
         };
 
 
+
+        // Initialize Governance Modules
+        this.phaseController = new PhaseController(this);
 
         // Initialize Cycle Controller
         this.cycle = new InstitutionalCycle(this);
@@ -81,10 +86,24 @@ export class InstitutionalKernel {
      * Orchestrates the evaluation of the institution based on new memory.
      * This is the "Cycle".
      */
-    evaluate() {
-        const result = this.cycle.run();
-        this.notify();
-        return result;
+    async evaluate() {
+        try {
+            const result = await this.cycle.run();
+            // Clear any lingering errors on success
+            this.state.update('error', null);
+            console.log("ICE: Cycle Success. Authority Maintained.");
+            this.notify();
+            return result;
+        } catch (error) {
+            console.error("ICE: Kernel Evaluation Failed", error);
+            this.state.update('error', {
+                message: error.message,
+                stack: error.stack,
+                timestamp: new Date().toISOString()
+            });
+            this.notify();
+            throw error;
+        }
     }
 
     /**
@@ -99,6 +118,7 @@ export class InstitutionalKernel {
         return {
             history,
             activeModules, // Tracking active discipline modules
+            phase: this.state.getDomain('phase'),
             state: this.state.getSnapshot(),
             mandates: this.state.getDomain('mandates') || { narrative: { tone: 'GUIDANCE', message: 'SYSTEM OFFLINE' }, motion: {}, surfaces: [] }
         };
