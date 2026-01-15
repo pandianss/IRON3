@@ -90,6 +90,8 @@ export function ActiveSurfaceFrame({ institution }) {
                 flexDirection: 'column'
             }}>
                 {renderRealSurface()}
+                {/* Providers and Bridge must mount here to drive the institutional state */}
+                {children}
             </div>
         </StandingThemeAdapter>
     );
