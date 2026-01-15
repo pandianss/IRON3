@@ -36,26 +36,29 @@ export function ActiveSurfaceFrame({ institution }) {
     // The Dashboard is the "Always-on" surface, even for Orphans.
     const renderRealSurface = () => {
         try {
+            const state = institution?.state || {};
+
             // Priority 1: Induction
-            if (institution?.standing?.state === 'PRE_INDUCTION' || institution?.standing?.state === 'INDUCTION') {
+            if (state.standing?.state === 'PRE_INDUCTION' || state.standing?.state === 'INDUCTION') {
                 return <Induction />;
             }
 
             // Priority 2: Active Session
-            if (institution?.authority?.surfaces && institution?.authority?.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
-                return <EvidenceCapture startTime={institution?.session?.startTime} venue={institution?.session?.venue} />;
+            if (state.authority?.surfaces && state.authority?.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
+                return <EvidenceCapture startTime={state.session?.startTime} venue={state.session?.venue} />;
             }
 
             // DEFAULT: THE OBSERVATORY (Handles ALIVE, BOOTING, and NO_INSTITUTION)
             return (
                 <InstitutionalDashboard snapshot={{
-                    identity: institution?.identity || { id: 'ORPHAN-GATE', epoch: 'N/A' },
+                    identity: state.identity || { id: 'ORPHAN-GATE', epoch: 'N/A' },
                     phase: institution?.status || 'ABSENT',
-                    standing: institution?.standing || { state: 'VOID', integrity: 0 },
-                    authority: institution?.authority || { surfaces: {}, interactionLevel: 'RESTRICTED' },
+                    standing: state.standing || { state: 'VOID', integrity: 0 },
+                    authority: state.authority || { surfaces: {}, interactionLevel: 'RESTRICTED' },
+                    physiology: state.physiology || { capacity: 100, load: 0, status: 'OPTIMAL', law: { isAuthorized: true } },
                     contracts: {
-                        active: institution?.obligations || [],
-                        breaches: institution?.scars || []
+                        active: state.obligations || [],
+                        breaches: state.scars || []
                     },
                     ledger: institution?.ledger || [],
                     diagnostics: {
@@ -70,6 +73,7 @@ export function ActiveSurfaceFrame({ institution }) {
             return <FailureSurface error={err.message} />;
         }
     };
+
 
 
     return (

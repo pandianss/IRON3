@@ -18,7 +18,6 @@ export class InstitutionalKernel {
     constructor(config = {}) {
         this.ledger = new MemoryLedger(config.initialEvents || []);
         this.state = new InstitutionState();
-        this.state.physiology = { capacity: 100, load: 0, status: 'OPTIMAL', law: { isAuthorized: true, mandates: [] } };
 
         // Initialize Engines with reference to Kernel
         this.engines = {
@@ -29,6 +28,7 @@ export class InstitutionalKernel {
             session: new SessionEngine(this),
             physiology: new PhysiologicalEngine(this)
         };
+
 
 
         // Initialize Cycle Controller
