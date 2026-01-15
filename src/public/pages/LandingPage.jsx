@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SEOHead } from '../SEOHead';
 import { getDisciplineList } from '../../domain/InstitutionalTemplates';
-import { useSovereignKernel } from '../../institution/InstitutionalContext';
+import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/InstitutionalContext';
 
 // Floating Panels
 import { WhatIsIron } from './WhatIsIron';
@@ -12,12 +12,15 @@ import { PersonalInstitution } from './PersonalInstitution';
 export const LandingPage = () => {
     const disciplines = getDisciplineList();
     const kernel = useSovereignKernel();
+    const snapshot = useInstitutionalSnapshot();
+    const activeModules = snapshot?.activeModules || [];
+
     const [activePanel, setActivePanel] = useState(null);
 
     const handleActivate = async (id) => {
+        if (activeModules.includes(id)) return;
         try {
             await kernel.ingest('MODULE_ACTIVATED', { moduleId: id }, 'USER_HOST');
-            alert(`Sovereign Module [${id}] Activated in Kernel.`);
         } catch (e) {
             console.error("Activation Failure:", e);
         }
@@ -73,23 +76,44 @@ export const LandingPage = () => {
                         THE REGISTRY
                     </h2>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-                        {disciplines.map(d => (
-                            <div key={d.id} style={cardStyle}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <h3 style={{ margin: 0, color: 'var(--iron-accent)', fontSize: '1.1rem' }}>{d.label}</h3>
-                                    <span style={{ fontSize: '0.6rem', opacity: 0.4, letterSpacing: '1px' }}>{d.primaryMetric.toUpperCase()}</span>
+                        {disciplines.map(d => {
+                            const isActive = activeModules.includes(d.id);
+                            return (
+                                <div key={d.id} style={{
+                                    ...cardStyle,
+                                    border: isActive ? '1px solid var(--iron-brand-stable)' : '1px solid var(--iron-border)',
+                                    background: isActive ? 'rgba(0, 255, 102, 0.05)' : 'rgba(255, 255, 255, 0.03)',
+                                    boxShadow: isActive ? '0 0 20px rgba(0, 255, 102, 0.1)' : 'none'
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        <h3 style={{ margin: 0, color: isActive ? 'var(--iron-brand-stable)' : 'var(--iron-accent)', fontSize: '1.1rem' }}>{d.label}</h3>
+                                        <span style={{ fontSize: '0.6rem', opacity: 0.4, letterSpacing: '1px' }}>{d.primaryMetric.toUpperCase()}</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.85rem', margin: '15px 0 25px 0', opacity: 0.7, lineHeight: '1.5', minHeight: '3em' }}>
+                                        {d.focus}
+                                    </p>
+                                    {isActive ? (
+                                        <Link to="/app" style={{
+                                            ...activateButtonStyle,
+                                            background: 'var(--iron-brand-stable)',
+                                            color: '#000',
+                                            borderColor: 'var(--iron-brand-stable)',
+                                            textDecoration: 'none',
+                                            display: 'inline-block'
+                                        }}>
+                                            OPEN DASHBOARD
+                                        </Link>
+                                    ) : (
+                                        <button
+                                            onClick={() => handleActivate(d.id)}
+                                            style={activateButtonStyle}
+                                        >
+                                            ACTIVATE
+                                        </button>
+                                    )}
                                 </div>
-                                <p style={{ fontSize: '0.85rem', margin: '15px 0 25px 0', opacity: 0.7, lineHeight: '1.5', minHeight: '3em' }}>
-                                    {d.focus}
-                                </p>
-                                <button
-                                    onClick={() => handleActivate(d.id)}
-                                    style={activateButtonStyle}
-                                >
-                                    ACTIVATE
-                                </button>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </section>
 
