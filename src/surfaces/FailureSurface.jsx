@@ -15,7 +15,10 @@ export function FailureSurface({ error }) {
                 <pre style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{error?.toString() || 'DISCIPLINE_VOID'}</pre>
             </div>
             <button
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                    localStorage.clear();
+                    window.location.href = '/';
+                }}
                 style={{
                     marginTop: 30,
                     padding: '15px 40px',
@@ -29,7 +32,7 @@ export function FailureSurface({ error }) {
                     alignSelf: 'center'
                 }}
             >
-                RE-ESTABLISH AUTHORITY
+                RE-ESTABLISH SOVEREIGNTY
             </button>
         </div>
     )
