@@ -34,7 +34,9 @@ export const EventLedger = ({ events }) => {
                     }}>
                         <span style={{ opacity: 0.4 }}>[{i}]</span>
                         <span style={{ color: 'var(--iron-accent)' }}>{e.type}</span>
-                        <span style={{ opacity: 0.5, fontSize: '0.6rem' }}>{new Date(e.timestamp).toLocaleTimeString()}</span>
+                        <span style={{ opacity: 0.5, fontSize: '0.6rem' }}>
+                            {e.meta?.timestamp ? new Date(e.meta.timestamp).toLocaleTimeString() : 'N/A'}
+                        </span>
                     </div>
                 ))}
                 {tail.length === 0 && <div style={{ opacity: 0.4 }}>NO RECENT EVENTS</div>}

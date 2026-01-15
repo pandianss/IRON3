@@ -26,7 +26,8 @@ const InstitutionalBridge = ({ onStateSync }) => {
         onStateSync({
             ...institutionalState,
             status,
-            error: institutionalState?.error
+            error: institutionalState?.error,
+            kernel // Pass kernel through bridge for recovery actions
         });
     }, [institutionalState, loading, onStateSync]);
 

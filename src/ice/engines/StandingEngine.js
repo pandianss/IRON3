@@ -40,24 +40,26 @@ export class StandingEngine {
             const next = transition(state, event.type);
             if (next) {
                 state = { ...state, ...next };
+                if (event.type === 'AUTHORITY_REALIGNED') {
+                    return { entropy: Math.min(100, current.entropy + (event.payload?.penalty || 20)) };
+                }
             }
+
+            // Update Internal Engine State
+            this.currentState = state;
+
+            // Update Institution State (Read Model)
+            this.kernel.state.update('standing', {
+                state: state.state,
+                integrity: 100 - state.entropy, // Derived Integrity
+                streak: state.streak,
+                lastPracticeDate: state.lastPracticeDate
+            });
+
+            console.log(`ICE: Standing Computed -> ${state.state} (Streak: ${state.streak})`);
         }
 
-        // Update Internal Engine State
-        this.currentState = state;
-
-        // Update Institution State (Read Model)
-        this.kernel.state.update('standing', {
-            state: state.state,
-            integrity: 100 - state.entropy, // Derived Integrity
-            streak: state.streak,
-            lastPracticeDate: state.lastPracticeDate
-        });
-
-        console.log(`ICE: Standing Computed -> ${state.state} (Streak: ${state.streak})`);
+        getCurrentStanding() {
+            return { ...this.currentState };
+        }
     }
-
-    getCurrentStanding() {
-        return { ...this.currentState };
-    }
-}
