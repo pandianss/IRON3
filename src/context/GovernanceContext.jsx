@@ -33,6 +33,7 @@ export const GovernanceProvider = ({ children }) => {
 
     return (
         <GovernanceContext.Provider value={{
+            kernel,
             institutionalState,
             loading,
             declare

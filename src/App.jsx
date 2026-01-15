@@ -13,7 +13,7 @@ import { LandingPage } from './public/pages/LandingPage';
 
  */
 const InstitutionalBridge = ({ onStateSync }) => {
-    const { institutionalState, loading } = useGovernance();
+    const { institutionalState, loading, kernel } = useGovernance();
 
     useEffect(() => {
         let status = 'ALIVE';
