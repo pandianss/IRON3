@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { EngineService } from '../services/engine/EngineService';
-import { useAuth } from '../App';
+import { useAuth } from './AuthContext';
 import { evaluateInstitution } from '../institution/standing-engine/evaluateInstitution';
 
 
