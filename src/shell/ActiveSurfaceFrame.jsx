@@ -6,7 +6,7 @@ import { DiagnosticSurface } from '../surfaces/DiagnosticSurface'
 
 // Experience Surfaces
 import { Induction } from '../experience/induction/Induction';
-import { SystemState } from '../experience/system-state/SystemState';
+import { InstitutionalDashboard } from '../experience/observatory/InstitutionalDashboard';
 import { EvidenceCapture } from '../experience/evidence-capture/EvidenceCapture';
 import { StandingThemeAdapter } from '../ui/adapters/StandingThemeAdapter';
 
@@ -59,12 +59,26 @@ export function ActiveSurfaceFrame({ institution }) {
                 return <EvidenceCapture startTime={session?.startTime} venue={session?.venue} />;
             }
 
+            // DEFAULT GOVERNED SURFACE: THE OBSERVATORY
+            // We pass the full institution state as the snapshot
             return (
-                <SystemState
-                    state={standing}
-                    era={institution.currentEra}
-                    scars={institution.scars}
-                />
+                <InstitutionalDashboard snapshot={{
+                    identity: { id: 'SIGMA-9', epoch: '2025' },
+                    phase: institution.status,
+                    standing: standing,
+                    authority: authority,
+                    contracts: {
+                        active: institution.obligations || [],
+                        breaches: institution.scars || []
+                    },
+                    ledger: institution.ledger || [],
+                    diagnostics: {
+                        cycles: institution.cycleCount || 0,
+                        memory: '1.2MB',
+                        errors: 0,
+                        orphans: 'NONE'
+                    }
+                }} />
             );
         } catch (err) {
             return <FailureSurface error={err.message} />;
@@ -78,7 +92,7 @@ export function ActiveSurfaceFrame({ institution }) {
                 zIndex: 1,
                 width: '100%',
                 minHeight: '100vh',
-                paddingTop: '40px', // status bar gap
+                paddingTop: '32px', // Minimal status bar gap
                 display: 'flex',
                 flexDirection: 'column'
             }}>
