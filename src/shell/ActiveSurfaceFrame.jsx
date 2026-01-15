@@ -33,10 +33,11 @@ export function ActiveSurfaceFrame({ institution }) {
     }
 
     // 3. Operational or Absence Phase
-    // The Dashboard is the "Always-on" surface, even for Orphans.
     const renderRealSurface = () => {
         try {
-            const state = institution?.state || {};
+            // The institution prop passed from App.jsx is the institutionalState (snapshot.state)
+            // with a status property added.
+            const state = institution || {};
 
             // Priority 1: Induction
             if (state.standing?.state === 'PRE_INDUCTION' || state.standing?.state === 'INDUCTION') {

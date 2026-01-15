@@ -7,8 +7,6 @@ import { IronAppShell } from './shell/IronAppShell';
 
 // Public Pages
 import { LandingPage } from './public/pages/LandingPage';
-// Public Pages
-import { LandingPage } from './public/pages/LandingPage';
 
 /**
  * THE SOVEREIGN SPINE CONNECTOR
@@ -18,14 +16,10 @@ const InstitutionalBridge = ({ onStateSync }) => {
     const { institutionalState, loading } = useGovernance();
 
     useEffect(() => {
-        let status = 'ALIVE';
-        if (loading) status = 'BOOTING';
-        if (!institutionalState && !loading) status = 'NO_INSTITUTION';
-
         onStateSync({
             ...institutionalState,
-            status,
-            standing: institutionalState?.standing?.state || 'UNKNOWN'
+            status: loading ? 'BOOTING' : (institutionalState ? 'ALIVE' : 'NO_INSTITUTION'),
+            // DO NOT OVERWRITE standing here, the UI needs the full object
         });
     }, [institutionalState, loading, onStateSync]);
 
