@@ -10,9 +10,18 @@ import { LedgerClosure } from '../experience/ledger-closure/LedgerClosure';
 import { ConsequenceHall } from '../experience/consequence-hall/ConsequenceHall';
 import { Induction } from '../experience/induction/Induction';
 
+import { BootScreen } from '../ui/components/system/BootScreen';
+import { DiagnosticOverlay } from '../ui/components/system/DiagnosticOverlay';
+
 export const InstitutionalShell = ({ institutionalState, loading }) => {
-    if (loading) return <div className="loading">CONNECTING TO LEDGER...</div>;
-    if (!institutionalState) return <div className="error">NO INSTITUTIONAL STATE</div>;
+    // 1. Guaranteed Boot/Loading Spine
+    if (loading) {
+        return <BootScreen status="CONNECTING TO LEDGER..." />;
+    }
+
+    if (!institutionalState) {
+        return <BootScreen status="NO STATE" error={true} details="The InstitutionalKernel returned no state snapshot." />;
+    }
 
     // Determine Surface (Routing Logic)
     // Priority: Induction > Evidence > Obligation > SystemState
@@ -23,53 +32,54 @@ export const InstitutionalShell = ({ institutionalState, loading }) => {
     const standing = institutionalState.standing;
     const session = institutionalState.session;
 
+    // Safety checks for sub-domains
+    if (!authority || !standing) {
+        return <BootScreen status="STATE CORRUPTION" error={true} details={{ authority: !!authority, standing: !!standing }} />;
+    }
+
     if (standing.state === 'PRE_INDUCTION') {
         surfaceId = SurfaceId.INDUCTION;
-    } else if (authority.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
+    } else if (authority.surfaces && authority.surfaces['EVIDENCE_CAPTURE'] === 'FULL') {
         surfaceId = SurfaceId.EVIDENCE_CAPTURE;
         // Pass session props
-        surfaceProps = { startTime: session.startTime, venue: session.venue };
-    } else if (authority.surfaces['OBLIGATION_CORRIDOR'] === 'FULL') {
-        // In this MVP, we might show SystemState which contains the contracts?
-        // Or if we have a dedicated Corridor view.
-        // For now, let's keep SystemState as the main hub unless strictly in Corridor mode.
+        surfaceProps = { startTime: session?.startTime, venue: session?.venue };
+    } else if (authority.surfaces && authority.surfaces['OBLIGATION_CORRIDOR'] === 'FULL') {
         surfaceId = SurfaceId.SYSTEM_STATE;
     }
 
     const renderSurface = () => {
-        switch (surfaceId) {
-            case SurfaceId.INDUCTION:
-                return <Induction {...surfaceProps} />;
+        try {
+            switch (surfaceId) {
+                case SurfaceId.INDUCTION:
+                    return <Induction {...surfaceProps} />;
 
-            case SurfaceId.SYSTEM_STATE:
-                return <SystemState
-                    state={institutionalState.standing}
-                    era={institutionalState.currentEra}
-                    scars={institutionalState.scars}
-                />;
+                case SurfaceId.SYSTEM_STATE:
+                    return <SystemState
+                        state={institutionalState.standing}
+                        era={institutionalState.currentEra}
+                        scars={institutionalState.scars}
+                    />;
 
-            case SurfaceId.OBLIGATION_CORRIDOR:
-                return <ObligationCorridor
-                    obligations={institutionalState.obligations}
-                    mode={surfaceProps.mode} // Pass mode (RECOVERY etc)
-                />;
+                case SurfaceId.OBLIGATION_CORRIDOR:
+                    return <ObligationCorridor
+                        obligations={institutionalState.obligations}
+                        mode={surfaceProps.mode} // Pass mode (RECOVERY etc)
+                    />;
 
-            case SurfaceId.EVIDENCE_CAPTURE:
-                return <EvidenceCapture {...surfaceProps} />;
+                case SurfaceId.EVIDENCE_CAPTURE:
+                    return <EvidenceCapture {...surfaceProps} />;
 
-            case SurfaceId.LEDGER_CLOSURE:
-                return <LedgerClosure {...surfaceProps} />;
+                case SurfaceId.LEDGER_CLOSURE:
+                    return <LedgerClosure {...surfaceProps} />;
 
-            case SurfaceId.CONSEQUENCE_HALL:
-                return <ConsequenceHall {...surfaceProps} scars={institutionalState.scars} />;
+                case SurfaceId.CONSEQUENCE_HALL:
+                    return <ConsequenceHall {...surfaceProps} scars={institutionalState.scars} />;
 
-            default:
-                return (
-                    <div className="surface-error">
-                        <h1>UNKNOWN SURFACE ASSIGNMENT</h1>
-                        <pre>{surfaceId}</pre>
-                    </div>
-                );
+                default:
+                    return <BootScreen status="SURFACE ROUTING ERROR" error={true} details={{ surfaceId }} />;
+            }
+        } catch (err) {
+            return <BootScreen status="RENDER CRASH" error={true} details={err.message} />;
         }
     };
 
@@ -77,6 +87,7 @@ export const InstitutionalShell = ({ institutionalState, loading }) => {
         <StandingThemeAdapter institutionalState={institutionalState}>
             <div className="app-shell">
                 {renderSurface()}
+                <DiagnosticOverlay state={institutionalState} />
             </div>
         </StandingThemeAdapter>
     );
