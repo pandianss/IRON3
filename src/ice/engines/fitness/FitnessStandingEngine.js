@@ -211,8 +211,6 @@ export class FitnessStandingEngine {
                 recovery: this.recovery,
                 degradedSince: this.state.degradedSince // Persist
             };
-            this.kernel.state.update('fitnessStanding', this.state);
-
             // Universal Standing Update (Governed)
             const standingAction = {
                 type: 'STANDING_UPDATE_STATUS',
@@ -230,13 +228,14 @@ export class FitnessStandingEngine {
                 actor: 'FitnessStandingEngine',
                 rules: ['R-STND-01', 'R-STND-02', 'R-STND-03', 'R-STND-04']
             };
-        };
 
-        this.kernel.complianceKernel.getGate().govern(standingAction, () => {
-            this.kernel.state.update('standing', standingAction.payload);
-        }).catch(e => {
-            console.error("ICE: Standing Update Blocked", e.message);
-        });
+            this.kernel.complianceKernel.getGate().govern(standingAction, () => {
+                this.kernel.state.update('fitnessStanding', this.state);
+                this.kernel.state.update('standing', standingAction.payload);
+            }).catch(e => {
+                console.error("ICE: Standing Update Blocked", e.message);
+            });
+        }
     }
 
     constitutionalGate(inst, band, signals, si) {

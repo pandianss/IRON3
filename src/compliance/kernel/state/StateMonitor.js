@@ -4,10 +4,23 @@
  */
 export class StateMonitor {
     constructor(kernel) {
-        this.kernel = kernel; // Reference to the actual kernel/state
+        this.kernel = kernel;
+        this.cache = null;
+    }
+
+    /**
+     * Set a temporary cache for the current evaluation cycle.
+     */
+    enableCache() {
+        this.cache = this.kernel.state.getSnapshot();
+    }
+
+    disableCache() {
+        this.cache = null;
     }
 
     getState() {
+        if (this.cache) return this.cache;
         if (!this.kernel || !this.kernel.state) return null;
         return this.kernel.state.getSnapshot();
     }

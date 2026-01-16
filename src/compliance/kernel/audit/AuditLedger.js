@@ -1,10 +1,12 @@
 /**
  * Audit Ledger
  * Institutional Memory. Append-only logging.
+ * Persisted via localStorage for v1.0 risk mitigation.
  */
 export class AuditLedger {
     constructor() {
-        this.history = [];
+        this.STORAGE_KEY = 'IRON_AUDIT_LEDGER';
+        this.history = this._load() || [];
     }
 
     /**
@@ -19,6 +21,7 @@ export class AuditLedger {
             ...decision
         };
         this.history.push(record);
+        this._save();
         return record.id;
     }
 
@@ -34,6 +37,7 @@ export class AuditLedger {
             ...transition
         };
         this.history.push(record);
+        this._save();
     }
 
     /**
@@ -48,11 +52,34 @@ export class AuditLedger {
             ...violation
         };
         this.history.push(record);
+        this._save();
         console.warn(`AUDIT: Violation Recorded [${record.id}]`, violation);
     }
 
     exportEvidence() {
         return [...this.history];
+    }
+
+    getLog() {
+        return this.history;
+    }
+
+    _save() {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.history));
+        } catch (e) {
+            console.error("AUDIT: Persistence Failure", e);
+        }
+    }
+
+    _load() {
+        try {
+            const data = localStorage.getItem(this.STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        } catch (e) {
+            console.error("AUDIT: Load Failure", e);
+            return null;
+        }
     }
 
     _generateId() {

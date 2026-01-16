@@ -15,44 +15,47 @@ export class ComplianceGate {
      * @param {function} operation - The actual function to execute if allowed.
      */
     async govern(action, operation) {
-        // 1. Pre-check Legality (Rule Engine)
-        const ruleIds = action.rules || [];
-        const context = {
-            action,
-            state: this.stateMonitor.getState()
-        };
+        // TR-03: Enable caching for the current session to optimize performance
+        this.stateMonitor.enableCache();
 
-        const rejectionReasons = [];
-        let allowed = true;
-
-        for (const ruleId of ruleIds) {
-            const verdict = this.engine.evaluate(ruleId, context);
-            if (!verdict.allowed) {
-                allowed = false;
-                rejectionReasons.push(`[${ruleId}] ${verdict.reason}`);
-            }
-        }
-
-        // 2. Audit Decision
-        this.ledger.recordDecision({
-            action: action.type,
-            allowed,
-            rejectionReasons,
-            context: { actor: action.actor }
-        });
-
-        if (!allowed) {
-            console.error(`GATE: Action ${action.type} Blocked: ${rejectionReasons.join(', ')}`);
-            throw new Error(`Compliance Violation: ${rejectionReasons.join(', ')}`);
-        }
-
-        // 3. Execute Operation
         try {
+            // 1. Pre-check Legality (Rule Engine)
+            const ruleIds = action.rules || [];
+            const context = {
+                action,
+                state: this.stateMonitor.getState()
+            };
+
+            const rejectionReasons = [];
+            let allowed = true;
+
+            for (const ruleId of ruleIds) {
+                const verdict = this.engine.evaluate(ruleId, context);
+                if (!verdict.allowed) {
+                    allowed = false;
+                    rejectionReasons.push(`[${ruleId}] ${verdict.reason}`);
+                }
+            }
+
+            // 2. Audit Decision
+            this.ledger.recordDecision({
+                action: action.type,
+                allowed,
+                rejectionReasons,
+                context: { actor: action.actor }
+            });
+
+            if (!allowed) {
+                console.error(`GATE: Action ${action.type} Blocked: ${rejectionReasons.join(', ')}`);
+                throw new Error(`Compliance Violation: ${rejectionReasons.join(', ')}`);
+            }
+
+            // 3. Execute Operation
             const result = await operation();
             return result;
-        } catch (e) {
-            // Audit execution failure?
-            throw e;
+        } finally {
+            // TR-03: Ensure cache is cleared even on failure
+            this.stateMonitor.disableCache();
         }
     }
 

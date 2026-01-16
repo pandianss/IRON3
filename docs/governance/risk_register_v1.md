@@ -4,9 +4,9 @@
 ### 1. Technical Risks
 | Risk ID | Description | Impact | Mitigation |
 | :--- | :--- | :--- | :--- |
-| **TR-01** | **Memory Volatility** | High | The Audit Ledger and `degradedSince` timers are currently in-memory. A crash clears history. | Implement persistent storage adapter for the `AuditLedger`. |
+| **TR-01** | **Memory Volatility** | Low | MITIGATED: Audit Ledger now persists to `localStorage`. |
 | **TR-02** | **Logic Deadlock** | Medium | A contradictory set of rules could block all institution progress. | Implement a "Safety Hatch" or override mechanism for simulation/admin. |
-| **TR-03** | **Performance Overhead** | Low | Replaying history for every SI calculation could slow down the cycle. | Implement incremental signal caching in the `StateMonitor`. |
+| **TR-03** | **Performance Overhead** | Low | MITIGATED: Implemented state snapshot caching during governance cycles. |
 
 ### 2. Institutional Risks
 | Risk ID | Description | Impact | Mitigation |
