@@ -52,7 +52,12 @@ export class FitnessLifecycleEngine {
 
                 const action = {
                     type: 'LIFECYCLE_PROMOTE',
-                    payload: { currentStage: current, targetStage: stage, now: now },
+                    payload: {
+                        currentStage: current,
+                        targetStage: stage,
+                        now: now,
+                        evidence: signals // Constitutional Verification
+                    },
                     actor: 'FitnessLifecycleEngine',
                     rules: rules
                 };

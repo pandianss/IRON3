@@ -7,6 +7,7 @@ import { ConstitutionalStatus } from '../../ui/components/governance/Constitutio
 import { PhysiologyMonitor } from '../../ui/components/governance/PhysiologyMonitor';
 import { StandingBadge } from '../../ui/components/governance/StandingBadge';
 import { AuditLog } from '../../ui/components/governance/AuditLog';
+import { RecoveryMonitor } from '../../ui/components/governance/RecoveryMonitor';
 
 import { InstitutionalHeader } from './InstitutionalHeader';
 import { StandingCore } from './StandingCore'; // Keeping import just in case, but unused?
@@ -90,6 +91,9 @@ export const InstitutionalDashboard = ({ snapshot }) => {
                 <div style={{ background: 'var(--iron-surface)', gridRow: isFitness ? 'span 2' : 'auto', padding: '16px', overflowY: 'auto' }}>
                     {/* 1. Sovereign Status */}
                     <ConstitutionalStatus />
+
+                    {/* 1.5. Recovery Monitor (Priority) */}
+                    <RecoveryMonitor />
 
                     {/* 2. Standing Badge (Belt) */}
                     <StandingBadge />

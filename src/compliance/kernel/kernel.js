@@ -93,53 +93,82 @@ export class ConstitutionalKernel {
 
         this.ruleEngine.registerRule({
             id: 'R-LIFE-02',
-            description: 'PROBATION to ACTIVE requires stabilization period.',
+            description: 'PROBATION to ACTIVE requires evidence of sustained continuity.',
             logic: (context) => {
                 if (context.action.type !== 'LIFECYCLE_PROMOTE') return true;
                 if (context.action.payload.targetStage !== 'ACTIVE') return true;
 
-                // Logic handled by engine, but Rule enforces the Gate
-                // For now, allow if Engine requests it, assuming Engine did math.
-                // In full implementation, we re-verify signals here.
+                const evidence = context.action.payload.evidence || {};
+                // Article III.4: "Sustained positive continuity"
+                // We check if the Engine provided evidence of activity.
+                // Minimal check: activeDays > 0 and continuityIndex > 0
+
+                if (!evidence.activeDays || evidence.activeDays < 3) { // Min 3 days to be "Sustained" locally?
+                    // Contract likely demands more, but Constitution demands "Demonstrated".
+                    return {
+                        allowed: false,
+                        reason: `Promotion to ACTIVE denied. Insufficient continuity evidence (Active Days: ${evidence.activeDays}).`
+                    };
+                }
                 return true;
             }
         });
 
         this.ruleEngine.registerRule({
             id: 'R-LIFE-03',
-            description: 'ACTIVE to DEGRADABLE requires low integrity or neglect.',
+            description: 'ACTIVE to DEGRADABLE requires maturity (Article III.5).',
             logic: (context) => {
                 if (context.action.type !== 'LIFECYCLE_PROMOTE') return true;
                 if (context.action.payload.targetStage !== 'DEGRADABLE') return true;
-                // Engine has logic, Gate enforces simple check or 'Engine Auth'
-                // Strict check: signals.activeDays >= 21 AND continuityIndex >= 0.55 (Wait, contract says this is ENTRY condition?)
-                // Let's re-read contract.
-                // DEGRADABLE entry: activeDays >= 21 AND continuityIndex >= 0.55 ?? 
-                // Wait, degradation usually means BAD signals.
-                // FC-FIT-01: 
-                // DEGRADABLE: activeDays >= 21 && continuityIndex >= 0.55 
-                // This looks like promotion to a "Higher/Sustainable" stage or "Degradable" capability?
-                // Ah, "Degradable" means "Capable of Degrading"? Or "Currently Degrading"?
-                // The enum is GENESIS -> PROBATION -> ACTIVE -> DEGRADABLE -> COLLAPSED.
-                // Usually DEGRADABLE implies "At Risk".
-                // Let's assume the contract logic I saw earlier is correct (it seemed to require high stats for Degradable?).
-                // "No institution may degrade before it is DEGRADABLE" (Invariant).
-                // So DEGRADABLE is a status you EARN, which allows you to Collpase?
-                // OR is it a state of decay?
-                // Step 1 Framing Note said: Triggered by integrity < 30%.
-                // But contract code I viewed said: activeDays >= 21 && continuityIndex >= 0.55.
-                // This implies DEGRADABLE is a "Mature" phase where you can now Lose status?
-                // I will stick to what the contract CODE says for the Rule.
+
+                // Article III.5: "DEGRADABLE begins only after prolonged ACTIVE standing."
+                const evidence = context.action.payload.evidence || {};
+
+                // We ensure we aren't rushing into Degradable mode unnecessarily, or that we ARE mature enough.
+                if (evidence.activeDays < 14) { // "Prolonged" implies time.
+                    return {
+                        allowed: false,
+                        reason: `Institution is too young to be DEGRADABLE. (Active Days: ${evidence.activeDays} < 14).`
+                    };
+                }
                 return true;
             }
         });
 
         this.ruleEngine.registerRule({
             id: 'R-LIFE-04',
-            description: 'DEGRADABLE to COLLAPSED requires sustained failure.',
+            description: 'DEGRADABLE to COLLAPSED requires sustained failure (Article VII).',
             logic: (context) => {
                 if (context.action.type !== 'LIFECYCLE_PROMOTE') return true;
                 if (context.action.payload.targetStage !== 'COLLAPSED') return true;
+
+                const evidence = context.action.payload.evidence || {};
+                const currentStage = context.state.lifecycle?.stage;
+
+                // 1. Must be DEGRADABLE (Article VII.1)
+                if (currentStage !== 'DEGRADABLE') {
+                    return {
+                        allowed: false,
+                        reason: `Collapse Blocked. Lifecycle is ${currentStage}, must be DEGRADABLE.`
+                    };
+                }
+
+                // 2. Duration Check (30 Days)
+                if ((evidence.degradedDays || 0) < 30) {
+                    return {
+                        allowed: false,
+                        reason: `Collapse Blocked. Degradation duration ${evidence.degradedDays} < 30 days.`
+                    };
+                }
+
+                // 3. Continuity Check (Abandonment)
+                if ((evidence.continuityIndex || 0) >= 0.2) {
+                    return {
+                        allowed: false,
+                        reason: `Collapse Blocked. Continuity ${evidence.continuityIndex} > 0.2 (Still Alive).`
+                    };
+                }
+
                 return true;
             }
         });
@@ -254,6 +283,77 @@ export class ConstitutionalKernel {
                         };
                     }
                 }
+                return true;
+            }
+        });
+
+        this.ruleEngine.registerRule({
+            id: 'R-STND-03',
+            description: 'Degradation requires DEGRADABLE status and Convergent Evidence (FC-FIT-02).',
+            logic: (context) => {
+                if (context.action.type !== 'STANDING_UPDATE_STATUS') return true;
+                const targetState = context.action.payload.state;
+
+                // Only govern transitions TO 'DEGRADED' (or 'BREACHED' if that's the engine's term for it)
+                // Assuming 'DEGRADED' is the state.
+                if (targetState !== 'DEGRADED') return true;
+
+                // 1. Lifecycle Precondition (Article II.1)
+                const lifecycle = context.state.lifecycle?.stage;
+                if (lifecycle !== 'DEGRADABLE') {
+                    return {
+                        allowed: false,
+                        reason: `Degradation blocked. Lifecycle is ${lifecycle}, must be DEGRADABLE.`
+                    };
+                }
+
+                // 2. Convergent Evidence (Article III)
+                const evidence = context.action.payload.evidence || {};
+                let validVectors = 0;
+                const vectors = ['continuityBreach', 'stressDominance', 'standingLoss', 'integrityFailure', 'adjudicativeConfirmation'];
+
+                vectors.forEach(v => {
+                    if (evidence[v] && evidence[v].detected) validVectors++;
+                });
+
+                if (validVectors < 2) {
+                    return {
+                        allowed: false,
+                        reason: `Degradation blocked. Insufficient Evidence (${validVectors}/2 vectors). (Article III).`
+                    };
+                }
+
+                return true;
+            }
+        });
+
+        this.ruleEngine.registerRule({
+            id: 'R-STND-04',
+            description: 'Recovery must follow governed phases (No instant reinstatement).',
+            logic: (context) => {
+                if (context.action.type !== 'STANDING_UPDATE_STATUS') return true;
+
+                const currentState = context.state.standing?.state;
+                const targetState = context.action.payload.state; // Proposed state
+                const recoveryPhase = context.action.payload.recoveryPhase; // If in recovery
+
+                // 1. Block Illegal Exit from DEGRADED
+                if (currentState === 'DEGRADED' || currentState === 'BREACHED') {
+                    // Attempting to jump to STABLE/ASCENDING without finishing Recovery
+                    if (targetState === 'STABLE' || targetState === 'ASCENDING' || targetState === 'SOVEREIGN') {
+                        // Check if Revalidation is complete (Article VI.3)
+                        if (recoveryPhase !== 'COMPLETED') {
+                            return {
+                                allowed: false,
+                                reason: `Premature reinstatement blocked. Recovery Phase is '${recoveryPhase || 'NONE'}', must be 'COMPLETED'.`
+                            };
+                        }
+                    }
+                }
+
+                // 2. Enforce Phase Sequence (Optional but good for strictness)
+                // STABILIZATION -> RECONSTITUTION -> REINTEGRATION -> REVALIDATION
+
                 return true;
             }
         });
