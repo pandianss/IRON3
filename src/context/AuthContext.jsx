@@ -4,11 +4,24 @@ export const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-    // Hardcoded user for MVP demo
-    const [currentUser] = useState({ uid: 'test_citizen_001', displayName: 'Citizen 001' });
+    const [currentUser, setCurrentUser] = useState(() => {
+        const saved = localStorage.getItem('iron_user');
+        return saved ? JSON.parse(saved) : null;
+    });
+
+    const login = (userData) => {
+        const user = userData || { uid: 'citizen_' + Math.random().toString(36).substr(2, 9), displayName: 'Citizen' };
+        setCurrentUser(user);
+        localStorage.setItem('iron_user', JSON.stringify(user));
+    };
+
+    const logout = () => {
+        setCurrentUser(null);
+        localStorage.removeItem('iron_user');
+    };
 
     return (
-        <AuthContext.Provider value={{ currentUser }}>
+        <AuthContext.Provider value={{ currentUser, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

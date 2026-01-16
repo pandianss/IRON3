@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { CapacityMeter } from './fitness/CapacityMeter';
 
 
@@ -17,11 +18,21 @@ export const InstitutionalHeader = ({ identity, status, physiology, isFitness })
             background: 'var(--iron-surface)',
             color: 'var(--iron-text-primary)'
         }}>
-            <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.6rem', opacity: 0.5, fontFamily: 'var(--font-mono)' }}>INSTITUTION_ID</div>
-                <div style={{ fontFamily: 'var(--font-authority)', letterSpacing: '2px' }}>
-                    {identity?.id || 'SIGMA-9'} <span style={{ opacity: 0.3, fontSize: '0.8rem' }}>// {identity?.epoch || '2025'}</span>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <div>
+                    <div style={{ fontSize: '0.6rem', opacity: 0.5, fontFamily: 'var(--font-mono)' }}>INSTITUTION_ID</div>
+                    <div style={{ fontFamily: 'var(--font-authority)', letterSpacing: '2px' }}>
+                        {identity?.id || 'SIGMA-9'} <span style={{ opacity: 0.3, fontSize: '0.8rem' }}>// {identity?.epoch || '2025'}</span>
+                    </div>
                 </div>
+                <Link to="/" style={{
+                    fontSize: '0.6rem',
+                    color: 'var(--iron-accent)',
+                    textDecoration: 'none',
+                    border: '1px solid var(--iron-border)',
+                    padding: '4px 8px',
+                    fontFamily: 'var(--font-mono)'
+                }}>GOTO_REGISTRY</Link>
             </div>
 
             <div style={{ flex: 1, textAlign: 'center' }}>

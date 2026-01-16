@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '../SEOHead';
 import { getDisciplineList } from '../../domain/InstitutionalTemplates';
 import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/InstitutionalContext';
+import { useAuth } from '../../context/AuthContext';
 
 // Floating Panels
 import { WhatIsIron } from './WhatIsIron';
@@ -18,9 +19,16 @@ export const LandingPage = () => {
 
     const [activePanel, setActivePanel] = useState(null);
     const navigate = useNavigate();
+    const { currentUser, login, logout } = useAuth();
 
     const handleToggleModule = async (e, id) => {
         e.stopPropagation();
+
+        if (!currentUser) {
+            setActivePanel('AUTH_REQUIRED');
+            return;
+        }
+
         const isActive = activeModules.includes(id);
 
         try {
@@ -34,6 +42,11 @@ export const LandingPage = () => {
         } catch (e) {
             console.error("Module Toggle Failure:", e);
         }
+    };
+
+    const handleJoin = () => {
+        login(); // Generic join/login for demo
+        navigate('/app'); // Direct to induction
     };
 
     const handleCardClick = (discipline) => {
@@ -67,13 +80,26 @@ export const LandingPage = () => {
                             {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
                             {activePanel === 'SOVEREIGNTY' && <PersonalInstitution />}
                             {activePanel?.type === 'LAW' && <DisciplineLawPanel discipline={activePanel.discipline} />}
-                            {activePanel === 'CONSTITUTION' && <DisciplineLawPanel discipline={disciplines.find(d => d.id === 'FITNESS_RECOVERY')} />}
+                            {activePanel === 'AUTH_REQUIRED' && (
+                                <div style={{ textAlign: 'center', padding: '20px' }}>
+                                    <h2 style={{ fontFamily: 'var(--font-authority)', color: 'var(--iron-brand-stable)', letterSpacing: '2px' }}>AUTHENTICATION_REQUIRED</h2>
+                                    <p style={{ opacity: 0.7, margin: '20px 0' }}>Institutional modules require a sovereign identity. Join the institution to begin your governance.</p>
+                                    <button onClick={handleJoin} style={actionStyle}>JOIN_THE_INSTITUTION</button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             )}
 
-            <header style={{ marginBottom: '60px', textAlign: 'center' }}>
+            <header style={{ marginBottom: '60px', textAlign: 'center', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: 0, right: 0 }}>
+                    {currentUser ? (
+                        <button onClick={logout} style={authButtonStyle}>Citizen_{currentUser.uid.substring(0, 4)} [DISCONNECT]</button>
+                    ) : (
+                        <button onClick={handleJoin} style={authButtonStyle}>JOIN_THE_INSTITUTION</button>
+                    )}
+                </div>
                 <h1 style={{ fontFamily: 'var(--font-authority)', fontSize: '4rem', margin: 0, letterSpacing: '8px' }}>IRON</h1>
                 <p style={{ opacity: 0.6, letterSpacing: '4px', marginTop: '10px' }}>Sovereign Discipline System</p>
             </header>
@@ -258,6 +284,20 @@ const actionStyle = {
     fontWeight: 'bold',
     fontFamily: 'var(--font-authority)',
     textAlign: 'center',
-    fontSize: '0.9rem'
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    width: '100%',
+    border: 'none'
+};
+
+const authButtonStyle = {
+    background: 'transparent',
+    border: '1px solid var(--iron-border)',
+    color: 'var(--iron-accent)',
+    padding: '5px 10px',
+    fontSize: '0.6rem',
+    fontFamily: 'var(--font-mono)',
+    cursor: 'pointer',
+    letterSpacing: '1px'
 };
 
