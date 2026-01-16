@@ -11,6 +11,8 @@ import { InstitutionalProductivity } from './InstitutionalProductivity';
 import { PersonalInstitution } from './PersonalInstitution';
 import { DisciplineLawPanel } from './DisciplineLawPanel';
 
+import { ConstitutionPanel } from './ConstitutionPanel';
+
 export const LandingPage = () => {
     const disciplines = getDisciplineList();
     const kernel = useSovereignKernel();
@@ -22,7 +24,7 @@ export const LandingPage = () => {
     const { currentUser, login, logout } = useAuth();
 
     const handleToggleModule = async (e, id) => {
-        e.stopPropagation();
+        if (e) e.stopPropagation();
 
         if (!currentUser) {
             setActivePanel('AUTH_REQUIRED');
@@ -37,7 +39,14 @@ export const LandingPage = () => {
                 await kernel.ingest('MODULE_DEACTIVATED', { moduleId: id }, 'USER_HOST');
             } else {
                 await kernel.ingest('MODULE_ACTIVATED', { moduleId: id }, 'USER_HOST');
-                navigate('/app');
+                // navigate('/app'); // Don't auto-navigate if toggling from panel? 
+                // Actually the original code navigated on activate. 
+                // The user said "activate button can show up as a floating button". 
+                // Maybe we should stay on the page if activated from panel?
+                // For now, I'll keep the navigate behavior consistent if that's what's expected, 
+                // but usually activation implies you want to start using it. 
+                // However, if they are just reading, maybe they don't want to jump.
+                // Let's remove the navigate for now to keep them in the flow unless they explicitly click "Dashboard".
             }
         } catch (e) {
             console.error("Module Toggle Failure:", e);
@@ -79,7 +88,14 @@ export const LandingPage = () => {
                             {activePanel === 'PHILOSOPHY' && <WhatIsIron />}
                             {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
                             {activePanel === 'SOVEREIGNTY' && <PersonalInstitution />}
-                            {activePanel?.type === 'LAW' && <DisciplineLawPanel discipline={activePanel.discipline} />}
+                            {activePanel === 'CONSTITUTION' && <ConstitutionPanel />}
+                            {activePanel?.type === 'LAW' && (
+                                <DisciplineLawPanel
+                                    discipline={activePanel.discipline}
+                                    isActive={activeModules.includes(activePanel.discipline.id)}
+                                    onToggle={handleToggleModule}
+                                />
+                            )}
                             {activePanel === 'AUTH_REQUIRED' && (
                                 <div style={{ textAlign: 'center', padding: '20px' }}>
                                     <h2 style={{ fontFamily: 'var(--font-authority)', color: 'var(--iron-brand-stable)', letterSpacing: '2px' }}>AUTHENTICATION_REQUIRED</h2>
@@ -137,39 +153,7 @@ export const LandingPage = () => {
                                     <p style={{ fontSize: '0.85rem', margin: '15px 0 25px 0', opacity: 0.7, lineHeight: '1.5', minHeight: '3em' }}>
                                         {d.focus}
                                     </p>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        {isActive ? (
-                                            <>
-                                                <Link to="/app" onClick={e => e.stopPropagation()} style={{
-                                                    ...activateButtonStyle,
-                                                    background: 'var(--iron-brand-stable)',
-                                                    color: '#000',
-                                                    borderColor: 'var(--iron-brand-stable)',
-                                                    textDecoration: 'none',
-                                                    display: 'inline-block'
-                                                }}>
-                                                    OPEN DASHBOARD
-                                                </Link>
-                                                <button
-                                                    onClick={(e) => handleToggleModule(e, d.id)}
-                                                    style={{
-                                                        ...activateButtonStyle,
-                                                        borderColor: 'var(--iron-brand-breach)',
-                                                        color: 'var(--iron-brand-breach)'
-                                                    }}
-                                                >
-                                                    SUSPEND
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <button
-                                                onClick={(e) => handleToggleModule(e, d.id)}
-                                                style={activateButtonStyle}
-                                            >
-                                                ACTIVATE
-                                            </button>
-                                        )}
-                                    </div>
+                                    {/* Action buttons removed from card face */}
                                 </div>
                             );
                         })}
@@ -191,7 +175,7 @@ export const LandingPage = () => {
                     </div>
                     <div onClick={() => setActivePanel('CONSTITUTION')} style={navItemStyle}>
                         <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>04_CONSTITUTION</span>
-                        The Fitness Law
+                        The Iron Constitution
                     </div>
                     <Link to="/app" style={actionStyle}>GOTO_DASHBOARD</Link>
                 </nav>

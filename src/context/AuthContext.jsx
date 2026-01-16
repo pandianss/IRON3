@@ -1,7 +1,14 @@
 import React, { createContext, useContext, useState } from 'react';
 
 export const AuthContext = createContext(null);
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        console.warn("AuthContext is missing. Returning safe default.");
+        return { currentUser: null, login: () => { }, logout: () => { } };
+    }
+    return context;
+};
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(() => {

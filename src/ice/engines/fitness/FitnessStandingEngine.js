@@ -45,115 +45,183 @@ export class FitnessStandingEngine {
      * Compute current standing from history
      */
     process() {
+        console.group("ICE: Fitness Engine Processing");
         const state = this.kernel.state;
-        const physiology = state.getDomain('physiology') || {};
+        const physiology = state.getDomain('physiology') || { load: 0, capacity: 50 };
         const history = this.kernel.ledger.getHistory();
         const scenario = this.kernel.scenario;
+
+        // --- CONSTITUTIONAL LIFECYCLE STATE ---
+        // Recover state or initialize default
+        let lifecycle = this.state?.lifecycle || 'GENESIS';
+        let baselineSI = this.state?.baselineSI || null;
+        let activeDays = this.state?.activeDays || 0;
+        let consecutivePositiveEvents = this.state?.consecutivePositiveEvents || 0;
 
         const fitnessEvents = history.filter(e =>
             ['SESSION_ENDED', 'RECOVERY_VALIDATED', 'AUTHORITY_REALIGNED', 'MODULE_ACTIVATED', 'TRAINING_COMPLETED', 'RECOVERY_COMPLETED', 'SESSION_MISSED'].includes(e.type)
         );
 
-        // 1. Stress Vector (S) - Directly from Physiological Load
-        // Load is typically 0-100 (where 100 is high exhaustion)
-        let S = Math.min(1.0, (physiology.load || 0) / 100);
+        console.log(`ICE: Fitness Events Found: ${fitnessEvents.length}`);
 
-        // 2. Recovery Vector (R) - From Physiological Capacity & Law
+        // 1. Stress & Recovery (Physiological)
+        let S = Math.min(1.0, (physiology.load || 0) / 100);
         let R = Math.min(1.0, (physiology.capacity || 50) / 100);
 
-        let C = 0.5, I = 1.0;
+        // 2. Continuity & Integrity (History Replay)
+        let C = this.state?.continuity ?? FC00_CONTRACT.seeding.continuity;
+        let I = this.state?.integrity ?? FC00_CONTRACT.seeding.integrity;
         let lastTimestamp = null;
+        let workingActiveDays = 0;
+        let workingConsecutive = 0;
 
+        // Replay history for SI calculation AND Lifecycle counting
         fitnessEvents.forEach(event => {
             const timestamp = new Date(event.meta?.timestamp || event.timestamp);
 
-            // 1. Time-based decay (Temporal Consistency)
+            // Count unique active days
+            if (lastTimestamp && timestamp.getDate() !== lastTimestamp.getDate()) {
+                workingActiveDays++;
+            }
+            lastTimestamp = timestamp;
+
+            // Decay
             if (lastTimestamp) {
                 const hoursPassed = (timestamp - lastTimestamp) / (1000 * 60 * 60);
-                // Continuity Law: Decays with inactivity
-                C -= Math.min(C, (hoursPassed / 168) * 0.2); // Loss of ~20% per week
+                if (hoursPassed > 24) {
+                    C -= Math.min(C, (hoursPassed / 168) * 0.2);
+                }
             }
 
-            // 2. Event-based updates
+            // Updates + Lifecycle Triggers
             switch (event.type) {
                 case 'MODULE_ACTIVATED':
                     if (event.payload.moduleId === 'FITNESS_RECOVERY') {
-                        C = 0.5; // Baseline established
+                        C = 0.5; I = 1.0;
+                    }
+                    // Trigger: GENESIS confirmation (if needed, though usually implicit)
+                    break;
+
+                case 'TRAINING_COMPLETED':
+                case 'SESSION_ENDED':
+                    C = Math.min(1.0, C + 0.05);
+                    I = Math.min(1.0, I + 0.01);
+                    workingConsecutive++;
+
+                    // Trigger: PROBATION (First real commitment)
+                    if (lifecycle === 'GENESIS') {
+                        lifecycle = 'PROBATION';
+                        console.log("ICE: Constitutional Promotion -> PROBATION");
                     }
                     break;
-                case 'SESSION_ENDED':
-                case 'TRAINING_COMPLETED':
-                    // Continuity grows slowly
-                    C = Math.min(1.0, C + 0.05);
-                    // Integrity grows slightly with compliant session
-                    I = Math.min(1.0, I + 0.01);
-                    break;
+
                 case 'RECOVERY_VALIDATED':
                 case 'RECOVERY_COMPLETED':
-                    // Integrity grows with recovery compliance
                     I = Math.min(1.0, I + 0.02);
+                    workingConsecutive++;
                     break;
+
                 case 'SESSION_MISSED':
-                    // Integrity decays on missed session
                     I = Math.max(0, I - 0.05);
-                    // Continuity decays faster on miss
                     C = Math.max(0, C - 0.1);
+                    workingConsecutive = 0; // Break streak
                     break;
+
                 case 'AUTHORITY_REALIGNED':
-                    // Integrity decays on breach/realignment
-                    const decay = scenario?.integrityDecayMultiplier ? (0.2 * scenario.integrityDecayMultiplier) : 0.2;
-                    I = Math.max(0, I - decay);
+                    I = Math.max(0, I - 0.2);
+                    workingConsecutive = 0;
                     break;
             }
-
-            lastTimestamp = timestamp;
         });
 
-        // 3. Trajectory Calculation (Rolling Window comparison)
-        const T = 0; // Simplified for MVP: flat trajectory
+        // Update counters based on replay (simplified for MVP, ideally stored statefully)
+        activeDays = workingActiveDays;
+        consecutivePositiveEvents = workingConsecutive;
 
-        // 4. Standing Index (SI)
-        const SI = (this.weights.wC * C) +
-            (this.weights.wR * R) +
-            (this.weights.wI * I) -
-            (this.weights.wS * S) +
-            (this.weights.wT * T);
+        // --- LIFECYCLE PROMOTION LOGIC ---
+        // PROBATION -> ACTIVE
+        if (lifecycle === 'PROBATION' && consecutivePositiveEvents >= 3) {
+            lifecycle = 'ACTIVE';
+            // Establish Baseline
+            // In a real implementation this would be a rolling average, using current SI for MVP
+            // Calculating intermediate SI here for baseline setting would require re-calc, 
+            // for now we set baseline at end of loop if not set.
+            console.log("ICE: Constitutional Promotion -> ACTIVE");
+        }
 
+        // ACTIVE -> DEGRADABLE
+        if (lifecycle === 'ACTIVE' && activeDays >= 14) { // T=14 days
+            lifecycle = 'DEGRADABLE';
+            console.log("ICE: Constitutional Promotion -> DEGRADABLE");
+        }
+
+
+        // 3. SI Calculation
+        const T = 0;
+        const SI = (this.weights.wC * C) + (this.weights.wR * R) + (this.weights.wI * I) - (this.weights.wS * S) + (this.weights.wT * T);
         const finalSI = Math.max(0, Math.min(1, SI));
 
-        // 5. Institutional Bands (Scenario Overrides)
-        const thresholds = scenario?.thresholds || {
-            breached: 0.2,
-            degraded: 0.4,
-            strained: 0.8,
-            ascending: 0.8
-        };
+        // Set baseline if needed and valid
+        if (lifecycle !== 'GENESIS' && !baselineSI) {
+            baselineSI = finalSI;
+        }
 
-        let band = 'STABLE';
-        if (finalSI < thresholds.breached) band = 'BREACHED';
-        else if (finalSI < thresholds.degraded) band = 'DEGRADED';
-        else if (S > thresholds.strained) band = 'STRAINED';
-        else if (finalSI > thresholds.ascending) band = 'ASCENDING';
+        console.log(`ICE: SI=${finalSI.toFixed(2)} | Lifecycle=${lifecycle} | ActiveDays=${activeDays}`);
+
+        // 4. Band Calculation & Gating
+        const thresholds = scenario?.thresholds || { breached: 0.2, degraded: 0.4, strained: 0.8, ascending: 0.8 };
+        let rawBand = 'STABLE';
+        if (finalSI < thresholds.breached) rawBand = 'BREACHED';
+        else if (finalSI < thresholds.degraded) rawBand = 'DEGRADED';
+        else if (S > thresholds.strained) rawBand = 'STRAINED';
+        else if (finalSI > thresholds.ascending) rawBand = 'ASCENDING';
+
+        // --- CONSTITUTIONAL GATING ---
+        let finalBand = rawBand;
+
+        // Rule V: Protect GENESIS and PROBATION
+        if (lifecycle === 'GENESIS') {
+            finalBand = 'STABLE';
+        } else if (lifecycle === 'PROBATION' && (rawBand === 'DEGRADED' || rawBand === 'BREACHED')) {
+            finalBand = 'STABLE';
+        } else if (lifecycle === 'ACTIVE' && (rawBand === 'DEGRADED' || rawBand === 'BREACHED')) {
+            // Rule III extension: ACTIVE is also protected until DEGRADABLE
+            finalBand = 'STABLE';
+        }
+
+        // Rule IV: Redefine Degradation
+        if (lifecycle === 'DEGRADABLE' && (rawBand === 'DEGRADED' || rawBand === 'BREACHED')) {
+            const drop = (baselineSI || finalSI) - finalSI;
+            const degradationDelta = 0.15; // Constitutionally defined
+            const sustainedNegativeHistory = consecutivePositiveEvents === 0; // Simplified proxy
+
+            // Only degrade if drop is significant AND history is negative
+            if (drop < degradationDelta || !sustainedNegativeHistory) {
+                finalBand = 'STABLE'; // Saved by the Constitution
+                console.log("ICE: Degradation Prevented by Constitutional Shield (Drop insufficient or History positive)");
+            }
+        }
+
+        console.log(`ICE: Final Band: ${finalBand} (Raw: ${rawBand})`);
+        console.groupEnd();
 
         this.state = {
-            continuity: C,
-            stress: S,
-            recovery: R,
-            integrity: I,
-            trajectory: T,
+            continuity: C, stress: S, recovery: R, integrity: I, trajectory: T,
             standingIndex: finalSI,
-            band: band
+            band: finalBand,
+            // Constitutional Meta
+            lifecycle, baselineSI, activeDays, consecutivePositiveEvents
         };
 
-        // Update Global State Read Model
         this.kernel.state.update('fitnessStanding', this.state);
 
-        // Also update generic standing for UI compatibility
+        // Universal Standing Update
         this.kernel.state.update('standing', {
-            state: band,
+            state: finalBand,
             integrity: Math.round(I * 100),
             index: finalSI,
-            vectors: this.state
+            vectors: this.state,
+            lifecycle: lifecycle // <--- Universal Property
         });
     }
 

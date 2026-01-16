@@ -1,13 +1,33 @@
 import React from 'react';
 
-export const DisciplineLawPanel = ({ discipline }) => {
+export const DisciplineLawPanel = ({ discipline, isActive, onToggle }) => {
     if (!discipline || !discipline.law) return <div>NO_LAW_FOUND</div>;
 
     const { law } = discipline;
 
     return (
         <div style={panelBodyStyle}>
-            <h1 style={titleStyle}>{law.title}</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                <h1 style={titleStyle}>{law.title}</h1>
+                <div style={{ marginLeft: '20px' }}>
+                    {isActive ? (
+                        <button
+                            onClick={(e) => onToggle(e, discipline.id)}
+                            style={{ ...activateButtonStyle, borderColor: 'var(--iron-brand-breach)', color: 'var(--iron-brand-breach)' }}
+                        >
+                            SUSPEND PROTOCOL
+                        </button>
+                    ) : (
+                        <button
+                            onClick={(e) => onToggle(e, discipline.id)}
+                            style={activateButtonStyle}
+                        >
+                            ACTIVATE PROTOCOL
+                        </button>
+                    )}
+                </div>
+            </div>
+
             <p style={{ opacity: 0.6, fontSize: '0.8rem', marginBottom: '30px', letterSpacing: '1px' }}>{law.preamble}</p>
 
             {law.articles && law.articles.map((article, idx) => (
@@ -27,6 +47,19 @@ export const DisciplineLawPanel = ({ discipline }) => {
             </div>
         </div>
     );
+};
+
+const activateButtonStyle = {
+    background: 'transparent',
+    border: '1px solid var(--iron-brand-stable)',
+    color: 'var(--iron-brand-stable)',
+    padding: '10px 20px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+    fontWeight: 'bold',
+    letterSpacing: '2px',
+    transition: 'all 0.2s',
+    fontFamily: 'var(--font-mono)'
 };
 
 const panelBodyStyle = { color: '#f0f0f0', maxWidth: '100%', paddingBottom: '40px' };

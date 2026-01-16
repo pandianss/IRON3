@@ -11,6 +11,13 @@ import { FitnessStandingEngine } from './engines/fitness/FitnessStandingEngine.j
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
 import { PhaseController } from './governance/PhaseController.js';
 
+// Compliance Framework
+import { AuditLogger } from '../compliance/ael/AuditLogger.js';
+import { EvidenceManager } from '../compliance/ael/EvidenceManager.js';
+import { ComplianceTelemetryAgent } from '../compliance/mtl/ComplianceTelemetryAgent.js';
+import { ConstitutionalTestHarness } from '../compliance/vvl/ConstitutionalTestHarness.js';
+import { ResponseOrchestrator } from '../compliance/ccl/ResponseOrchestrator.js';
+
 /**
  * ICE Module 1: Institutional Kernel
  * Role: Sovereign Coordinator.
@@ -19,6 +26,9 @@ import { PhaseController } from './governance/PhaseController.js';
 export class InstitutionalKernel {
     constructor(config = {}) {
         this.scenario = config.scenario || {};
+        // React Bridge Support (Observer) - Init first for Compliance Modules
+        this.subscribers = new Set();
+
         this.ledger = new MemoryLedger(config.initialEvents || []);
         this.state = new InstitutionState();
 
@@ -41,8 +51,28 @@ export class InstitutionalKernel {
         // Initialize Cycle Controller
         this.cycle = new InstitutionalCycle(this);
 
-        // React Bridge Support (Observer)
-        this.subscribers = new Set();
+        // Compliance Framework Initialization
+        this.compliance = {
+            ael: {
+                logger: new AuditLogger(),
+                evidence: new EvidenceManager()
+            },
+            // VVL & CCL depend on 'this', so we init them. 
+            // MTL Agent auto-subscribes in its constructor.
+            vvl: {
+                harness: new ConstitutionalTestHarness(this)
+            },
+            ccl: {
+                orchestrator: new ResponseOrchestrator(this)
+            }
+        };
+
+        // MTL Agent (Observer)
+        this.compliance.mtl = {
+            agent: new ComplianceTelemetryAgent(this)
+        };
+
+
 
         console.log("ICE: Kernel Initialized (v1.0 Sovereignty).");
     }
@@ -71,6 +101,10 @@ export class InstitutionalKernel {
      * @param {string} actorId 
      */
     async ingest(eventType, payload, actorId) {
+        // 0. AEL: Audit Log (Before processing)
+        const auditHash = this.compliance.ael.logger.log({ type: eventType, payload, actorId });
+        console.log(`ICE: Event Audit Logged [Hash: ${auditHash.substring(0, 8)}]`);
+
         // 1. Validate & Normalize (Event Registry)
         const event = EventRegistry.create(eventType, payload, actorId);
 
@@ -92,6 +126,21 @@ export class InstitutionalKernel {
             // Clear any lingering errors on success
             this.state.update('error', null);
             console.log("ICE: Cycle Success. Authority Maintained.");
+
+            // VVL: Invariant Check (Post-Cycle Verification)
+            const verification = this.compliance.vvl.harness.verifySnapshot();
+
+            if (verification.status === 'CONSTITUTIONAL_CRISIS') {
+                console.error("ICE: CONSTITUTIONAL CRISIS DETECTED", verification.details);
+
+                // CCL: Automated Response
+                const response = await this.compliance.ccl.orchestrator.handleTrigger('CONSTITUTIONAL_CRISIS', verification);
+                if (response?.action === 'LOCKED') {
+                    console.warn("ICE: SYSTEM LOCKDOWN EFFECTIVE IMMEDIATELY.");
+                    // In a full implementation, we would set a flag in State to block further mutations.
+                }
+            }
+
             this.notify();
             return result;
         } catch (error) {

@@ -40,16 +40,18 @@ const InstitutionalBridge = ({ onStateSync }) => {
 export default function App() {
     return (
         <InstitutionalProvider>
-            <Routes>
-                {/* Public SEO Root Site */}
-                <Route path="/" element={<LandingPage />} />
+            <AuthProvider>
+                <Routes>
+                    {/* Public SEO Root Site */}
+                    <Route path="/" element={<LandingPage />} />
 
-                {/* Governed Application Spine */}
-                <Route path="/app/*" element={<GovernedApp />} />
+                    {/* Governed Application Spine */}
+                    <Route path="/app/*" element={<GovernedApp />} />
 
-                {/* Redirects */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                    {/* Redirects */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+            </AuthProvider>
         </InstitutionalProvider>
     );
 }
@@ -62,11 +64,9 @@ const GovernedApp = () => {
 
     return (
         <IronAppShell institution={institution}>
-            <AuthProvider>
-                <GovernanceProvider>
-                    <InstitutionalBridge onStateSync={setInstitution} />
-                </GovernanceProvider>
-            </AuthProvider>
+            <GovernanceProvider>
+                <InstitutionalBridge onStateSync={setInstitution} />
+            </GovernanceProvider>
         </IronAppShell>
     );
 };
