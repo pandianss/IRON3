@@ -1,0 +1,352 @@
+[
+  {
+    "id": "FRAGILE-1",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-2",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-3",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-4",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-5",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-6",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-7",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-8",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-9",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-10",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-11",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-12",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-13",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-14",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-15",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-16",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-17",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-18",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-19",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-20",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-21",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-22",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-23",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-24",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "FRAGILE-25",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-1",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-2",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-3",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-4",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-5",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-6",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-7",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-8",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-9",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-10",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-11",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-12",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-13",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-14",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-15",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-16",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-17",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-18",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-19",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-20",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-21",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-22",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-23",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-24",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "RECOVERING_HERO-25",
+    "finalStanding": 0.55,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  }
+]

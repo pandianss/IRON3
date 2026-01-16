@@ -8,7 +8,7 @@ import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/
 import { WhatIsIron } from './WhatIsIron';
 import { InstitutionalProductivity } from './InstitutionalProductivity';
 import { PersonalInstitution } from './PersonalInstitution';
-import { FitnessConstitutionPanel } from './FitnessConstitutionPanel';
+import { DisciplineLawPanel } from './DisciplineLawPanel';
 
 export const LandingPage = () => {
     const disciplines = getDisciplineList();
@@ -19,17 +19,25 @@ export const LandingPage = () => {
     const [activePanel, setActivePanel] = useState(null);
     const navigate = useNavigate();
 
-    const handleActivate = async (id) => {
-        if (activeModules.includes(id)) {
-            navigate('/app');
-            return;
-        }
+    const handleToggleModule = async (e, id) => {
+        e.stopPropagation();
+        const isActive = activeModules.includes(id);
+
         try {
-            await kernel.ingest('MODULE_ACTIVATED', { moduleId: id }, 'USER_HOST');
-            navigate('/app');
+            if (isActive) {
+                console.log("Deactivating Module:", id);
+                await kernel.ingest('MODULE_DEACTIVATED', { moduleId: id }, 'USER_HOST');
+            } else {
+                await kernel.ingest('MODULE_ACTIVATED', { moduleId: id }, 'USER_HOST');
+                navigate('/app');
+            }
         } catch (e) {
-            console.error("Activation Failure:", e);
+            console.error("Module Toggle Failure:", e);
         }
+    };
+
+    const handleCardClick = (discipline) => {
+        setActivePanel({ type: 'LAW', discipline });
     };
 
     const closePanel = () => setActivePanel(null);
@@ -58,7 +66,8 @@ export const LandingPage = () => {
                             {activePanel === 'PHILOSOPHY' && <WhatIsIron />}
                             {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
                             {activePanel === 'SOVEREIGNTY' && <PersonalInstitution />}
-                            {activePanel === 'CONSTITUTION' && <FitnessConstitutionPanel />}
+                            {activePanel?.type === 'LAW' && <DisciplineLawPanel discipline={activePanel.discipline} />}
+                            {activePanel === 'CONSTITUTION' && <DisciplineLawPanel discipline={disciplines.find(d => d.id === 'FITNESS_RECOVERY')} />}
                         </div>
                     </div>
                 </div>
@@ -86,12 +95,15 @@ export const LandingPage = () => {
                         {disciplines.map(d => {
                             const isActive = activeModules.includes(d.id);
                             return (
-                                <div key={d.id} style={{
-                                    ...cardStyle,
-                                    border: isActive ? '1px solid var(--iron-brand-stable)' : '1px solid var(--iron-border)',
-                                    background: isActive ? 'rgba(0, 255, 102, 0.05)' : 'rgba(255, 255, 255, 0.03)',
-                                    boxShadow: isActive ? '0 0 20px rgba(0, 255, 102, 0.1)' : 'none'
-                                }}>
+                                <div key={d.id}
+                                    onClick={() => handleCardClick(d)}
+                                    style={{
+                                        ...cardStyle,
+                                        border: isActive ? '1px solid var(--iron-brand-stable)' : '1px solid var(--iron-border)',
+                                        background: isActive ? 'rgba(0, 255, 102, 0.05)' : 'rgba(255, 255, 255, 0.03)',
+                                        boxShadow: isActive ? '0 0 20px rgba(0, 255, 102, 0.1)' : 'none',
+                                        cursor: 'pointer'
+                                    }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                         <h3 style={{ margin: 0, color: isActive ? 'var(--iron-brand-stable)' : 'var(--iron-accent)', fontSize: '1.1rem' }}>{d.label}</h3>
                                         <span style={{ fontSize: '0.6rem', opacity: 0.4, letterSpacing: '1px' }}>{d.primaryMetric.toUpperCase()}</span>
@@ -99,25 +111,39 @@ export const LandingPage = () => {
                                     <p style={{ fontSize: '0.85rem', margin: '15px 0 25px 0', opacity: 0.7, lineHeight: '1.5', minHeight: '3em' }}>
                                         {d.focus}
                                     </p>
-                                    {isActive ? (
-                                        <Link to="/app" style={{
-                                            ...activateButtonStyle,
-                                            background: 'var(--iron-brand-stable)',
-                                            color: '#000',
-                                            borderColor: 'var(--iron-brand-stable)',
-                                            textDecoration: 'none',
-                                            display: 'inline-block'
-                                        }}>
-                                            OPEN DASHBOARD
-                                        </Link>
-                                    ) : (
-                                        <button
-                                            onClick={() => handleActivate(d.id)}
-                                            style={activateButtonStyle}
-                                        >
-                                            ACTIVATE
-                                        </button>
-                                    )}
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        {isActive ? (
+                                            <>
+                                                <Link to="/app" onClick={e => e.stopPropagation()} style={{
+                                                    ...activateButtonStyle,
+                                                    background: 'var(--iron-brand-stable)',
+                                                    color: '#000',
+                                                    borderColor: 'var(--iron-brand-stable)',
+                                                    textDecoration: 'none',
+                                                    display: 'inline-block'
+                                                }}>
+                                                    OPEN DASHBOARD
+                                                </Link>
+                                                <button
+                                                    onClick={(e) => handleToggleModule(e, d.id)}
+                                                    style={{
+                                                        ...activateButtonStyle,
+                                                        borderColor: 'var(--iron-brand-breach)',
+                                                        color: 'var(--iron-brand-breach)'
+                                                    }}
+                                                >
+                                                    SUSPEND
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <button
+                                                onClick={(e) => handleToggleModule(e, d.id)}
+                                                style={activateButtonStyle}
+                                            >
+                                                ACTIVATE
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             );
                         })}

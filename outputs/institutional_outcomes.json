@@ -1,0 +1,702 @@
+[
+  {
+    "id": "CONSISTENT-1",
+    "finalStanding": 0.6729999823412698,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-2",
+    "finalStanding": 0.6699999999999999,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-3",
+    "finalStanding": 0.688,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-4",
+    "finalStanding": 0.7,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CONSISTENT-5",
+    "finalStanding": 0.6549999941468254,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CONSISTENT-6",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-7",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-8",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-9",
+    "finalStanding": 0.6970000000000001,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-10",
+    "finalStanding": 0.6909999822420634,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-11",
+    "finalStanding": 0.6549999531746031,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-12",
+    "finalStanding": 0.6970000000000001,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-13",
+    "finalStanding": 0.6369999590277777,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CONSISTENT-14",
+    "finalStanding": 0.685,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CONSISTENT-15",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-16",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-17",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-18",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-19",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CONSISTENT-20",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-1",
+    "finalStanding": 0.7,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "INTENSE-2",
+    "finalStanding": 0.6879999822420635,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "INTENSE-3",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-4",
+    "finalStanding": 0.654999994047619,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-5",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-6",
+    "finalStanding": 0.6549999939484126,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "INTENSE-7",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-8",
+    "finalStanding": 0.6639999650793651,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-9",
+    "finalStanding": 0.673,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-10",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-11",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-12",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-13",
+    "finalStanding": 0.6669999881944444,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-14",
+    "finalStanding": 0.688,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-15",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-16",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-17",
+    "finalStanding": 0.6729999822420634,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-18",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-19",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "INTENSE-20",
+    "finalStanding": 0.6009999647817461,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-1",
+    "finalStanding": 0.3489999413690477,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-2",
+    "finalStanding": 0.1,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "FRAGILE_STARTER-3",
+    "finalStanding": 0.11800000000000001,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-4",
+    "finalStanding": 0.43,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "FRAGILE_STARTER-5",
+    "finalStanding": 0.13599999394841272,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "FRAGILE_STARTER-6",
+    "finalStanding": 0.13299991765873015,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-7",
+    "finalStanding": 0.29499337500000017,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "FRAGILE_STARTER-8",
+    "finalStanding": 0.21099950744047657,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-9",
+    "finalStanding": 0.3519998900793651,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-10",
+    "finalStanding": 0.1,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-11",
+    "finalStanding": 0.1,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-12",
+    "finalStanding": 0.21699953898809532,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "FRAGILE_STARTER-13",
+    "finalStanding": 0.3729999532738095,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-14",
+    "finalStanding": 0.12999997648809525,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-15",
+    "finalStanding": 0.387946709722223,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-16",
+    "finalStanding": 0.11800000000000001,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "FRAGILE_STARTER-17",
+    "finalStanding": 0.11800000000000001,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-18",
+    "finalStanding": 0.11800000000000001,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-19",
+    "finalStanding": 0.27999982658730177,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "FRAGILE_STARTER-20",
+    "finalStanding": 0.41199991210317477,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-1",
+    "finalStanding": 0.5229995230158735,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-2",
+    "finalStanding": 0.27399961924603194,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-3",
+    "finalStanding": 0.5619999999999999,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-4",
+    "finalStanding": 0.685,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-5",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-6",
+    "finalStanding": 0.6459999999999999,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-7",
+    "finalStanding": 0.679,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-8",
+    "finalStanding": 0.42699996498015874,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-9",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-10",
+    "finalStanding": 0.6759999999999999,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-11",
+    "finalStanding": 0.20499970307539697,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-12",
+    "finalStanding": 0.6819999999999999,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-13",
+    "finalStanding": 0.31299995327380953,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-14",
+    "finalStanding": 0.5049998304563493,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-15",
+    "finalStanding": 0.5259999882936506,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-16",
+    "finalStanding": 0.3699998411706351,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-17",
+    "finalStanding": 0.3519997283730162,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-18",
+    "finalStanding": 0.6279998411706351,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-19",
+    "finalStanding": 0.6099999882936507,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "DISHONEST_OPTIMIST-20",
+    "finalStanding": 0.445,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-1",
+    "finalStanding": 0.517,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CYCLIC-2",
+    "finalStanding": 0.451,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-3",
+    "finalStanding": 0.37899990625000013,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-4",
+    "finalStanding": 0.3039997478174603,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-5",
+    "finalStanding": 0.688,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-6",
+    "finalStanding": 0.1,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-7",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-8",
+    "finalStanding": 0.4029999940476191,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CYCLIC-9",
+    "finalStanding": 0.1,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CYCLIC-10",
+    "finalStanding": 0.6549999593253968,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CYCLIC-11",
+    "finalStanding": 0.649,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-12",
+    "finalStanding": 0.13599998829365081,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-13",
+    "finalStanding": 0.11800000000000001,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-14",
+    "finalStanding": 0.6879999825396825,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CYCLIC-15",
+    "finalStanding": 0.4029999942460318,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-16",
+    "finalStanding": 0.35799994712301597,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-17",
+    "finalStanding": 0.7,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-18",
+    "finalStanding": 0.22599994742063492,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  },
+  {
+    "id": "CYCLIC-19",
+    "finalStanding": 0.11800000000000001,
+    "finalBand": "VIOLATED",
+    "finalPhase": "DEGRADED",
+    "finalIntegrity": 0
+  },
+  {
+    "id": "CYCLIC-20",
+    "finalStanding": 0.679,
+    "finalBand": "STRAINED",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 50
+  }
+]

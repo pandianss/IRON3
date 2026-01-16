@@ -1,0 +1,282 @@
+[
+  {
+    "id": "MINIMALIST-1",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-2",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-3",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-4",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-5",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-6",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-7",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-8",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-9",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "MINIMALIST-10",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-1",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-2",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-3",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-4",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-5",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-6",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-7",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-8",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-9",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OPTIMIZER-10",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-1",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-2",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-3",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-4",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-5",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-6",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-7",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-8",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-9",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "LIAR-10",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-1",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-2",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-3",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-4",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-5",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-6",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-7",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-8",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-9",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  },
+  {
+    "id": "OVERFITTER-10",
+    "finalStanding": 0.75,
+    "finalBand": "PRE_INDUCTION",
+    "finalPhase": "ACTIVE",
+    "finalIntegrity": 100
+  }
+]

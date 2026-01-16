@@ -24,6 +24,7 @@ export const EventTypes = {
     // Admin/Cycle
     CONTINUE_CYCLE: 'CONTINUE_CYCLE',
     MODULE_ACTIVATED: 'MODULE_ACTIVATED',
+    MODULE_DEACTIVATED: 'MODULE_DEACTIVATED',
     AUTHORITY_REALIGNED: 'AUTHORITY_REALIGNED',
 
     // The Genesis: Institutional Birth (FC-00)
@@ -57,6 +58,7 @@ const RequiredPayloads = {
     [EventTypes.SESSION_STARTED]: ['venue'],
     [EventTypes.EVIDENCE_SUBMITTED]: ['venue', 'evidenceType'],
     [EventTypes.MODULE_ACTIVATED]: ['moduleId'],
+    [EventTypes.MODULE_DEACTIVATED]: ['moduleId'],
     [EventTypes.ASSESSMENT_COMPLETED]: ['brokenPromise'],
     [EventTypes.CALIBRATION_SET]: ['startTime', 'anchorHabits'],
     [EventTypes.OATH_TAKEN]: ['nonNegotiable'],
