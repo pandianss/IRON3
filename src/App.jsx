@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { InstitutionalProvider } from './institution/InstitutionalContext';
+import { InstitutionalProvider } from './institution/logic/InstitutionalContext';
 import { GovernanceProvider, useGovernance } from './context/GovernanceContext';
 import { IronAppShell } from './shell/IronAppShell';
 

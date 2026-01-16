@@ -1,5 +1,5 @@
 import React from 'react';
-import { useInstitutionalMandate } from '../../../institution/InstitutionalContext';
+import { useInstitutionalMandate } from '../../../institution/logic/InstitutionalContext';
 import '../../styles/InstitutionalTheme.css';
 
 /**

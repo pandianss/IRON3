@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSovereignKernel } from '../../institution/InstitutionalContext';
+import { useSovereignKernel } from '../../institution/logic/InstitutionalContext';
 
 export const Induction = () => {
     const kernel = useSovereignKernel();

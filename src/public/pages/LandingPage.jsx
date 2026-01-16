@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '../SEOHead';
 import { getDisciplineList } from '../../domain/InstitutionalTemplates';
-import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/InstitutionalContext';
+import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/logic/InstitutionalContext';
 import { useAuth } from '../../context/AuthContext';
 
 // Floating Panels

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
-import { InstitutionalKernel } from '../ice/Kernel';
+import { InstitutionalKernel } from '../../ice/Kernel';
 
 // The Context holds the specific instance of the Engine
 const InstitutionalContext = createContext(null);
