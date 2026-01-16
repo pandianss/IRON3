@@ -1,5 +1,5 @@
 import React from 'react';
-import { useInstitutionalMandate } from '../../../institution/logic/InstitutionalContext';
+import { useInstitutionalMandate, useInstitutionalSnapshot } from '../../../institution/logic/InstitutionalContext';
 import '../../styles/InstitutionalTheme.css';
 
 /**
@@ -11,6 +11,7 @@ import '../../styles/InstitutionalTheme.css';
  */
 export const VerdictPanel = () => {
     const narrative = useInstitutionalMandate('NARRATIVE');
+    const snapshot = useInstitutionalSnapshot();
 
     if (!narrative) return null; // Authority is silent
 
@@ -68,6 +69,24 @@ export const VerdictPanel = () => {
             <p className="font-human text-body" style={{ marginBottom: '0' }}>
                 {message}
             </p>
+
+            {/* Constitutional Surfacing (Minimum Viable) */}
+            <div style={{
+                marginTop: 'var(--iron-space-md)',
+                paddingTop: 'var(--iron-space-sm)',
+                borderTop: '1px solid rgba(0,0,0,0.1)',
+                fontSize: '0.8rem',
+                opacity: 0.7,
+                fontFamily: 'var(--font-mono)'
+            }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>LIFECYCLE: {snapshot?.state?.lifecycle?.stage || 'UNKNOWN'}</span>
+                    <span>STANDING: {snapshot?.state?.standing?.state || 'UNKNOWN'}</span>
+                </div>
+                {snapshot?.state?.lifecycle?.baselineSI && (
+                    <div style={{ marginTop: '5px' }}>BASELINE: {snapshot.state.lifecycle.baselineSI.toFixed(2)}</div>
+                )}
+            </div>
         </div>
     );
 };

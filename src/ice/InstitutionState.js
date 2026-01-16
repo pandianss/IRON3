@@ -13,7 +13,8 @@ export class InstitutionState {
             phase: { id: 'GENESIS', label: 'GENESIS', version: '1.0' },
             session: { status: 'INACTIVE', startTime: null, duration: 0 },
             physiology: { capacity: 100, load: 0, status: 'OPTIMAL', era: 'PEAK' },
-            foundation: { brokenPromise: '', anchorHabits: [], nonNegotiable: '', why: '' }
+            foundation: { brokenPromise: '', anchorHabits: [], nonNegotiable: '', why: '' },
+            lifecycle: { stage: 'GENESIS', history: [], baselineSI: null, baselineEstablishedAt: null }
         };
     }
 

@@ -8,6 +8,7 @@ import { MandateEngine } from './engines/MandateEngine.js';
 import { SessionEngine } from './engines/SessionEngine.js';
 import { PhysiologicalEngine } from './engines/fitness/PhysiologicalEngine.js';
 import { FitnessStandingEngine } from './engines/fitness/FitnessStandingEngine.js';
+import { FitnessLifecycleEngine } from '../institution/logic/lifecycle/FitnessLifecycleEngine.js';
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
 import { PhaseController } from './governance/PhaseController.js';
 
@@ -40,7 +41,8 @@ export class InstitutionalKernel {
             mandate: new MandateEngine(this),
             session: new SessionEngine(this),
             physiology: new PhysiologicalEngine(this),
-            fitnessStanding: new FitnessStandingEngine(this)
+            fitnessStanding: new FitnessStandingEngine(this),
+            fitnessLifecycle: new FitnessLifecycleEngine(this)
         };
 
 
