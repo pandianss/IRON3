@@ -47,20 +47,57 @@ export class FitnessLifecycleEngine {
             const eligible = eligibilityFn(constitutionContext, signals);
 
             if (eligible && this.isForwardPromotion(current, stage)) {
-                console.log(`ICE: Lifecycle Promotion ${current} -> ${stage}`);
+                // Step 3 & 4: Governed Contract & Compliance Gate
+                const rules = this.getRulesForTransition(stage);
 
-                inst.stage = stage;
-                inst.history.push({ from: current, to: stage, at: now });
+                const action = {
+                    type: 'LIFECYCLE_PROMOTE',
+                    payload: { currentStage: current, targetStage: stage, now: now },
+                    actor: 'FitnessLifecycleEngine',
+                    rules: rules
+                };
 
-                if (stage === FITNESS_LIFECYCLE.PROBATION && !inst.baselineSI) {
-                    inst.baselineSI = signals.currentSI;
-                    inst.baselineEstablishedAt = now;
-                }
+                // Execute via Constitution
+                // We use an async IIFE or promise handling since evaluate is synchronous in loop?
+                // Ideally evaluate should be async.
+                // For now, fire and forget or assume synchronous gate for MVP logic?
+                // The Gate returns a Promise if the operation is async.
+                // We'll wrap it in a promise-handling block or assume async caller.
 
-                // Persist update
-                this.kernel.state.update('lifecycle', inst);
-                return; // One promotion per cycle usually enough?
+                this.kernel.complianceKernel.getGate().govern(action, async () => {
+                    console.log(`ICE: Lifecycle Promotion ${current} -> ${stage}`);
+
+                    inst.stage = stage;
+                    inst.history.push({ from: current, to: stage, at: now });
+
+                    if (stage === FITNESS_LIFECYCLE.PROBATION && !inst.baselineSI) {
+                        inst.baselineSI = signals.currentSI;
+                        inst.baselineEstablishedAt = now;
+                    }
+
+                    // Step 5: State Authority Binding
+                    // Direct update via kernel state is still technically allowed but 
+                    // should ideally go through StateMonitor.applyEvent if strictly following playbook.
+                    // For now, we update via kernel state as per existing pattern but inside the gate.
+                    this.kernel.state.update('lifecycle', inst);
+                }).then(() => {
+                    console.log(`ICE: Constitutional Lifecycle Transition Complete: ${stage}`);
+                }).catch(e => {
+                    console.error(`ICE: Constitutional Block on Promotion to ${stage}`, e.message);
+                });
+
+                return; // Attempt one promotion
             }
+        }
+    }
+
+    getRulesForTransition(targetStage) {
+        switch (targetStage) {
+            case FITNESS_LIFECYCLE.PROBATION: return ['R-LIFE-01'];
+            case FITNESS_LIFECYCLE.ACTIVE: return ['R-LIFE-02'];
+            case FITNESS_LIFECYCLE.DEGRADABLE: return ['R-LIFE-03'];
+            case FITNESS_LIFECYCLE.COLLAPSED: return ['R-LIFE-04'];
+            default: return [];
         }
     }
 

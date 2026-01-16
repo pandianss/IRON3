@@ -1,11 +1,11 @@
 import { INVARIANTS } from './data/invariants.js';
 
 /**
- * VVL Module 1: Constitutional Test Harness
+ * Invariant Engine
  * Role: The Internal Auditor.
  * Responsibility: Continuously verify that the Institutional State adheres to defined Invariants.
  */
-export class ConstitutionalTestHarness {
+export class InvariantEngine {
     constructor(kernel) {
         this.kernel = kernel;
         this.invariants = INVARIANTS;

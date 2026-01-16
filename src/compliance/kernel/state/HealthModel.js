@@ -1,11 +1,11 @@
 import { TelemetryStore } from './TelemetryStore.js';
 
 /**
- * MTL Module 1: Compliance Telemetry Agent
+ * Health Model
  * Role: The Observer.
  * Responsibility: Calculate high-level compliance metrics from raw kernel events.
  */
-export class ComplianceTelemetryAgent {
+export class HealthModel {
     constructor(kernel) {
         this.kernel = kernel;
         this.store = new TelemetryStore();

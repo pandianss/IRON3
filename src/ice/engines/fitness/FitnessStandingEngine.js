@@ -159,13 +159,25 @@ export class FitnessStandingEngine {
 
         this.kernel.state.update('fitnessStanding', this.state);
 
-        // Universal Standing Update
-        this.kernel.state.update('standing', {
-            state: finalBand,
-            integrity: Math.round(I * 100),
-            index: finalSI,
-            vectors: this.state,
-            lifecycle: updatedLifecycleState.stage // <--- Universal Property
+        // Universal Standing Update (Governed)
+        const standingAction = {
+            type: 'STANDING_UPDATE_STATUS',
+            payload: {
+                state: finalBand,
+                integrity: Math.round(I * 100),
+                index: finalSI,
+                vectors: this.state,
+                lifecycle: updatedLifecycleState.stage,
+                reason: "Ledger Recalculation" // Citation for R-STND-02
+            },
+            actor: 'FitnessStandingEngine',
+            rules: ['R-STND-01', 'R-STND-02']
+        };
+
+        this.kernel.complianceKernel.getGate().govern(standingAction, () => {
+            this.kernel.state.update('standing', standingAction.payload);
+        }).catch(e => {
+            console.error("ICE: Standing Update Blocked", e.message);
         });
     }
 

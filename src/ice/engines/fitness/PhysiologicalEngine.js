@@ -43,13 +43,35 @@ export class PhysiologicalEngine {
         const lawResult = RecoveryLaw.evaluateIntent(capacity, evaluationPayload, params);
 
         // 5. Update Engine State
-        state.update('physiology', {
-            era: activeEra,
-            capacity: capacity.value,
-            load: capacity.load,
-            status: capacity.status,
-            law: lawResult,
-            params: params // Expose params for UI visibility
+        // 5. Update Engine State (Governed)
+        // We define an explicit action for the update to ensure auditability of physiological changes.
+        const action = {
+            type: 'PHYSIOLOGY_UPDATE_CAPACITY',
+            payload: {
+                era: activeEra,
+                capacity: capacity.value,
+                load: capacity.load,
+                status: capacity.status,
+                law: lawResult,
+                // stress: is derived from session ended payload if present.
+                // We verify R-PHYS-01 (Load Cap) here if load increased significantly.
+            },
+            actor: 'PhysiologicalEngine',
+            rules: ['R-PHYS-01', 'R-PHYS-02']
+        };
+
+        this.kernel.complianceKernel.getGate().govern(action, () => {
+            state.update('physiology', {
+                era: activeEra,
+                capacity: capacity.value,
+                load: capacity.load,
+                status: capacity.status,
+                law: lawResult,
+                params: params
+            });
+        }).catch(e => {
+            console.error("ICE: Physiological Update Blocked by Constitution", e.message);
+            // If blocked, we might revert to previous safe state or enter Safety Mode.
         });
     }
 }

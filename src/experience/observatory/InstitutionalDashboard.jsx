@@ -1,9 +1,15 @@
 import React from 'react';
 import { RecoveryTimer } from './fitness/RecoveryTimer';
 import { StandingRadar } from './fitness/StandingRadar';
+import { HeatMap } from './HeatMap';
+
+import { ConstitutionalStatus } from '../../ui/components/governance/ConstitutionalStatus';
+import { PhysiologyMonitor } from '../../ui/components/governance/PhysiologyMonitor';
+import { StandingBadge } from '../../ui/components/governance/StandingBadge';
+import { AuditLog } from '../../ui/components/governance/AuditLog';
 
 import { InstitutionalHeader } from './InstitutionalHeader';
-import { StandingCore } from './StandingCore';
+import { StandingCore } from './StandingCore'; // Keeping import just in case, but unused?
 import { AuthorityMap } from './AuthorityMap';
 import { ContractMonitor } from './ContractMonitor';
 import { EventLedger } from './EventLedger';
@@ -74,22 +80,40 @@ export const InstitutionalDashboard = ({ snapshot }) => {
             <div style={{
                 flex: 1,
                 display: 'grid',
-                gridTemplateColumns: isFitness ? 'minmax(300px, 1fr) 1fr 1fr' : 'minmax(300px, 1fr) minmax(300px, 1fr)',
+                gridTemplateColumns: isFitness ? 'minmax(320px, 1fr) 1fr 1fr' : 'minmax(300px, 1fr) minmax(300px, 1fr)',
                 gridTemplateRows: isFitness ? '1fr 1fr' : 'repeat(2, 1fr)',
                 gap: '1px',
                 background: 'var(--iron-border)',
                 overflow: 'hidden'
             }}>
-                {/* B. Standing Core */}
-                <div style={{ background: 'var(--iron-surface)', gridRow: isFitness ? 'span 2' : 'auto' }}>
-                    <StandingCore standing={snapshot?.standing} />
+                {/* B. Constitutional Column (formerly Standing Core) */}
+                <div style={{ background: 'var(--iron-surface)', gridRow: isFitness ? 'span 2' : 'auto', padding: '16px', overflowY: 'auto' }}>
+                    {/* 1. Sovereign Status */}
+                    <ConstitutionalStatus />
+
+                    {/* 2. Standing Badge (Belt) */}
+                    <StandingBadge />
+
+                    {/* 2.5 Streak Heatmap (Provenance) */}
+                    <div className="mt-4">
+                        <HeatMap streak={standing.streak} />
+                    </div>
+
+                    {/* 3. Physiology (if Active) */}
                     {isFitness && (
-                        <div style={{ padding: '20px', borderTop: '1px solid var(--iron-border)' }}>
+                        <div className="mt-4">
+                            <PhysiologyMonitor />
+                        </div>
+                    )}
+
+                    {/* 4. Legacy Radar & Recovery (Kept for continuity) */}
+                    {isFitness && (
+                        <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--iron-border)' }}>
                             <StandingRadar vectors={fitnessVectors} />
                         </div>
                     )}
                     {isFitness && (
-                        <div style={{ padding: '20px', borderTop: '1px solid var(--iron-border)' }}>
+                        <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--iron-border)' }}>
                             <RecoveryTimer
                                 law={physiology.law}
                                 era={physiology.era}
@@ -110,9 +134,9 @@ export const InstitutionalDashboard = ({ snapshot }) => {
                     <ContractMonitor contracts={snapshot?.contracts} />
                 </div>
 
-                {/* E. Event Ledger */}
+                {/* E. Audit Ledger (Governance) */}
                 <div style={{ background: 'var(--iron-surface)' }}>
-                    <EventLedger events={snapshot?.ledger} />
+                    <AuditLog />
                 </div>
             </div>
 
