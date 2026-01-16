@@ -30,7 +30,7 @@ export class ConstitutionalKernel {
     }
 
     initialize(config, institutionalKernel) {
-        this.stateMonitor = new InstitutionalStateMonitor(institutionalKernel);
+        this.stateMonitor = new InstitutionalStateMonitor(institutionalKernel, config.sovereignToken);
         this.gate = new ComplianceGate(this.ruleEngine, this.audit, this.stateMonitor);
         this.health = new DegradationModel(institutionalKernel);
         this.invariantEngine = new InvariantEngine(institutionalKernel);

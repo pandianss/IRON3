@@ -82,6 +82,7 @@ export class AuditLedger {
 
     _save() {
         try {
+            if (typeof localStorage === 'undefined') return;
             // Safe stringify to handle potential circular references in complex action payloads
             const safeHistory = JSON.stringify(this.history, (key, value) => {
                 if (key === 'kernel' || key === 'complianceKernel' || key === 'gate' || key === 'monitor') return '[Filtered Component]';
@@ -95,6 +96,7 @@ export class AuditLedger {
 
     _load() {
         try {
+            if (typeof localStorage === 'undefined') return [];
             const data = localStorage.getItem(this.STORAGE_KEY);
             return data ? JSON.parse(data) : null;
         } catch (e) {

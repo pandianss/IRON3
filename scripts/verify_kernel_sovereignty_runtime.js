@@ -1,73 +1,69 @@
-import { SimulationKernel } from '../src/simulation/harness/SimulationKernel.js';
-import { SIM_FIT_03 } from '../src/simulation/scenarios/SIM-FIT-03.js';
-import { initializeKernel } from '../src/compliance/bootstrap.js';
-import { ConstitutionalKernel } from '../src/compliance/kernel/kernel.js';
+import {
+    attemptKernellessExecution,
+    attemptGateBypass,
+    attemptDirectStateMutation,
+    attemptGovernedActionWithoutAudit
+} from '../src/compliance/kernel/tests/sovereigntyHarness.js';
 
-async function verifySovereignty() {
-    console.log("--- KERNEL SOVEREIGNTY RUNTIME VERIFICATION ---");
+const TIMEOUT_MS = 2000; // Global kill switch
 
-    // 1. Initialize Simulation and Kernel
-    const sim = new SimulationKernel(SIM_FIT_03);
-    const kernel = await initializeKernel(sim);
+async function runSovereigntyCheck() {
+    const startTime = Date.now();
+    console.log("--- CONSTITUTIONAL SOVEREIGNTY VERIFICATION ---");
+    console.log("Validating Negative Capabilities (The 'Can Not' Doctrines)");
 
-    // --- TEST 1: Bypass Attempt (Direct ICE Ingest without Gate) ---
-    // In our implementation, ICE ingest IS gated. 
-    // But let's verify that a "SUPREME" violation triggers an enforcer response.
-    console.log("\nTEST 1: supreme Violation Enforcement (Automatic Suspension)");
-    try {
-        await sim.kernel.ingest('ACTIVATE_INSTITUTION', {
-            health: 50, // Below P-ACT-01 threshold (80)
-            foundation: { why: "Test Purpose" }
-        }, "UnauthorizedActor"); // R-SYS-01 should also trigger
+    const probes = [
+        { name: "Probe A: Kernel Unavoidability", fn: attemptKernellessExecution, expectedBlocked: true },
+        { name: "Probe B: Gate Supremacy", fn: attemptGateBypass, expectedBlocked: true },
+        { name: "Probe C: State Write Lock", fn: attemptDirectStateMutation, expectedBlocked: true },
+        { name: "Probe D: Audit Mandatory", fn: attemptGovernedActionWithoutAudit, expectedBlocked: true }
+    ];
 
-        console.error("FAIL: Supreme Violation allowed through ICE.ingest");
-    } catch (e) {
-        console.log("PASS: Supreme Violation Blocked:", e.message);
+    let passed = 0;
+    let failed = 0;
 
-        // Verify Enforcement: Stage should be SUSPENDED
-        const snapshot = sim.kernel.getSnapshot();
-        if (snapshot.state.lifecycle.stage === 'SUSPENDED') {
-            console.log("PASS: Institution automatically SUSPENDED by CCL.");
-        } else {
-            console.error("FAIL: Institution NOT suspended. Current Stage:", snapshot.state.lifecycle.stage);
+    for (const probe of probes) {
+        try {
+            const result = await Promise.race([
+                probe.fn(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 200)) // 200ms per probe limit
+            ]);
+
+            if (result.blocked === probe.expectedBlocked) {
+                console.log(`✅ ${probe.name}: PASS`);
+                passed++;
+            } else {
+                console.log(`\n!!! FAILURE DETECTED !!!`);
+                console.log(`❌ ${probe.name}: FAIL`);
+                console.log(`   Expected Blocked: ${probe.expectedBlocked}`);
+                console.log(`   Actual Blocked: ${result.blocked}`);
+                console.log(`   Result/Message: ${JSON.stringify(result)}`);
+                console.log(`!!! ---------------- !!!\n`);
+                failed++;
+            }
+        } catch (e) {
+            console.log(`\n!!! EXCEPTION IN TEST RUNNER !!!`);
+            console.error(`❌ ${probe.name}: ERROR - ${e.message}`);
+            failed++;
         }
     }
 
-    // --- TEST 2: Pre-Bootstrap Guard ---
-    // We can't really test this easily without a new process, 
-    // but initializeKernel ensures only one instance exists.
+    const duration = Date.now() - startTime;
+    console.log(`\nRESULTS: ${passed}/${probes.length} Passed in ${duration}ms`);
 
-    // --- TEST 3: Action Provenance (R-SYS-01) ---
-    console.log("\nTEST 2: Actor Provenance Verification (R-SYS-01)");
-    try {
-        await kernel.getGate().govern({
-            type: "AUTHORITY_PROMOTE",
-            actor: "MaliciousScript",
-            payload: {}
-        }, () => {
-            console.error("FAIL: Malicious Actor allowed.");
-        });
-    } catch (e) {
-        console.log("PASS: Malicious Actor Blocked:", e.message);
-    }
-
-    // --- TEST 4: Emergency Override (R-SYS-02) ---
-    console.log("\nTEST 3: Sovereign Recovery Override (Escape Hatch)");
-    const recoveryResult = await kernel.getGate().govern({
-        type: "EMERGENCY_RESET",
-        actor: "OVERRIDE_ADMIN",
-        payload: { overrideToken: "SOVEREIGN_RECOVERY" }
-    }, async () => {
-        return "RECOVERY_SUCCESS";
-    });
-
-    if (recoveryResult === "RECOVERY_SUCCESS") {
-        console.log("PASS: Sovereign Recovery Override Successful.");
+    if (failed > 0) {
+        console.error("VERDICT: SOVEREIGNTY BREACHED.");
+        process.exit(1);
     } else {
-        console.error("FAIL: Sovereign Recovery Blocked or Failed.");
+        console.log("VERDICT: SOVEREIGNTY SECURE.");
+        process.exit(0);
     }
-
-    console.log("\n--- VERIFICATION COMPLETE ---");
 }
 
-verifySovereignty().catch(console.error);
+// Kill switch
+setTimeout(() => {
+    console.error("\n❌ FATAL: Global Timeout Exceeded.");
+    process.exit(1);
+}, TIMEOUT_MS);
+
+runSovereigntyCheck();

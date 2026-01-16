@@ -4,8 +4,9 @@
  * Cache for quick lookups by Engines.
  */
 export class InstitutionState {
-    constructor() {
+    constructor(sovereignToken) {
         this.STORAGE_KEY = 'IRON_INSTITUTION_STATE';
+        this.token = sovereignToken;
 
         // Initial / Default Domains
         const defaults = {
@@ -23,10 +24,16 @@ export class InstitutionState {
     }
 
     getDomain(name) {
-        return this.domains[name];
+        if (!this.domains[name]) return null;
+        // Return frozen copy to prevent direct mutation
+        return Object.freeze({ ...this.domains[name] });
     }
 
-    update(domain, data) {
+    update(domain, data, token) {
+        if (token !== this.token) {
+            throw new Error("Sovereignty Breach: Unauthorized State Mutation.");
+        }
+
         if (data === null || data === undefined) {
             this.domains[domain] = null;
         } else if (!this.domains[domain] || typeof data !== 'object') {
@@ -39,13 +46,22 @@ export class InstitutionState {
     }
 
     getSnapshot() {
-        return { ...this.domains };
+        // Shallow freeze of the map
+        const snap = { ...this.domains };
+        // Deep freeze top level domains?
+        Object.keys(snap).forEach(k => {
+            if (snap[k] && typeof snap[k] === 'object') {
+                snap[k] = Object.freeze({ ...snap[k] });
+            }
+        });
+        return Object.freeze(snap);
     }
 
     _save() {
         try {
+            if (typeof localStorage === 'undefined') return;
             const safeData = JSON.stringify(this.domains, (key, value) => {
-                if (key === 'kernel' || key === 'complianceKernel' || key === 'gate' || key === 'monitor') return '[Filtered Component]';
+                if (key === 'kernel' || key === 'complianceKernel' || key === 'gate' || key === 'monitor') return '[Filtered component]';
                 return value;
             });
             localStorage.setItem(this.STORAGE_KEY, safeData);
@@ -56,6 +72,7 @@ export class InstitutionState {
 
     _load() {
         try {
+            if (typeof localStorage === 'undefined') return null;
             const data = localStorage.getItem(this.STORAGE_KEY);
             return data ? JSON.parse(data) : null;
         } catch (e) {
