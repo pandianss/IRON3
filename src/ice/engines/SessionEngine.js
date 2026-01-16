@@ -66,7 +66,7 @@ export class SessionEngine {
         };
 
         this.kernel.complianceKernel.getGate().govern(action, () => {
-            this.kernel.state.update('session', payload);
+            this.kernel.setState('session', payload);
             console.log(`ICE: Session Update [${payload.status}] Governed.`);
         }).catch(e => {
             console.error("ICE: Session Update Blocked by Constitution", e.message);

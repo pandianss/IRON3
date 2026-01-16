@@ -60,6 +60,22 @@ export class AuditLedger {
         return [...this.history];
     }
 
+    /**
+     * registerSimulation - Marks a run as a simulation for governance tracking.
+     * @param {string} runId 
+     */
+    registerSimulation(runId) {
+        const record = {
+            id: this._generateId(),
+            timestamp: new Date().toISOString(),
+            type: 'SIMULATION_REGISTERED',
+            runId: runId
+        };
+        this.history.push(record);
+        this._save();
+        console.log(`AUDIT: Simulation Registered [${runId}]`);
+    }
+
     getLog() {
         return this.history;
     }

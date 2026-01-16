@@ -80,7 +80,7 @@ export class AuthorityEngine {
         };
 
         this.kernel.complianceKernel.getGate().govern(action, () => {
-            this.kernel.state.update('authority', profile);
+            this.kernel.setState('authority', profile);
             console.log("ICE: Authority Resolved & Governed", profile);
         }).catch(e => {
             console.error("ICE: Authority Resolution Blocked by Constitution", e.message);

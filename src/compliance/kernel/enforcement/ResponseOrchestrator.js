@@ -42,10 +42,12 @@ export class ResponseOrchestrator {
     }
 
     async lockAuthority(payload) {
-        // In a real app, this would call kernel.suspend() or similar
         console.warn("CCL: !!! AUTHORITY LOCKDOWN INITIATED !!!");
-        // We can simulate this by ingesting a LOCK event into the kernel if it supports it
-        // or just returning the decision for the caller to act on.
+        // Sovereignty Item 10: Automated correction flow
+        this.kernel.getMonitor().applyEvent('authority', {
+            interactionLevel: 'LOCKED',
+            reason: payload.reason || 'Constitutional Crisis'
+        });
         return { action: 'LOCKED', reason: payload.reason || 'Constitutional Crisis' };
     }
 

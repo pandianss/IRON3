@@ -61,7 +61,7 @@ export class MandateEngine {
         };
 
         this.kernel.complianceKernel.getGate().govern(action, () => {
-            this.kernel.state.update('mandates', bundle);
+            this.kernel.setState('mandates', bundle);
             console.log("ICE: Mandates Issued & Governed", bundle);
         }).catch(e => {
             console.error("ICE: Mandate Issuance Blocked by Constitution", e.message);

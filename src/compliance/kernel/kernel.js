@@ -2,7 +2,7 @@ import { PrincipleRegistry } from './principles/PrincipleRegistry.js';
 import { RuleEngine } from './engine/RuleEngine.js';
 import { InvariantEngine } from './engine/InvariantEngine.js';
 import { AuditLedger } from './audit/AuditLedger.js';
-import { StateMonitor } from './state/StateMonitor.js';
+import { InstitutionalStateMonitor } from './state/InstitutionalStateMonitor.js';
 import { HealthModel } from './state/HealthModel.js';
 import { ComplianceGate } from './gate/ComplianceGate.js';
 import { ResponseOrchestrator } from './enforcement/ResponseOrchestrator.js';
@@ -28,7 +28,7 @@ export class ConstitutionalKernel {
     }
 
     initialize(config, institutionalKernel) {
-        this.stateMonitor = new StateMonitor(institutionalKernel);
+        this.stateMonitor = new InstitutionalStateMonitor(institutionalKernel);
         this.gate = new ComplianceGate(this.ruleEngine, this.audit, this.stateMonitor);
         this.health = new HealthModel(institutionalKernel);
         this.invariantEngine = new InvariantEngine(institutionalKernel);
@@ -124,6 +124,14 @@ export class ConstitutionalKernel {
         });
 
         console.log("CONSTITUTIONAL KERNEL: All Rules Ratified.");
+    }
+
+    evaluate() {
+        const report = this.invariantEngine.verifySnapshot();
+        if (report.status === 'CONSTITUTIONAL_CRISIS') {
+            this.enforcer.handleTrigger('CONSTITUTIONAL_CRISIS', report);
+        }
+        return report;
     }
 
     getSnapshot() {

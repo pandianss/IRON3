@@ -169,8 +169,8 @@ export class FitnessStandingEngine {
         };
 
         this.kernel.complianceKernel.getGate().govern(standingAction, () => {
-            this.kernel.state.update('fitnessStanding', this.state);
-            this.kernel.state.update('standing', standingAction.payload);
+            this.kernel.setState('fitnessStanding', this.state);
+            this.kernel.setState('standing', standingAction.payload);
         }).catch(e => {
             console.error("ICE: Standing Update Blocked", e.message);
         });

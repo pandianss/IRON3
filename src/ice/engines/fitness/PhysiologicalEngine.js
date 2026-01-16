@@ -61,7 +61,7 @@ export class PhysiologicalEngine {
         };
 
         this.kernel.complianceKernel.getGate().govern(action, () => {
-            state.update('physiology', {
+            this.kernel.setState('physiology', {
                 era: activeEra,
                 capacity: capacity.value,
                 load: capacity.load,

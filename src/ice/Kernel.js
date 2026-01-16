@@ -136,15 +136,8 @@ export class InstitutionalKernel {
             this.state.update('error', null);
             console.log("ICE: Cycle Success. Authority Maintained.");
 
-            // VVL Post-Cycle Verification
-            const vvlReport = this.complianceKernel.invariantEngine.verifySnapshot();
-            if (vvlReport.status === 'CONSTITUTIONAL_CRISIS') {
-                console.error("ICE: Sovereignty Crisis! Invariants Failed.", vvlReport.details.filter(d => !d.passed));
-                this.state.update('governance_status', 'CRISIS');
-            } else {
-                this.state.update('governance_status', 'NOMINAL');
-            }
-
+            // Sovereignty Item 8: Continuous Invariant Evaluation
+            this.complianceKernel.evaluate();
         } catch (e) {
             console.error("ICE: Cycle Failure", e);
             this.state.update('error', e.message);
@@ -172,6 +165,12 @@ export class InstitutionalKernel {
                 audit: this.complianceKernel.audit.getLog() // Expose the Decision Record
             }
         };
+        /**
+         * setState - Sovereign write access (Sovereignty Item 6)
+         * Centralized bottleneck for all state mutations.
+         */
+        setState(domain, data) {
+            this.complianceKernel.getMonitor().applyEvent(domain, data);
+        }
     }
-}
 
