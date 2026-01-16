@@ -1,4 +1,4 @@
-import { transition } from '../../institution/standing-engine/standingTransitions.js';
+import { transition } from '../../institution/logic/standing-engine/standingTransitions.js';
 import { PhaseGate } from '../governance/PhaseGate.js';
 // Note: We are reusing the pure transition logic for now, but wrapping it in the Engine class.
 

@@ -1,6 +1,6 @@
 import { PhaseGate } from '../../governance/PhaseGate.js';
 import { FC00_CONTRACT } from '../../contract/definitions/FC-00.js';
-import { FITNESS_LIFECYCLE } from '../../../institution/logic/lifecycle/FitnessLifecycleEngine.js'; // Import enum
+import { FITNESS_LIFECYCLE } from '../../../core/contracts/FC-FIT-01-LIFECYCLE.js';
 import { buildFitnessSignals } from '../../../institution/logic/events/FitnessEventProcessor.js';
 
 /**

@@ -12,12 +12,17 @@ import { FitnessLifecycleEngine } from '../institution/logic/lifecycle/FitnessLi
 import { InstitutionalCycle } from './cycle/InstitutionalCycle.js';
 import { PhaseController } from './governance/PhaseController.js';
 
-// Compliance Framework
-import { AuditLogger } from '../compliance/ael/AuditLogger.js';
-import { EvidenceManager } from '../compliance/ael/EvidenceManager.js';
-import { ComplianceTelemetryAgent } from '../compliance/mtl/ComplianceTelemetryAgent.js';
-import { ConstitutionalTestHarness } from '../compliance/vvl/ConstitutionalTestHarness.js';
-import { ResponseOrchestrator } from '../compliance/ccl/ResponseOrchestrator.js';
+// Compliance Framework (Unified Root)
+import {
+    AuditLogger,
+    EvidenceManager,
+    ComplianceTelemetryAgent,
+    ConstitutionalTestHarness,
+    ResponseOrchestrator,
+    PrincipleRegistry,
+    RuleEngine,
+    DecisionInterceptor
+} from '../compliance/index.js';
 
 /**
  * ICE Module 1: Institutional Kernel
@@ -54,26 +59,27 @@ export class InstitutionalKernel {
         this.cycle = new InstitutionalCycle(this);
 
         // Compliance Framework Initialization
+        // "One new root... No simulation... occurs without passing through it."
         this.compliance = {
-            ael: {
+            audit: {
                 logger: new AuditLogger(),
                 evidence: new EvidenceManager()
             },
-            // VVL & CCL depend on 'this', so we init them. 
-            // MTL Agent auto-subscribes in its constructor.
-            vvl: {
+            tests: {
                 harness: new ConstitutionalTestHarness(this)
             },
-            ccl: {
+            enforcement: {
                 orchestrator: new ResponseOrchestrator(this)
+            },
+            metrics: {
+                agent: new ComplianceTelemetryAgent(this)
+            },
+            principles: PrincipleRegistry,
+            engine: {
+                rules: RuleEngine,
+                interceptor: DecisionInterceptor
             }
         };
-
-        // MTL Agent (Observer)
-        this.compliance.mtl = {
-            agent: new ComplianceTelemetryAgent(this)
-        };
-
 
 
         console.log("ICE: Kernel Initialized (v1.0 Sovereignty).");
@@ -81,7 +87,7 @@ export class InstitutionalKernel {
 
     /**
      * Subscribe to Kernel updates (Post-Cycle).
-     * @param {function} callback 
+     * @param {function} callback
      * @returns {function} unsubscribe
      */
     subscribe(callback) {
@@ -98,23 +104,33 @@ export class InstitutionalKernel {
     /**
      * The Single Entry Point.
      * Ingests a signal, normalizes it, and runs the cycle.
-     * @param {string} eventType 
-     * @param {object} payload 
-     * @param {string} actorId 
+     * @param {string} eventType
+     * @param {object} payload
+     * @param {string} actorId
      */
     async ingest(eventType, payload, actorId) {
-        // 0. AEL: Audit Log (Before processing)
-        const auditHash = this.compliance.ael.logger.log({ type: eventType, payload, actorId });
+        // 0. COMPLIANCE INTERCEPTION (Policy Execution Layer)
+        // No event enters the Ledger without permission.
+        const decision = this.compliance.engine.interceptor.intercept('INGEST_EVENT', { eventType, payload, actorId }, []);
+        // Note: We can register global rules to check here, e.g. 'R-GLOBAL-INGEST'.
+
+        if (!decision.allowed) {
+            console.error(`ICE: Ingest Blocked by Compliance: ${decision.rejectionReasons.join(', ')}`);
+            throw new Error(`Compliance Violation: ${decision.rejectionReasons.join(', ')}`);
+        }
+
+        // 1. AEL: Audit Log (Before processing)
+        const auditHash = this.compliance.audit.logger.log({ type: eventType, payload, actorId });
         console.log(`ICE: Event Audit Logged [Hash: ${auditHash.substring(0, 8)}]`);
 
-        // 1. Validate & Normalize (Event Registry)
+        // 2. Validate & Normalize (Event Registry)
         const event = EventRegistry.create(eventType, payload, actorId);
 
-        // 2. Append to Memory (Ledger)
+        // 3. Append to Memory (Ledger)
         this.ledger.append(event);
         console.log(`ICE: Event ${event.type} committed to Ledger [ID: ${event.id.substring(0, 8)}]`);
 
-        // 3. Run Institutional Cycle (Evaluate Consequences)
+        // 4. Run Institutional Cycle (Evaluate Consequences)
         return this.evaluate();
     }
 
@@ -130,13 +146,13 @@ export class InstitutionalKernel {
             console.log("ICE: Cycle Success. Authority Maintained.");
 
             // VVL: Invariant Check (Post-Cycle Verification)
-            const verification = this.compliance.vvl.harness.verifySnapshot();
+            const verification = this.compliance.tests.harness.verifySnapshot();
 
             if (verification.status === 'CONSTITUTIONAL_CRISIS') {
                 console.error("ICE: CONSTITUTIONAL CRISIS DETECTED", verification.details);
 
                 // CCL: Automated Response
-                const response = await this.compliance.ccl.orchestrator.handleTrigger('CONSTITUTIONAL_CRISIS', verification);
+                const response = await this.compliance.enforcement.orchestrator.handleTrigger('CONSTITUTIONAL_CRISIS', verification);
                 if (response?.action === 'LOCKED') {
                     console.warn("ICE: SYSTEM LOCKDOWN EFFECTIVE IMMEDIATELY.");
                     // In a full implementation, we would set a flag in State to block further mutations.
