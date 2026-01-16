@@ -37,5 +37,39 @@ export const INVARIANTS = [
             const load = context.state?.physiology?.load || 0;
             return load >= 0;
         }
+    },
+    {
+        id: 'INV-ACT-01',
+        description: 'Activated institutions must have nonzero health.',
+        severity: 'SUPREME',
+        check: (context) => {
+            const stage = context.state?.lifecycle?.stage;
+            const health = context.state?.physiology?.health || 0;
+            if (stage === 'ACTIVE' && health <= 0) return false;
+            return true;
+        }
+    },
+    {
+        id: 'INV-DEG-01',
+        description: 'Degraded institutions cannot escalate privileges.',
+        severity: 'HIGH',
+        check: (context) => {
+            const health = context.state?.physiology?.health || 0;
+            const action = context.action || {};
+            if (health < 40 && action.type === 'AUTHORITY_PROMOTE') return false;
+            return true;
+        }
+    },
+    {
+        id: 'INV-DEG-02',
+        description: 'Critical degradation triggers enforcement protocols.',
+        severity: 'SUPREME',
+        check: (context) => {
+            const health = context.state?.physiology?.health || 0;
+            // If health is below 10, it MUST be in CRITICAL or COLLAPSED band
+            const band = context.state?.physiology?.status;
+            if (health < 10 && band !== 'CRITICAL' && band !== 'COLLAPSED') return false;
+            return true;
+        }
     }
 ];

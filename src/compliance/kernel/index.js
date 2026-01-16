@@ -1,4 +1,4 @@
-import { ConstitutionalKernel } from './kernel.js';
+import { ConstitutionalKernel } from './ConstitutionalKernel.js';
 
 export { ConstitutionalKernel };
 // Also export types/classes if needed by consumers

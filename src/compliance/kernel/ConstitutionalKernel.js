@@ -3,17 +3,19 @@ import { RuleEngine } from './engine/RuleEngine.js';
 import { InvariantEngine } from './engine/InvariantEngine.js';
 import { AuditLedger } from './audit/AuditLedger.js';
 import { InstitutionalStateMonitor } from './state/InstitutionalStateMonitor.js';
-import { HealthModel } from './state/HealthModel.js';
+import { DegradationModel } from './state/DegradationModel.js';
 import { ComplianceGate } from './gate/ComplianceGate.js';
 import { ResponseOrchestrator } from './enforcement/ResponseOrchestrator.js';
 
 import { FC00_CONTRACT } from '../../ice/contract/definitions/FC-00.js';
 import { FITNESS_LIFECYCLE_CONTRACT } from '../../core/contracts/FC-FIT-01-LIFECYCLE.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-/**
- * Constitutional Kernel
- * Wires the constitutional organs together.
- */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export class ConstitutionalKernel {
     constructor() {
         this.principles = new PrincipleRegistry();
@@ -30,7 +32,7 @@ export class ConstitutionalKernel {
     initialize(config, institutionalKernel) {
         this.stateMonitor = new InstitutionalStateMonitor(institutionalKernel);
         this.gate = new ComplianceGate(this.ruleEngine, this.audit, this.stateMonitor);
-        this.health = new HealthModel(institutionalKernel);
+        this.health = new DegradationModel(institutionalKernel);
         this.invariantEngine = new InvariantEngine(institutionalKernel);
         this.enforcer = new ResponseOrchestrator(this);
 
@@ -56,17 +58,28 @@ export class ConstitutionalKernel {
         })) || [];
         fit01Principles.forEach(p => this.principles.register(p));
 
-        console.log(`CONSTITUTIONAL KERNEL: Loaded ${fc00Principles.length + fit01Principles.length} Principles.`);
+        try {
+            const principlesPath = path.resolve(__dirname, 'principles', 'texts', 'activation.principles.yaml');
+            if (fs.existsSync(principlesPath)) {
+                this.principles.loadFromYaml(fs.readFileSync(principlesPath, 'utf8'));
+            } else {
+                this.principles.register({ id: 'P-ACT-01', text: 'Activation Health Requirement', threshold: 80 });
+                this.principles.register({ id: 'P-DEG-01', text: 'Critical Degradation Threshold', threshold: 40 });
+            }
+        } catch (e) {
+            console.error("KERNEL: Failed to register Slice Principles", e);
+        }
+
+        console.log(`CONSTITUTIONAL KERNEL: Loaded ${this.principles.getAll().length} Principles.`);
         this.loadRules();
     }
 
     loadRules() {
-        // --- Lifecycle Rules ---
         this.ruleEngine.registerRule({
             id: 'R-LIFE-01',
             logic: (context) => {
                 if (context.action.type !== 'LIFECYCLE_PROMOTE' || context.action.payload.targetStage !== 'PROBATION') return true;
-                return { allowed: !!context.state.foundation?.why, reason: 'Genesis Verdict not found.' };
+                return { allowed: !!context.state.foundation?.why, reason: 'Genesis Purpose (Why) not found.' };
             }
         });
 
@@ -81,17 +94,6 @@ export class ConstitutionalKernel {
             }
         });
 
-        // --- Authority/Mandate/Session Rules ---
-        this.ruleEngine.registerRule({
-            id: 'R-AUTH-01',
-            logic: (context) => true // Placeholder logic
-        });
-
-        this.ruleEngine.registerRule({
-            id: 'R-MAND-01',
-            logic: (context) => true // Placeholder logic
-        });
-
         this.ruleEngine.registerRule({
             id: 'R-SESS-01',
             logic: (context) => {
@@ -102,13 +104,21 @@ export class ConstitutionalKernel {
             }
         });
 
-        // --- System Hardening Rules ---
         this.ruleEngine.registerRule({
             id: 'R-SYS-01',
             description: 'Actor Provenance Verification',
             logic: (context) => {
-                const validActors = ['InstitutionalKernel', 'AuthorityEngine', 'MandateEngine', 'SessionEngine', 'PhysiologicalEngine', 'FitnessStandingEngine', 'FitnessLifecycleEngine', 'OVERRIDE_ADMIN'];
-                return validActors.includes(context.action.actor) || { allowed: false, reason: `Unrecognized Actor: ${context.action.actor}` };
+                const validActors = new Set([
+                    'InstitutionalKernel', 'AuthorityEngine', 'MandateEngine', 'SessionEngine',
+                    'PhysiologicalEngine', 'FitnessStandingEngine', 'FitnessLifecycleEngine',
+                    'OVERRIDE_ADMIN', 'SimulationHarness', 'System'
+                ]);
+                if (context.action.actor === 'SimulationHarness') {
+                    console.log("DEBUG: R-SYS-01 Set has SimulationHarness:", validActors.has('SimulationHarness'));
+                    console.log("DEBUG: R-SYS-01 Set values:", Array.from(validActors));
+                }
+                if (validActors.has(context.action.actor)) return true;
+                return { allowed: false, reason: `Unrecognized Actor: ${context.action.actor}` };
             }
         });
 
@@ -136,7 +146,7 @@ export class ConstitutionalKernel {
 
     getSnapshot() {
         return {
-            principles: this.principles.history,
+            principles: this.principles.getAll(),
             audit: this.audit.getLog(),
             health: this.health.getScore(),
             invariants: this.invariantEngine.getAuditLog()

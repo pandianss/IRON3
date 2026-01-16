@@ -46,9 +46,39 @@ export class InstitutionalStateMonitor {
         }
     }
 
+    /**
+     * activateInstitution - Sovereignty Slice (Phase 2.3)
+     * Canonical transition to ACTIVE stage.
+     */
+    activateInstitution(event) {
+        if (this.getState()?.lifecycle?.stage === 'ACTIVE') {
+            throw new Error("Sovereignty Breach: Institution is already active.");
+        }
+
+        const payload = event.payload || {};
+        const health = payload.health || 80;
+
+        console.log("STATE_MONITOR: Canonical Activation Transition.");
+
+        // 1. Update Lifecycle Stage
+        this.applyEvent('lifecycle', {
+            stage: 'ACTIVE',
+            baselineHealth: health,
+            activatedAt: new Date().toISOString()
+        });
+
+        // 2. Initialize Health Domain (Sovereignty Item 9 alignment)
+        this.applyEvent('physiology', {
+            health: health,
+            status: 'OPTIMAL',
+            lastAssessment: new Date().toISOString()
+        });
+    }
+
     getHealthScore() {
         const state = this.getState();
-        return state?.standing?.integrity || 100;
+        // Item 9: Health comes from the physiology/degradation domain
+        return state?.physiology?.health || 100;
     }
 
     getDegradationProfile() {

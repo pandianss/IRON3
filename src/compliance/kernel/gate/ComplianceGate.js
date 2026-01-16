@@ -56,6 +56,16 @@ export class ComplianceGate {
 
             if (!allowed) {
                 console.error(`GATE: Action ${action.type} Blocked: ${rejectionReasons.join(', ')}`);
+
+                // PHASE 5.2: Wire gate to enforcement
+                const severity = action.severity || 'MAJOR';
+                if (severity === 'SUPREME' || severity === 'CRITICAL') {
+                    this.stateMonitor.kernel.enforcer.handleTrigger(
+                        severity === 'SUPREME' ? 'SUPREME_VIOLATION' : 'CONSTITUTIONAL_CRISIS',
+                        { reason: rejectionReasons.join('; '), action: action.type }
+                    );
+                }
+
                 throw new Error(`Compliance Violation: ${rejectionReasons.join(', ')}`);
             }
 

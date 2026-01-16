@@ -9,14 +9,18 @@ export class ResponseOrchestrator {
         this.strategies = {
             'LOG_ONLY': this.logOnly.bind(this),
             'LOCK_AUTHORITY': this.lockAuthority.bind(this),
-            'RESET_MODULE': this.resetModule.bind(this)
+            'RESET_MODULE': this.resetModule.bind(this),
+            'DEGRADATION_ESCALATION': this.escalateDegradation.bind(this),
+            'SUSPEND_INSTITUTION': this.suspendInstitution.bind(this)
         };
 
         // Simple rules engine for response mapping
         this.responseMap = {
             'CONSTITUTIONAL_CRISIS': 'LOCK_AUTHORITY',
             'MODULE_CRASH': 'RESET_MODULE',
-            'OBLIGATION_BREACHED': 'LOG_ONLY'
+            'OBLIGATION_BREACHED': 'LOG_ONLY',
+            'CRITICAL_DEGRADATION': 'DEGRADATION_ESCALATION',
+            'SUPREME_VIOLATION': 'SUSPEND_INSTITUTION'
         };
     }
 
@@ -54,5 +58,23 @@ export class ResponseOrchestrator {
     async resetModule(payload) {
         console.log(`CCL: Attempting verification reset for module: ${payload.moduleId}`);
         return { action: 'RESET_ATTEMPTED', target: payload.moduleId };
+    }
+
+    async escalateDegradation(payload) {
+        console.warn("CCL: !!! DEGRADATION ESCALATION TRIGGERED !!!");
+        this.kernel.getMonitor().applyEvent('lifecycle', {
+            monitoringLevel: 'CRITICAL',
+            reason: 'Health dropped below critical threshold'
+        });
+        return { action: 'ESCALATED', reason: 'High-risk degradation detected' };
+    }
+
+    async suspendInstitution(payload) {
+        console.error("CCL: !!! AUTOMATIC INSTITUTION SUSPENSION !!!");
+        this.kernel.getMonitor().applyEvent('lifecycle', {
+            stage: 'SUSPENDED',
+            reason: payload.reason || 'Supreme Constitutional Violation'
+        });
+        return { action: 'SUSPENDED', reason: payload.reason || 'Sovereignty Breach' };
     }
 }
