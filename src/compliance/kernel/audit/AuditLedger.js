@@ -66,7 +66,12 @@ export class AuditLedger {
 
     _save() {
         try {
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.history));
+            // Safe stringify to handle potential circular references in complex action payloads
+            const safeHistory = JSON.stringify(this.history, (key, value) => {
+                if (key === 'kernel' || key === 'complianceKernel' || key === 'gate' || key === 'monitor') return '[Filtered Component]';
+                return value;
+            });
+            localStorage.setItem(this.STORAGE_KEY, safeHistory);
         } catch (e) {
             console.error("AUDIT: Persistence Failure", e);
         }

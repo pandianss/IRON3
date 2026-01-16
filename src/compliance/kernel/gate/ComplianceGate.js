@@ -31,6 +31,15 @@ export class ComplianceGate {
 
             for (const ruleId of ruleIds) {
                 const verdict = this.engine.evaluate(ruleId, context);
+
+                // TR-02: Check for Force Allow (Escape Hatch)
+                if (verdict.forceAllow) {
+                    console.log(`GATE: Escape Hatch Triggered by rule ${ruleId}. Bypassing further checks.`);
+                    allowed = true;
+                    rejectionReasons = [];
+                    break;
+                }
+
                 if (!verdict.allowed) {
                     allowed = false;
                     rejectionReasons.push(`[${ruleId}] ${verdict.reason}`);

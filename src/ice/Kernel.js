@@ -136,11 +136,14 @@ export class InstitutionalKernel {
             this.state.update('error', null);
             console.log("ICE: Cycle Success. Authority Maintained.");
 
-            // VVL Check via Kernel? 
-            // The new kernel has 'invariantEngine'. 
-            // My implementation has 'stateMonitor' but I haven't implemented explicit 'invariantEngine' in the ConstitutionalKernel yet (it was in blueprint but I prioritized 6 files).
-            // I'll skip explicit post-cycle check for this specific step unless I port VVL harness.
-            // I can assume ComplianceGate handles pre-checks.
+            // VVL Post-Cycle Verification
+            const vvlReport = this.complianceKernel.invariantEngine.verifySnapshot();
+            if (vvlReport.status === 'CONSTITUTIONAL_CRISIS') {
+                console.error("ICE: Sovereignty Crisis! Invariants Failed.", vvlReport.details.filter(d => !d.passed));
+                this.state.update('governance_status', 'CRISIS');
+            } else {
+                this.state.update('governance_status', 'NOMINAL');
+            }
 
         } catch (e) {
             console.error("ICE: Cycle Failure", e);

@@ -5,8 +5,10 @@
  */
 export class InstitutionState {
     constructor() {
-        // Domains
-        this.domains = {
+        this.STORAGE_KEY = 'IRON_INSTITUTION_STATE';
+
+        // Initial / Default Domains
+        const defaults = {
             standing: { state: 'PRE_INDUCTION', integrity: 100, entropy: 0, streak: 0 },
             authority: { surfaces: {}, interactionLevel: 'RESTRICTED' },
             mandates: { narrative: { tone: 'GUIDANCE', message: 'SYSTEM BOOTING' }, motion: {}, surfaces: [] },
@@ -16,6 +18,8 @@ export class InstitutionState {
             foundation: { brokenPromise: '', anchorHabits: [], nonNegotiable: '', why: '' },
             lifecycle: { stage: 'GENESIS', history: [], baselineSI: null, baselineEstablishedAt: null }
         };
+
+        this.domains = this._load() || defaults;
     }
 
     getDomain(name) {
@@ -25,16 +29,38 @@ export class InstitutionState {
     update(domain, data) {
         if (data === null || data === undefined) {
             this.domains[domain] = null;
-            return;
-        }
-        if (!this.domains[domain] || typeof data !== 'object') {
+        } else if (!this.domains[domain] || typeof data !== 'object') {
             this.domains[domain] = data;
         } else {
             this.domains[domain] = { ...this.domains[domain], ...data };
         }
+
+        this._save();
     }
 
     getSnapshot() {
         return { ...this.domains };
+    }
+
+    _save() {
+        try {
+            const safeData = JSON.stringify(this.domains, (key, value) => {
+                if (key === 'kernel' || key === 'complianceKernel' || key === 'gate' || key === 'monitor') return '[Filtered Component]';
+                return value;
+            });
+            localStorage.setItem(this.STORAGE_KEY, safeData);
+        } catch (e) {
+            console.error("ICE: State Persistence Failure", e);
+        }
+    }
+
+    _load() {
+        try {
+            const data = localStorage.getItem(this.STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        } catch (e) {
+            console.error("ICE: State Load Failure", e);
+            return null;
+        }
     }
 }

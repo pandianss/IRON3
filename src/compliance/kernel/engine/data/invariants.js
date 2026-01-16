@@ -1,18 +1,41 @@
 export const INVARIANTS = [
     {
-        id: 'inv-001',
-        description: 'Standing Integrity must be monotonic within a day (mock)',
+        id: 'INV-STND-01',
+        description: 'Integrity must be a valid numeral [0-100].',
         severity: 'HIGH',
         check: (context) => {
-            return true; // Placeholder
+            const integrity = context.state?.standing?.integrity;
+            return typeof integrity === 'number' && integrity >= 0 && integrity <= 100;
         }
     },
     {
-        id: 'inv-002',
-        description: 'No orphan mandates allowed',
+        id: 'INV-LIFE-01',
+        description: 'Lifecycle stage must be a valid constitutional stage.',
+        severity: 'CRITICAL',
+        check: (context) => {
+            const stage = context.state?.lifecycle?.stage;
+            const validStages = ['GENESIS', 'PROBATION', 'ACTIVE', 'DEGRADABLE', 'COLLAPSED'];
+            return validStages.includes(stage);
+        }
+    },
+    {
+        id: 'INV-LIFE-02',
+        description: 'Lifecycle activeDays must be monotonic (non-decreasing).',
+        severity: 'HIGH',
+        check: (context) => {
+            if (!context.previousSnapshot) return true;
+            const currentDays = context.state?.lifecycle?.activeDays || 0;
+            const previousDays = context.previousSnapshot.state?.lifecycle?.activeDays || 0;
+            return currentDays >= previousDays;
+        }
+    },
+    {
+        id: 'INV-PHYS-01',
+        description: 'Physiological Load cannot be negative.',
         severity: 'MEDIUM',
         check: (context) => {
-            return true; // Placeholder
+            const load = context.state?.physiology?.load || 0;
+            return load >= 0;
         }
     }
 ];
