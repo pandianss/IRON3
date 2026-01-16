@@ -40,6 +40,10 @@ export function transition(current, event) {
                 // "FIRST_COMPLIANCE -> COMPLIANT"
                 return { state: StandingState.COMPLIANT, entropy: 0, streak: 1, lastPracticeDate: new Date().toISOString() };
             }
+            if (event === 'GENESIS_VERDICT_SUBMITTED') {
+                // The institution is born. User is now a member on probation.
+                return { state: StandingState.COMPLIANT, entropy: 0, streak: 0 };
+            }
             if (event === 'PRACTICE_MISSED' || event === 'SESSION_MISSED') {
                 // "FIRST_BREACH -> VIOLATED"
                 // Strict law: First day failure in Induction is a Violation? 

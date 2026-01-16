@@ -54,7 +54,7 @@ export function ActiveSurfaceFrame({ institution }) {
             return (
                 <InstitutionalDashboard snapshot={{
                     identity: state.identity || { id: 'ORPHAN-GATE', epoch: 'N/A' },
-                    phase: institution?.status || 'ABSENT',
+                    phase: state.phase || { id: 'GENESIS' },
                     standing: state.standing || { state: 'VOID', integrity: 0 },
                     authority: state.authority || { surfaces: {}, interactionLevel: 'RESTRICTED' },
                     activeModules: institution?.activeModules || [],

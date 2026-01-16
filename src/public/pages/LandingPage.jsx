@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '../SEOHead';
 import { getDisciplineList } from '../../domain/InstitutionalTemplates';
 import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/InstitutionalContext';
@@ -17,11 +17,16 @@ export const LandingPage = () => {
     const activeModules = snapshot?.activeModules || [];
 
     const [activePanel, setActivePanel] = useState(null);
+    const navigate = useNavigate();
 
     const handleActivate = async (id) => {
-        if (activeModules.includes(id)) return;
+        if (activeModules.includes(id)) {
+            navigate('/app');
+            return;
+        }
         try {
             await kernel.ingest('MODULE_ACTIVATED', { moduleId: id }, 'USER_HOST');
+            navigate('/app');
         } catch (e) {
             console.error("Activation Failure:", e);
         }
