@@ -52,10 +52,11 @@ export class StandingEngine {
         this.currentState = state;
 
         // Update Institution State (Read Model)
-        this.kernel.state.update('standing', {
+        this.kernel.setState('standing', {
             state: state.state,
-            integrity: 100 - state.entropy, // Derived Integrity
-            streak: state.streak,
+            integrity: 100 - state.entropy,
+            streak: 0, // derived ?
+            lastUpdated: new Date().toISOString(),
             lastPracticeDate: state.lastPracticeDate
         });
 

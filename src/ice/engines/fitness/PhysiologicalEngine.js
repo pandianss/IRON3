@@ -32,12 +32,35 @@ export class PhysiologicalEngine {
         // 3. Calculate Capacity (Factoring in Deload multipliers)
         const capacity = CapacityEngine.calculate(fitnessEvents, state.getDomain('standing'), params);
 
-        // 4. Apply Recovery Law to current intent
+        // 4. Check for Authority Realignment (Pardon)
+        const lastEvent = ledger[ledger.length - 1];
+        if (lastEvent?.type === 'AUTHORITY_REALIGNED') {
+            const penalty = lastEvent.payload.penalty || 20;
+            const newHealth = Math.max(10, 50 - penalty); // Safe baseline
+
+            this.kernel.complianceKernel.getGate().govern({
+                type: 'PHYSIOLOGY_PARDON',
+                payload: { health: newHealth, status: 'RECOVERY' },
+                actor: 'PhysiologicalEngine',
+                rules: ['R-SYS-01']
+            }, () => {
+                this.kernel.setState('physiology', {
+                    ...currentPhysio,
+                    health: newHealth,
+                    status: 'RECOVERY',
+                    law: { compliant: true, reason: 'Authority Realigned' }
+                });
+            }).catch(e => console.error("ICE: Pardon Blocked", e));
+
+            return; // Skip normal law evaluation for this cycle
+        }
+
+        // 5. Apply Recovery Law to current intent
         const sessionDomain = state.getDomain('session');
         const intent = sessionDomain?.status === 'PENDING' ? { type: 'START_SESSION' } : { type: 'IDLE' };
 
         // Special case: check if we just ended a session that exceeded deload cap
-        const lastEvent = ledger[ledger.length - 1];
+        // lastEvent used from scope above
         const evaluationPayload = (lastEvent?.type === 'SESSION_ENDED') ? { type: 'SESSION_ENDED', duration: lastEvent.payload.duration } : intent;
 
         const lawResult = RecoveryLaw.evaluateIntent(capacity, evaluationPayload, params);

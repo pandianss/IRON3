@@ -58,4 +58,9 @@ export class DegradationModel {
             timestamp: new Date().toISOString()
         };
     }
+
+    getScore() {
+        const state = this.kernel.state?.getSnapshot() || {};
+        return state.physiology?.health ?? 100;
+    }
 }

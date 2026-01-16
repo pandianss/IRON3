@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useSovereignKernel, useInstitutionalSnapshot } from '../institution/InstitutionalContext';
+import { useSovereignKernel, useInstitutionalSnapshot } from '../institution/logic/InstitutionalContext';
 import { useAuth } from './AuthContext';
 
 export const GovernanceContext = createContext(null);
@@ -13,12 +13,12 @@ export const GovernanceProvider = ({ children }) => {
 
     // The 'institutionalState' expected by the Shell is the full snapshot
     // Snapshot structure from Kernel: { history, state, mandates, activeModules }
-    const institutionalState = {
+    const institutionalState = React.useMemo(() => (!snapshot ? null : {
         ...snapshot.state,
         activeModules: snapshot.activeModules,
         history: snapshot.history,
         mandates: snapshot.mandates
-    };
+    }), [snapshot]);
 
     const loading = !institutionalState;
 

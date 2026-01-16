@@ -65,12 +65,11 @@ export class PhaseController {
             }
         }
 
-        this.kernel.state.update('phase', {
+        this.kernel.setState('phase', {
             id: phase,
-            label: phase
-        });
-
-        console.log(`ICE: Phase Evaluated -> ${phase}`);
+            label: phase,
+            lastEvaluated: new Date().toISOString()
+        }); console.log(`ICE: Phase Evaluated -> ${phase}`);
         return phase;
     }
 }

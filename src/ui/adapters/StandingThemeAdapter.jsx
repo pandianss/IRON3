@@ -61,7 +61,7 @@ export const StandingThemeAdapter = ({ institutionalState, children }) => {
     // We apply this to a distinct "Theme Root"
     return (
         <div
-            className={`iron-theme-adapter band-${standingBand.toLowerCase()}`}
+            className={`iron-theme-adapter band-${(standingBand || 'STABLE').toLowerCase()}`}
             style={style}
         >
             {children}

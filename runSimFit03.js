@@ -11,7 +11,9 @@ async function run() {
     const sim = new SimulationKernel(SIM_FIT_03);
 
     // PHASE 4.1: Force kernel bootstrap
-    const kernel = await initializeKernel(sim);
+    // Note: InstitutionalKernel initializes its own internal Compliance Kernel.
+    // We initialize the Bootstrap singleton here to wrap the outer simulation flow.
+    const kernel = await initializeKernel(sim.kernel);
 
     const collector = new MetricCollector();
 

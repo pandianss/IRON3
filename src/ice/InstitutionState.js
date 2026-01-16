@@ -15,12 +15,32 @@ export class InstitutionState {
             mandates: { narrative: { tone: 'GUIDANCE', message: 'SYSTEM BOOTING' }, motion: {}, surfaces: [] },
             phase: { id: 'GENESIS', label: 'GENESIS', version: '1.0' },
             session: { status: 'INACTIVE', startTime: null, duration: 0 },
-            physiology: { capacity: 100, load: 0, status: 'OPTIMAL', era: 'PEAK' },
+            physiology: { health: 100, capacity: 100, load: 0, status: 'OPTIMAL', era: 'PEAK' },
             foundation: { brokenPromise: '', anchorHabits: [], nonNegotiable: '', why: '' },
             lifecycle: { stage: 'GENESIS', history: [], baselineSI: null, baselineEstablishedAt: null }
         };
 
-        this.domains = this._load() || defaults;
+        // 1. Load from storage
+        const loaded = this._load();
+
+        // 2. Deep Merge ensuring Defaults (Schema Migration)
+        // If loaded is null, uses defaults. 
+        // If loaded is partial, fills in missing keys from defaults.
+        this.domains = this._mergeDefaults(defaults, loaded);
+    }
+
+    _mergeDefaults(defaults, loaded) {
+        if (!loaded) return defaults;
+        const merged = { ...defaults };
+        Object.keys(loaded).forEach(key => {
+            if (loaded[key] && typeof loaded[key] === 'object' && !Array.isArray(loaded[key])) {
+                // Recursive merge for domain objects
+                merged[key] = { ...merged[key], ...loaded[key] };
+            } else {
+                merged[key] = loaded[key];
+            }
+        });
+        return merged;
     }
 
     getDomain(name) {
@@ -31,6 +51,7 @@ export class InstitutionState {
 
     update(domain, data, token) {
         if (token !== this.token) {
+            console.error(`ICE_STATE_DEBUG: Token Mismatch! Expected ${String(this.token)}, Got ${String(token)}`);
             throw new Error("Sovereignty Breach: Unauthorized State Mutation.");
         }
 

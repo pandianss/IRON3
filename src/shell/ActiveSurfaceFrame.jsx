@@ -10,7 +10,7 @@ import { InstitutionalDashboard } from '../experience/observatory/InstitutionalD
 import { EvidenceCapture } from '../experience/evidence-capture/EvidenceCapture';
 import { StandingThemeAdapter } from '../ui/adapters/StandingThemeAdapter';
 
-export function ActiveSurfaceFrame({ institution }) {
+export function ActiveSurfaceFrame({ institution, children }) {
     const [showDiag, setShowDiag] = useState(false);
 
     // Diagnostic Entry Law: Always possible via key chord

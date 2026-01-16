@@ -1,0 +1,22 @@
+{
+  "artifactType": "INSTITUTIONAL_HEALTH_REPORT",
+  "version": "1.0.0",
+  "timestamp": "2026-01-16T10:27:57.148Z",
+  "institution": {
+    "stage": "GENESIS",
+    "purpose": ""
+  },
+  "constitution": {
+    "principlesLoaded": 9,
+    "activeInvariants": 0
+  },
+  "health": {
+    "current": 100,
+    "timeline": []
+  },
+  "audit": {
+    "totalDecisions": 1,
+    "violations": []
+  },
+  "verdict": "INCONCLUSIVE"
+}

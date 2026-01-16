@@ -9,7 +9,29 @@ export class InstitutionalStateMonitor {
         this.cache = null;
     }
 
-    // ...
+    /**
+     * Set a temporary cache for the current evaluation cycle.
+     */
+    enableCache() {
+        // Safe access check
+        if (this.kernel && this.kernel.state) {
+            // Clone snapshot to create a mutable cache layer
+            this.cache = { ...this.kernel.state.getSnapshot() };
+        }
+    }
+
+    disableCache() {
+        this.cache = null;
+    }
+
+    /**
+     * Read access to institutional state.
+     */
+    getState() {
+        if (this.cache) return this.cache;
+        if (!this.kernel || !this.kernel.state) return null;
+        return this.kernel.state.getSnapshot();
+    }
 
     applyEvent(domain, data) {
         if (!this.kernel || !this.kernel.state) {

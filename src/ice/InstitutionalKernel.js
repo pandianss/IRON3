@@ -81,20 +81,27 @@ export class InstitutionalKernel {
     async evaluate() {
         try {
             const result = await this.cycle.run();
-            this.state.update('error', null);
+            this.setState('error', null);
             console.log("ICE: Cycle Success. Authority Maintained.");
             this.complianceKernel.evaluate();
+            this.notify(); // VITAL: Tell React to update!
         } catch (e) {
             console.error("ICE: Cycle Failure", e);
-            this.state.update('error', e.message);
+            this.setState('error', e.message);
+            this.notify();
         }
     }
 
     getSnapshot() {
         const history = this.ledger.getHistory();
-        const activeModules = history
-            .filter(e => e.type === 'MODULE_ACTIVATED')
-            .map(e => e.payload.moduleId);
+
+        // Correctly calculate active modules accounting for deactivation
+        const activeSet = new Set();
+        history.forEach(e => {
+            if (e.type === 'MODULE_ACTIVATED') activeSet.add(e.payload.moduleId);
+            if (e.type === 'MODULE_DEACTIVATED') activeSet.delete(e.payload.moduleId);
+        });
+        const activeModules = Array.from(activeSet);
 
         return {
             history,

@@ -170,15 +170,18 @@ export const LandingPage = () => {
                         Industrial Strength Productivity?
                     </div>
                     <div onClick={() => setActivePanel('SOVEREIGNTY')} style={navItemStyle}>
-                        <span style={{ block: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>03_SOVEREIGNTY</span>
+                        <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>03_SOVEREIGNTY</span>
                         What is a Private Discipline?
                     </div>
                     <div onClick={() => setActivePanel('CONSTITUTION')} style={navItemStyle}>
                         <span style={{ display: 'block', fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>04_CONSTITUTION</span>
                         The Iron Constitution
                     </div>
-                    <Link to="/app" style={actionStyle}>GOTO_DASHBOARD</Link>
                 </nav>
+
+                <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'center' }}>
+                    <Link to="/app" style={{ ...actionStyle, maxWidth: '300px' }}>GOTO_DASHBOARD</Link>
+                </div>
             </main>
         </div>
     );

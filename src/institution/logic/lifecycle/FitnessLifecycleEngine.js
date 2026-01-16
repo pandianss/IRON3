@@ -81,10 +81,7 @@ export class FitnessLifecycleEngine {
                     }
 
                     // Step 5: State Authority Binding
-                    // Direct update via kernel state is still technically allowed but 
-                    // should ideally go through StateMonitor.applyEvent if strictly following playbook.
-                    // For now, we update via kernel state as per existing pattern but inside the gate.
-                    this.kernel.state.update('lifecycle', inst);
+                    this.kernel.setState('lifecycle', inst);
                 }).then(() => {
                     console.log(`ICE: Constitutional Lifecycle Transition Complete: ${stage}`);
                 }).catch(e => {

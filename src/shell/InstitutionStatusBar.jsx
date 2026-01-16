@@ -16,7 +16,7 @@ export function InstitutionStatusBar({ institution }) {
         }}>
             <strong>IRON</strong>
             <span> | Status: {institution?.status ?? 'NO INSTITUTION'}</span>
-            <span> | Standing: {institution?.standing ?? 'UNKNOWN'}</span>
+            <span> | Standing: {institution?.standing?.state ?? 'UNKNOWN'}</span>
         </div>
     )
 }
