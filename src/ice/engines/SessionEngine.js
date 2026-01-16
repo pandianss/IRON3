@@ -27,7 +27,7 @@ export class SessionEngine {
 
         if (lastEvent.type === 'SESSION_INTENT') {
             if (currentSession.status === 'IDLE') {
-                this.kernel.state.update('session', {
+                this.updateSession({
                     status: 'PENDING',
                     activeContractId: lastEvent.payload.contractId
                 });
@@ -35,7 +35,7 @@ export class SessionEngine {
         } else if (lastEvent.type === 'SESSION_STARTED') {
             // User moved from Intake -> Active
             if (currentSession.status === 'PENDING' || currentSession.status === 'IDLE') {
-                this.kernel.state.update('session', {
+                this.updateSession({
                     status: 'ACTIVE',
                     startTime: lastEvent.payload.timestamp || lastEvent.meta.timestamp,
                     venue: lastEvent.payload.venue,
@@ -44,7 +44,7 @@ export class SessionEngine {
             }
         } else if (lastEvent.type === 'SESSION_ENDED') {
             if (currentSession.status === 'ACTIVE') {
-                this.kernel.state.update('session', {
+                this.updateSession({
                     status: 'IDLE',
                     activeContractId: null,
                     startTime: null,
@@ -53,7 +53,23 @@ export class SessionEngine {
             }
         } else if (lastEvent.type === 'PRACTICE_COMPLETE' && currentSession.status === 'ACTIVE') {
             // Implicit closure
-            this.kernel.state.update('session', { status: 'IDLE' });
+            this.updateSession({ status: 'IDLE' });
         }
+    }
+
+    updateSession(payload) {
+        const action = {
+            type: 'SESSION_UPDATE_STATUS',
+            payload: payload,
+            actor: 'SessionEngine',
+            rules: ['R-SESS-01']
+        };
+
+        this.kernel.complianceKernel.getGate().govern(action, () => {
+            this.kernel.state.update('session', payload);
+            console.log(`ICE: Session Update [${payload.status}] Governed.`);
+        }).catch(e => {
+            console.error("ICE: Session Update Blocked by Constitution", e.message);
+        });
     }
 }

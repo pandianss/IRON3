@@ -71,8 +71,19 @@ export class AuthorityEngine {
             profile.surfaces['OBLIGATION_CORRIDOR'] = 'FULL';
         }
 
-        // 5. Update State
-        this.kernel.state.update('authority', profile);
-        console.log("ICE: Authority Resolved", profile);
+        // 5. Update State (Governed)
+        const action = {
+            type: 'AUTHORITY_UPDATE_PROFILE',
+            payload: profile,
+            actor: 'AuthorityEngine',
+            rules: ['R-AUTH-01']
+        };
+
+        this.kernel.complianceKernel.getGate().govern(action, () => {
+            this.kernel.state.update('authority', profile);
+            console.log("ICE: Authority Resolved & Governed", profile);
+        }).catch(e => {
+            console.error("ICE: Authority Resolution Blocked by Constitution", e.message);
+        });
     }
 }

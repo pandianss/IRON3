@@ -359,6 +359,86 @@ export class ConstitutionalKernel {
         });
 
         console.log("CONSTITUTIONAL KERNEL: Loaded Standing Rules.");
+
+        // Authority Rules
+        this.ruleEngine.registerRule({
+            id: 'R-AUTH-01',
+            description: 'Authority must align with institutional Phase and Standing.',
+            logic: (context) => {
+                if (context.action.type !== 'AUTHORITY_UPDATE_PROFILE') return true;
+
+                const standing = context.state.standing?.state || 'PRE_INDUCTION';
+                const profile = context.action.payload;
+
+                // 1. Violation Lockout (Article III)
+                if (standing === 'BREACHED' || standing === 'DEGRADED') {
+                    if (profile.interactionLevel !== 'MINIMAL' && profile.interactionLevel !== 'OBSERVATIONAL') {
+                        // In v1.0, we allow 'OBSERVATIONAL' during degradation.
+                        // If the engine tries to open 'FULL' access while degraded, block it.
+                        const hasLocks = profile.locks?.length > 0;
+                        if (!hasLocks) {
+                            return {
+                                allowed: false,
+                                reason: `Authority Breach: Institution is ${standing}. Safety locks mandatory.`
+                            };
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
+        // Mandate Rules
+        this.ruleEngine.registerRule({
+            id: 'R-MAND-01',
+            description: 'Mandates must remain within logical bounds of Standing.',
+            logic: (context) => {
+                if (context.action.type !== 'MANDATE_UPDATE_BUNDLE') return true;
+
+                const standing = context.state.standing?.state || 'STABLE';
+                const bundle = context.action.payload;
+
+                // 1. Narrative Consistency
+                if (standing === 'BREACHED' && bundle.narrative?.tone !== 'ALARM' && bundle.narrative?.tone !== 'WARNING') {
+                    return {
+                        allowed: false,
+                        reason: `Mandate Breach: Institution is BREACHED. UI Tone must be ALARM or WARNING.`
+                    };
+                }
+
+                return true;
+            }
+        });
+
+        // Session Rules
+        this.ruleEngine.registerRule({
+            id: 'R-SESS-01',
+            description: 'Session transitions must be structurally valid.',
+            logic: (context) => {
+                if (context.action.type !== 'SESSION_UPDATE_STATUS') return true;
+
+                const currentStatus = context.state.session?.status || 'IDLE';
+                const targetStatus = context.action.payload.status;
+
+                // Simple State Machine Validation
+                const validTransitions = {
+                    'IDLE': ['PENDING', 'ACTIVE'], // Direct to Active allowed for shortcuts
+                    'PENDING': ['ACTIVE', 'IDLE'],
+                    'ACTIVE': ['IDLE']
+                };
+
+                if (!validTransitions[currentStatus].includes(targetStatus)) {
+                    return {
+                        allowed: false,
+                        reason: `Session Breach: Illegal transition ${currentStatus} -> ${targetStatus}.`
+                    };
+                }
+
+                return true;
+            }
+        });
+
+        console.log("CONSTITUTIONAL KERNEL: Loaded Authority, Mandate, and Session Rules.");
     }
 
     /**

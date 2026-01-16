@@ -52,9 +52,20 @@ export class MandateEngine {
             narrative: narrativeMandate
         };
 
-        // Update State
-        this.kernel.state.update('mandates', bundle);
-        console.log("ICE: Mandates Issued", bundle);
+        // 4. Update State (Governed)
+        const action = {
+            type: 'MANDATE_UPDATE_BUNDLE',
+            payload: bundle,
+            actor: 'MandateEngine',
+            rules: ['R-MAND-01']
+        };
+
+        this.kernel.complianceKernel.getGate().govern(action, () => {
+            this.kernel.state.update('mandates', bundle);
+            console.log("ICE: Mandates Issued & Governed", bundle);
+        }).catch(e => {
+            console.error("ICE: Mandate Issuance Blocked by Constitution", e.message);
+        });
 
         return bundle;
     }
