@@ -74,7 +74,7 @@ export const LegislatureSurface = ({ onClose }) => {
         }, {});
 
     const handleImport = () => {
-        const jsonStr = prompt("PASTE PROTOCOL MANIFEST (JSON):");
+        const jsonStr = prompt("PASTE PROTOCOL MANIFEST (JSON): \n\nThis will become Sovereign Law.");
         if (!jsonStr) return;
 
         try {
@@ -86,9 +86,13 @@ export const LegislatureSurface = ({ onClose }) => {
                 return;
             }
 
-            registerProtocol(protocol);
-            setLastUpdate(Date.now());
-            alert("PROTOCOL RATIFIED: " + protocol.title);
+            // Register via Registry (which now calls LawArchive)
+            if (registerProtocol(protocol)) {
+                setLastUpdate(Date.now());
+                alert(`PROTOCOL RATIFIED: ${protocol.title}\n\nIt is now Sovereign Law.`);
+            } else {
+                alert("RATIFICATION FAILED: Persistence Error.");
+            }
         } catch (e) {
             alert("INVALID MANIFEST: " + e.message);
         }

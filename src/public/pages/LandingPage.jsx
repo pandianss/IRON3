@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '../SEOHead';
 import { getProtocolList, SOVEREIGN_DOMAINS } from '../../wings/legislative/ProtocolRegistry';
-import { useSovereignKernel, useInstitutionalSnapshot } from '../../spine/context/SovereigntyContext';
+import { useSovereignKernel } from '../../spine/context/SovereigntyContext'; // Still needed for writes
+import { useKernelProjection } from '../projection/useKernelProjection'; // NEW: KPL Read
 import { useAuth } from '../../spine/context/AuthContext';
 import '../../ui/styles/landing.css';
 
@@ -20,9 +21,11 @@ import { LegislatureSurface } from '../../wings/legislative/LegislatureSurface';
 export const LandingPage = () => {
     const { t } = useTranslation();
     const disciplines = getProtocolList();
-    const kernel = useSovereignKernel();
-    const snapshot = useInstitutionalSnapshot();
-    const activeModules = snapshot?.activeModules || [];
+    const kernel = useSovereignKernel();  // Command Channel (Write)
+
+    // KPL Consumption (Read-Only)
+    const { institution, sovereignty } = useKernelProjection();
+    const activeModules = sovereignty.activeLaws || [];
 
     const navigate = useNavigate();
     const [activePanel, setActivePanel] = useState(null); // 'philosophy' | 'systems' | 'constitution'

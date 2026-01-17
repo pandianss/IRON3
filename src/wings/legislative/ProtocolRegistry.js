@@ -1,8 +1,10 @@
+import { LawArchive } from './LawArchive';
+
 /**
  * THE PROTOCOL REGISTRY
  * 
  * Defines the specialized protocols supported by the IRON platform.
- * Currently initialized to empty state for sovereign genesis.
+ * Aggregates Built-In Laws (Hardcoded) and Private Laws (Archive).
  */
 export const SOVEREIGN_DOMAINS = {
     BIO_REGIME: { id: 'BIO_REGIME', label: 'BIO-REGIME', description: 'Physicality & Health' },
@@ -64,59 +66,30 @@ const BUILT_IN_PROTOCOLS = {
     }
 };
 
-// Internal State for Registry
-let privateProtocols = {};
-
-// Initialize Registry from Memory
-const loadPrivateLaws = () => {
-    try {
-        const saved = localStorage.getItem('IRON_PRIVATE_LAWS');
-        if (saved) {
-            privateProtocols = JSON.parse(saved);
-        }
-    } catch (e) {
-        console.error("REGISTRY: Failed to load private laws.", e);
-    }
-};
-
-// Load on module init
-loadPrivateLaws();
-
-export const ProtocolRegistry = {
-    ...BUILT_IN_PROTOCOLS,
-    ...privateProtocols
-};
-
+/**
+ * Get the full list of available protocols.
+ * Merges Constitution (Built-in) + Archive (Private).
+ */
 export const getProtocolList = () => {
-    // Refresh private protocols in case of updates
-    return [...Object.values(BUILT_IN_PROTOCOLS), ...Object.values(privateProtocols)];
+    const privateLaws = LawArchive.loadLaws();
+    return [...Object.values(BUILT_IN_PROTOCOLS), ...Object.values(privateLaws)];
 };
 
+/**
+ * Get a specific protocol by ID.
+ */
 export const getProtocol = (id) => {
-    return BUILT_IN_PROTOCOLS[id] || privateProtocols[id];
+    // Check Built-in first
+    if (BUILT_IN_PROTOCOLS[id]) return BUILT_IN_PROTOCOLS[id];
+
+    // Then check Archive
+    const privateLaws = LawArchive.loadLaws();
+    return privateLaws[id];
 };
 
+/**
+ * Register a new protocol into the Archive.
+ */
 export const registerProtocol = (protocol) => {
-    if (!protocol || !protocol.id) {
-        throw new Error("INVALID_PROTOCOL: Missing ID");
-    }
-
-    // Save to memory
-    privateProtocols[protocol.id] = {
-        ...protocol,
-        domain: protocol.domain || 'SYSTEM_LOGISTICS', // Default to Logistics if undefined
-        userCount: 1, // Only you
-        isCustom: true
-    };
-
-    // Upate persistence
-    try {
-        localStorage.setItem('IRON_PRIVATE_LAWS', JSON.stringify(privateProtocols));
-    } catch (e) {
-        console.error("REGISTRY: Failed to persist law.", e);
-    }
-
-    // Note: The exported 'ProtocolRegistry' object itself is static-ish in ESM imports, 
-    // so consumers should rely on getProtocol() or getProtocolList() for dynamic data.
-    return true;
+    return LawArchive.saveLaw(protocol);
 };

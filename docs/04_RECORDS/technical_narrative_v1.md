@@ -1,5 +1,27 @@
-# IRON3 Architecture: The Sovereign Kernel
-## Executive Technical Narrative (v1.0)
+
+<!-- IRON DOCUMENTATION BADGE -->
+<div align="center">
+  <table style="border: 1px solid #333; background: #0A0D12; width: 100%; border-collapse: collapse; font-family: monospace;">
+    <tr>
+      <td style="border-right: 1px solid #333; padding: 10px; color: #505050; width: 25%;">CLASS</td>
+      <td style="border-right: 1px solid #333; padding: 10px; color: #e0e0e0; width: 25%; font-weight: bold;">RECORD</td>
+      <td style="border-right: 1px solid #333; padding: 10px; color: #505050; width: 25%;">AUTHORITY</td>
+      <td style="padding: 10px; color: #5BC0DE; width: 25%; font-weight: bold;">NON-BINDING</td>
+    </tr>
+    <tr>
+      <td style="border-right: 1px solid #333; border-top: 1px solid #333; padding: 10px; color: #505050;">ENFORCEMENT</td>
+      <td style="border-right: 1px solid #333; border-top: 1px solid #333; padding: 10px; color: #e0e0e0;">NONE</td>
+      <td style="border-right: 1px solid #333; border-top: 1px solid #333; padding: 10px; color: #505050;">STATUS</td>
+      <td style="border-top: 1px solid #333; padding: 10px; color: #5BC0DE;">ARCHIVED</td>
+    </tr>
+  </table>
+</div>
+<!-- END BADGE -->
+
+# TECHNICAL NARRATIVE (RECORD)
+## The Origin of Constitutional Sovereignty
+
+**NOTE: This document is a non-binding institutional record.**
 
 ### The Problem: Rule-Soup
 Most fitness and behavioral applications suffer from "Rule-Soup"—logic is scattered across UI components, database triggers, and backend controllers. This makes the system fragile, easily gamed, and impossible to audit.
@@ -21,6 +43,6 @@ IRON3 doesn't just track data; it manages a **Lifecycle**. An institution moves 
 ### Why It Matters for Partners
 - **Integrity**: The system is gamed-proof. Standing (Belts) must be earned and verified.
 - **Safety**: Physiological limits are core laws, not just UI warnings.
-- **Traceability**: Every state change has a constitutional citation. 
+- **Traceability**: Every state change has a constitutional citation.
 
 **IRON3 isn't just an app; it's a governed digital institution.**
