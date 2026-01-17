@@ -8,7 +8,7 @@ export const ConstitutionPanel = () => {
             </h1>
 
             <section style={{ marginBottom: '40px', fontStyle: 'italic', opacity: 0.8, borderLeft: '3px solid var(--iron-accent)', paddingLeft: '20px' }}>
-                <p>IRON is not a fitness application. IRON is a behavioural institution.</p>
+                <p>IRON is not a habit tracker. IRON is a behavioural institution.</p>
                 <p>Its purpose is to establish, govern, and preserve personal discipline through enforceable commitments, permanent records, and escalating accountability.</p>
             </section>
 
