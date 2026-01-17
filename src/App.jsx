@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { InstitutionalProvider } from './institution/logic/InstitutionalContext';
-import { GovernanceProvider, useGovernance } from './context/GovernanceContext';
-import { IronAppShell } from './shell/IronAppShell';
+import { AuthProvider } from './spine/context/AuthContext';
+import { SovereigntyProvider } from './spine/context/SovereigntyContext';
+import { GovernanceProvider, useGovernance } from './spine/context/GovernanceContext';
+import { SovereignShell } from './wings/experiential/shell/SovereignShell';
 
 // Public Pages
 import { LandingPage } from './public/pages/LandingPage';
@@ -39,7 +39,7 @@ const InstitutionalBridge = ({ onStateSync }) => {
  */
 export default function App() {
     return (
-        <InstitutionalProvider>
+        <SovereigntyProvider>
             <AuthProvider>
                 <Routes>
                     {/* Public SEO Root Site */}
@@ -52,20 +52,18 @@ export default function App() {
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </AuthProvider>
-        </InstitutionalProvider>
+        </SovereigntyProvider>
     );
 }
 
 /**
  * THE GOVERNED APP
  */
+// Governed App
 const GovernedApp = () => {
-    const [institution, setInstitution] = useState(null);
-
     return (
         <GovernanceProvider>
-            <InstitutionalBridge onStateSync={setInstitution} />
-            <IronAppShell institution={institution} />
+            <SovereignShell />
         </GovernanceProvider>
     );
 };

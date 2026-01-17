@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '../SEOHead';
-import { getDisciplineList } from '../../domain/InstitutionalTemplates';
-import { useSovereignKernel, useInstitutionalSnapshot } from '../../institution/logic/InstitutionalContext';
-import { useAuth } from '../../context/AuthContext';
+import { getDisciplineList } from '../../wings/legislative/ProtocolRegistry';
+import { useSovereignKernel, useInstitutionalSnapshot } from '../../spine/context/SovereigntyContext';
+import { useAuth } from '../../spine/context/AuthContext';
 
 // Floating Panels
 import { WhatIsIron } from './WhatIsIron';
