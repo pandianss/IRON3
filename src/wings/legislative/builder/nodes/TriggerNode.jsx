@@ -27,7 +27,8 @@ export default memo(({ data }) => {
     return (
         <div style={nodeStyle}>
             <div style={labelStyle}>TRIGGER</div>
-            <div>{data.label}</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{data.time || data.label}</div>
+            {data.time && <div style={{ fontSize: '0.6rem', opacity: 0.7 }}>{data.label}</div>}
 
             {/* Triggers only have outputs */}
             <Handle

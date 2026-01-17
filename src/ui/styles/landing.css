@@ -8,7 +8,8 @@
     color: var(--iron-text-primary);
     font-family: var(--font-human);
     position: relative;
-    background-color: var(--iron-infra-void);
+    /* IVC-01 Art. II: Depth over Brightness due to Light Field */
+    background: radial-gradient(circle at 50% 30%, #15181e 0%, var(--iron-infra-void) 60%);
     min-height: 100vh;
 }
 

@@ -17,6 +17,7 @@ import { DisciplineLawPanel } from './DisciplineLawPanel';
 import { ConstitutionPanel } from './ConstitutionPanel';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { LegislatureSurface } from '../../wings/legislative/LegislatureSurface';
+import { ActiveProtocolSurface } from '../wings/executive/ActiveProtocolSurface';
 
 export const LandingPage = () => {
     const { t } = useTranslation();
@@ -31,6 +32,7 @@ export const LandingPage = () => {
     const [activePanel, setActivePanel] = useState(null); // 'philosophy' | 'systems' | 'constitution'
     const [activeTag, setActiveTag] = useState('ALL'); // 'ALL' | DomainID
     const [showBuilder, setShowBuilder] = useState(false);
+    const [executionMode, setExecutionMode] = useState(null); // Protocol Object if executing
     const { currentUser, login, logout } = useAuth();
     const isAuthenticated = !!currentUser;
 
@@ -71,6 +73,17 @@ export const LandingPage = () => {
         return (
             <div style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'var(--iron-infra-void)' }}>
                 <LegislatureSurface onClose={() => setShowBuilder(false)} />
+            </div>
+        );
+    }
+
+    if (executionMode) {
+        return (
+            <div style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'var(--iron-infra-void)' }}>
+                <ActiveProtocolSurface
+                    protocol={executionMode}
+                    onClose={() => setExecutionMode(null)}
+                />
             </div>
         );
     }
@@ -117,7 +130,19 @@ export const LandingPage = () => {
             )}
 
             <header className="landing-header">
-                <div className="landing-auth-container">
+                <div className="landing-auth-container" style={{ display: 'flex', gap: '15px' }}>
+                    <button
+                        onClick={() => setShowBuilder(true)}
+                        className="btn-auth"
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid var(--iron-signal-active)',
+                            color: 'var(--iron-signal-active)'
+                        }}
+                    >
+                        LEGISLATURE
+                    </button>
+
                     {currentUser ? (
                         <button onClick={logout} className="btn-auth">
                             {t('landing.auth.disconnect', { id: currentUser.uid.substring(0, 4) })}
@@ -136,6 +161,23 @@ export const LandingPage = () => {
                     <p className="landing-hero-text">
                         {t('landing.hero.text')}
                     </p>
+                    <div style={{ marginTop: '30px' }}>
+                        <button
+                            onClick={() => setShowBuilder(true)}
+                            style={{
+                                background: 'transparent',
+                                border: '1px solid var(--iron-signal-active)',
+                                color: 'var(--iron-signal-active)',
+                                padding: '12px 24px',
+                                fontFamily: 'var(--font-systemic)',
+                                cursor: 'pointer',
+                                fontSize: '1rem',
+                                letterSpacing: '1px'
+                            }}
+                        >
+                            BUILD SOVEREIGN LAW
+                        </button>
+                    </div>
                 </section>
 
                 <section className="landing-section-registry">
@@ -210,13 +252,30 @@ export const LandingPage = () => {
                                     </div>
                                     <div className="landing-registry-grid">
                                         {disciplines.filter(d => activeModules.includes(d.id) && (activeTag === 'ALL' || d.domain === activeTag)).map(d => (
-                                            <div key={d.id} onClick={() => handleCardClick(d)} className="landing-card active">
-                                                <div className="landing-card-header">
-                                                    <h3 className="landing-card-title">{d.label}</h3>
-                                                    <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                            <div key={d.id} className="landing-card active" style={{ position: 'relative' }}>
+                                                <div onClick={() => handleCardClick(d)}>
+                                                    <div className="landing-card-header">
+                                                        <h3 className="landing-card-title">{d.label}</h3>
+                                                        <span className="landing-card-metric">{(d.primaryMetric || 'UNKNOWN').toUpperCase()}</span>
+                                                    </div>
+                                                    <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                    <p className="landing-card-text">{d.focus || d.description}</p>
                                                 </div>
-                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
-                                                <p className="landing-card-text">{d.focus}</p>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setExecutionMode(d); }}
+                                                    style={{
+                                                        width: '100%',
+                                                        marginTop: '15px',
+                                                        background: 'var(--iron-signal-active)',
+                                                        border: 'none',
+                                                        padding: '8px',
+                                                        cursor: 'pointer',
+                                                        fontWeight: 'bold',
+                                                        fontFamily: 'var(--font-systemic)'
+                                                    }}
+                                                >
+                                                    EXECUTE PROTOCOL
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
@@ -237,10 +296,10 @@ export const LandingPage = () => {
                                             <div key={d.id} onClick={() => handleCardClick(d)} className={`landing-card ${activeModules.includes(d.id) ? 'active' : ''}`}>
                                                 <div className="landing-card-header">
                                                     <h3 className="landing-card-title">{d.label}</h3>
-                                                    <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                                    <span className="landing-card-metric">{(d.primaryMetric || 'UNKNOWN').toUpperCase()}</span>
                                                 </div>
                                                 <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
-                                                <p className="landing-card-text">{d.focus}</p>
+                                                <p className="landing-card-text">{d.focus || d.description}</p>
                                             </div>
                                         ))}
                                 </div>
@@ -259,10 +318,10 @@ export const LandingPage = () => {
                                             <div key={d.id} onClick={() => handleCardClick(d)} className={`landing-card ${activeModules.includes(d.id) ? 'active' : ''}`}>
                                                 <div className="landing-card-header">
                                                     <h3 className="landing-card-title">{d.label}</h3>
-                                                    <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                                    <span className="landing-card-metric">{(d.primaryMetric || 'UNKNOWN').toUpperCase()}</span>
                                                 </div>
                                                 <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
-                                                <p className="landing-card-text">{d.focus}</p>
+                                                <p className="landing-card-text">{d.focus || d.description}</p>
                                             </div>
                                         ))}
                                 </div>
@@ -271,30 +330,6 @@ export const LandingPage = () => {
                         </div>
                     )}
                 </section>
-
-                <nav className="landing-nav">
-                    <div onClick={() => setActivePanel('PHILOSOPHY')} className="landing-nav-item">
-                        <span className="landing-nav-label">01_PHILOSOPHY</span>
-                        {t('landing.nav.philosophy')}
-                    </div>
-                    <div onClick={() => setActivePanel('SYSTEMS')} className="landing-nav-item">
-                        <span className="landing-nav-label">02_SYSTEMS</span>
-                        {t('landing.nav.systems')}
-                    </div>
-                    <div onClick={() => setActivePanel('SOVEREIGNTY')} className="landing-nav-item">
-                        <span className="landing-nav-label">03_SOVEREIGNTY</span>
-                        {t('landing.nav.sovereignty')}
-                    </div>
-                    <a className="landing-nav-item" onClick={() => setActivePanel('CONSTITUTION')}>
-                        <span className="landing-nav-label">04_CONSTITUTION</span>
-                        {t('landing.nav.constitution')}
-                    </a>
-
-                    <a className="landing-nav-item" onClick={() => setShowBuilder(true)} style={{ color: 'var(--iron-signal-active)' }}>
-                        <span className="landing-nav-label">LEGISLATURE</span>
-                        IX. PROTOCOL BUILDER
-                    </a>
-                </nav>
 
             </main>
 

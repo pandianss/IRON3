@@ -18,52 +18,8 @@ export const SOVEREIGN_DOMAINS = {
 };
 
 const BUILT_IN_PROTOCOLS = {
-    DISCIPLINE_MORNING_DRILL: {
-        id: 'DISCIPLINE_MORNING_DRILL',
-        label: 'MORNING DRILL',
-        focus: 'Early execution of physical obligations.',
-        primaryMetric: 'STREAK',
-        domain: 'BIO_REGIME',
-        userCount: 12405,
-        requirements: [
-            { type: 'TIME', value: '06:00' },
-            { type: 'INPUT', value: 'Hydration Log' }
-        ]
-    },
-    DISCIPLINE_DEEP_WORK: {
-        id: 'DISCIPLINE_DEEP_WORK',
-        label: 'DEEP WORK',
-        focus: 'Sovereign ownership of attention.',
-        primaryMetric: 'HOURS',
-        domain: 'PROFESSIONAL_WARFARE',
-        userCount: 8932,
-        requirements: [
-            { type: 'BLOCKER', value: 'Social Media' },
-            { type: 'TIMER', value: '90m' }
-        ]
-    },
-    DISCIPLINE_EVENING_AUDIT: {
-        id: 'DISCIPLINE_EVENING_AUDIT',
-        label: 'EVENING AUDIT',
-        focus: 'Reconciliation of daily debt.',
-        primaryMetric: 'COMPLETION',
-        domain: 'SYSTEM_LOGISTICS',
-        userCount: 5600,
-        requirements: [
-            { type: 'INPUT', value: 'Journal' }
-        ]
-    },
-    DISCIPLINE_FASTING: {
-        id: 'DISCIPLINE_FASTING',
-        label: 'IRON FAST',
-        focus: 'Metabolic sovereignty.',
-        primaryMetric: 'HOURS',
-        domain: 'BIO_REGIME',
-        userCount: 3210,
-        requirements: [
-            { type: 'TIMER', value: '16h' }
-        ]
-    }
+    // HARDCODING REMOVED.
+    // All protocols now live in the LawArchive (LocalStorage) or utilize the Protocol Builder.
 };
 
 /**

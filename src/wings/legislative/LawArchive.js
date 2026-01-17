@@ -18,12 +18,72 @@ export const LawArchive = {
     loadLaws: () => {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) return {};
-            return JSON.parse(raw);
+            let laws = {};
+
+            if (raw) {
+                laws = JSON.parse(raw);
+            }
+
+            // AUTO-SEED: Ensure defaults exist even if DB is not empty
+            // This fixes the issue where new system protocols don't appear for existing users
+            const defaults = LawArchive.getDefaults();
+            let dirty = false;
+
+            Object.keys(defaults).forEach(key => {
+                if (!laws[key]) {
+                    laws[key] = defaults[key];
+                    dirty = true;
+                }
+            });
+
+            if (dirty) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(laws));
+                console.log("LAW_ARCHIVE: Surgical Seed Complete (Missing defaults injected).");
+            }
+
+            return laws;
         } catch (e) {
             console.error("LAW_ARCHIVE: Failed to load laws.", e);
             return {};
         }
+    },
+
+    getDefaults: () => {
+        return {
+            'LAW_MIN_DAILY_FITNESS': {
+                id: 'LAW_MIN_DAILY_FITNESS',
+                label: 'MINIMUM DAILY FITNESS',
+                description: 'Mandatory physical obligation.',
+                domain: 'BIO_REGIME',
+                userCount: 1,
+                primaryMetric: 'COMPLETE',
+                ratifiedAt: Date.now(),
+                isCustom: true,
+                focus: 'Complete before noon. Failure triggers escalation.',
+
+                // Advanced Protocol Logic (Graph Simulation)
+                trigger: {
+                    type: 'TIME',
+                    value: '07:00',
+                    reminders: [
+                        { time: '12:00', message: 'COMMITMENT INCOMPLETE' },
+                        { time: '16:00', message: 'FAILURE IMMINENT: ESCALATION' }
+                    ]
+                },
+                requirements: [
+                    { id: 'c1', type: 'PHOTO', label: 'Before Workout Selfie', timestamp: true },
+                    { id: 'c2', type: 'GPS', label: 'Gym Location Check', timestamp: true },
+                    { id: 'c3', type: 'PHOTO', label: 'After Workout Selfie', timestamp: true },
+                    { id: 'c4', type: 'TAGS', label: 'Session Tags', allowCustom: true }
+                ]
+            }
+        };
+    },
+
+    seedDefaults: () => {
+        const defaults = LawArchive.getDefaults();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
+        return defaults;
     },
 
     /**

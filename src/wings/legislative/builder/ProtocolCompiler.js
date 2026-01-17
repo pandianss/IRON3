@@ -14,7 +14,8 @@ export const PROTOCOL_SCHEMA_VERSION = "1.0.0";
 export const NODE_TYPES = {
     TRIGGER: 'TRIGGER',
     CONSTRAINT: 'CONSTRAINT',
-    VERDICT: 'VERDICT'
+    VERDICT: 'VERDICT',
+    DECISION: 'DECISION'
 };
 
 /**
@@ -56,17 +57,33 @@ export const compileGraphToProtocol = (graph, metadata = {}) => {
     const triggerNode = graph.nodes.find(n => n.type === NODE_TYPES.TRIGGER);
     if (!triggerNode) throw new Error("Manifest requires a Trigger.");
 
-    // 2. Map Constraints
-    const constraintNodes = graph.nodes.filter(n => n.type === NODE_TYPES.CONSTRAINT);
-    const requirements = constraintNodes.map(node => ({
-        id: node.id,
-        type: node.data.constraintType, // e.g., 'GPS', 'PHOTO', 'INPUT'
-        params: {
-            ...node.data.params,
-            format: node.data.dataFormat || 'TEXT'
-        },
-        description: node.data.label
-    }));
+    // 2. Map Constraints & Decisions
+    // Note: This MVP Compiler linearizes the graph. Branching not yet supported in runtime.
+    // Decisions are converted to Boolean Input Constraints.
+    const steps = graph.nodes.filter(n => n.type === NODE_TYPES.CONSTRAINT || n.type === NODE_TYPES.DECISION);
+
+    // Sort steps based on Y-position to approximate flow (since we don't traverse edges yet)
+    steps.sort((a, b) => a.position.y - b.position.y);
+
+    const requirements = steps.map(node => {
+        if (node.type === NODE_TYPES.DECISION) {
+            return {
+                id: node.id,
+                type: 'INPUT',
+                params: { format: 'BOOLEAN' },
+                description: node.data.label || 'Decision Point'
+            };
+        }
+        return {
+            id: node.id,
+            type: node.data.constraintType, // e.g., 'GPS', 'PHOTO', 'INPUT'
+            params: {
+                ...node.data.params,
+                format: node.data.dataFormat || 'TEXT'
+            },
+            description: node.data.label
+        };
+    });
 
     // 3. Map Verdicts (End States)
     // In v1, we assume a linear flow: Trigger -> Constraints -> Verdict(Success)
