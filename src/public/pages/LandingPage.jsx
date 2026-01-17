@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '../SEOHead';
-import { getProtocolList } from '../../wings/legislative/ProtocolRegistry';
+import { getProtocolList, SOVEREIGN_DOMAINS } from '../../wings/legislative/ProtocolRegistry';
 import { useSovereignKernel, useInstitutionalSnapshot } from '../../spine/context/SovereigntyContext';
 import { useAuth } from '../../spine/context/AuthContext';
 import '../../ui/styles/landing.css';
@@ -26,6 +26,7 @@ export const LandingPage = () => {
 
     const navigate = useNavigate();
     const [activePanel, setActivePanel] = useState(null); // 'philosophy' | 'systems' | 'constitution'
+    const [activeTag, setActiveTag] = useState('ALL'); // 'ALL' | DomainID
     const [showBuilder, setShowBuilder] = useState(false);
     const { currentUser, login, logout } = useAuth();
     const isAuthenticated = !!currentUser;
@@ -156,33 +157,115 @@ export const LandingPage = () => {
                             </button>
                         </div>
                     ) : (
-                        disciplines.length > 0 ? (
-                            <div className="landing-registry-grid">
-                                {disciplines.map(d => {
-                                    const isActive = activeModules.includes(d.id);
-                                    const cardClass = isActive ? "landing-card active" : "landing-card";
-                                    return (
-                                        <div key={d.id}
-                                            onClick={() => handleCardClick(d)}
-                                            className={cardClass}>
-                                            <div className="landing-card-header">
-                                                <h3 className="landing-card-title">{d.label}</h3>
-                                                <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                        <div className="landing-registry-container">
+                            {/* TAG BAR - Sovereign Domains */}
+                            <div className="landing-tag-bar" style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '20px', marginBottom: '20px' }}>
+                                <button
+                                    onClick={() => setActiveTag('ALL')}
+                                    style={{
+                                        background: activeTag === 'ALL' ? 'var(--iron-signal-active)' : 'transparent',
+                                        color: activeTag === 'ALL' ? '#000' : 'var(--iron-text-secondary)',
+                                        border: activeTag === 'ALL' ? 'none' : '1px solid var(--iron-structure-border)',
+                                        padding: '5px 15px',
+                                        borderRadius: '20px',
+                                        fontSize: '0.8rem',
+                                        cursor: 'pointer',
+                                        whiteSpace: 'nowrap',
+                                        fontFamily: 'var(--font-systemic)'
+                                    }}
+                                >
+                                    ALL DOMAINS
+                                </button>
+                                {Object.values(SOVEREIGN_DOMAINS).map(domain => (
+                                    <button
+                                        key={domain.id}
+                                        onClick={() => setActiveTag(domain.id)}
+                                        style={{
+                                            background: activeTag === domain.id ? 'var(--iron-signal-active)' : 'transparent',
+                                            color: activeTag === domain.id ? '#000' : 'var(--iron-text-secondary)',
+                                            border: activeTag === domain.id ? 'none' : '1px solid var(--iron-structure-border)',
+                                            padding: '5px 15px',
+                                            borderRadius: '20px',
+                                            fontSize: '0.8rem',
+                                            cursor: 'pointer',
+                                            whiteSpace: 'nowrap',
+                                            fontFamily: 'var(--font-systemic)'
+                                        }}
+                                    >
+                                        {domain.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* SECTIONS */}
+
+                            {/* 1. LAST USED (Active) */}
+                            {activeModules.length > 0 && (activeTag === 'ALL' || disciplines.some(d => activeModules.includes(d.id) && d.domain === activeTag)) && (
+                                <div style={{ marginBottom: '40px' }}>
+                                    <div style={{ fontFamily: 'var(--font-constitutional)', fontSize: '1rem', color: 'var(--iron-signal-active)', marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px' }}>
+                                        LAST USED (ACTIVE)
+                                    </div>
+                                    <div className="landing-registry-grid">
+                                        {disciplines.filter(d => activeModules.includes(d.id) && (activeTag === 'ALL' || d.domain === activeTag)).map(d => (
+                                            <div key={d.id} onClick={() => handleCardClick(d)} className="landing-card active">
+                                                <div className="landing-card-header">
+                                                    <h3 className="landing-card-title">{d.label}</h3>
+                                                    <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                                </div>
+                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                <p className="landing-card-text">{d.focus}</p>
                                             </div>
-                                            <p className="landing-card-text">
-                                                {d.focus}
-                                            </p>
-                                        </div>
-                                    );
-                                })}
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 2. POPULAR (Top 5 by User Count) */}
+                            <div style={{ marginBottom: '40px' }}>
+                                <div style={{ fontFamily: 'var(--font-constitutional)', fontSize: '1rem', color: 'var(--iron-text-primary)', marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px' }}>
+                                    POPULAR
+                                </div>
+                                <div className="landing-registry-grid">
+                                    {disciplines
+                                        .filter(d => activeTag === 'ALL' || d.domain === activeTag)
+                                        .sort((a, b) => b.userCount - a.userCount)
+                                        .slice(0, 5)
+                                        .map(d => (
+                                            <div key={d.id} onClick={() => handleCardClick(d)} className={`landing-card ${activeModules.includes(d.id) ? 'active' : ''}`}>
+                                                <div className="landing-card-header">
+                                                    <h3 className="landing-card-title">{d.label}</h3>
+                                                    <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                                </div>
+                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                <p className="landing-card-text">{d.focus}</p>
+                                            </div>
+                                        ))}
+                                </div>
                             </div>
-                        ) : (
-                            <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5, border: '1px dashed var(--iron-infra-border)' }}>
-                                <div style={{ fontSize: '2rem', marginBottom: '20px' }}>∅</div>
-                                <div style={{ fontFamily: 'var(--font-authority)', letterSpacing: '2px' }}>{t('landing.registry.empty_title')}</div>
-                                <div style={{ marginTop: '10px' }}>{t('landing.registry.empty_text')}</div>
+
+                            {/* 3. LATEST (Mock Reverse + Domain Filter) */}
+                            <div style={{ marginBottom: '40px' }}>
+                                <div style={{ fontFamily: 'var(--font-constitutional)', fontSize: '1rem', color: 'var(--iron-text-primary)', marginBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px' }}>
+                                    LATEST
+                                </div>
+                                <div className="landing-registry-grid">
+                                    {[...disciplines].reverse()
+                                        .filter(d => activeTag === 'ALL' || d.domain === activeTag)
+                                        .slice(0, 5)
+                                        .map(d => (
+                                            <div key={d.id} onClick={() => handleCardClick(d)} className={`landing-card ${activeModules.includes(d.id) ? 'active' : ''}`}>
+                                                <div className="landing-card-header">
+                                                    <h3 className="landing-card-title">{d.label}</h3>
+                                                    <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                                </div>
+                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                <p className="landing-card-text">{d.focus}</p>
+                                            </div>
+                                        ))}
+                                </div>
                             </div>
-                        )
+
+                        </div>
                     )}
                 </section>
 
@@ -215,6 +298,6 @@ export const LandingPage = () => {
             <footer style={{ marginTop: '60px', paddingBottom: '40px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}>
                 <LanguageSwitcher />
             </footer>
-        </div>
+        </div >
     );
 };

@@ -76,6 +76,7 @@ export const compileGraphToProtocol = (graph, metadata = {}) => {
         title: metadata.title || "Custom Protocol",
         label: metadata.title || "Custom Protocol", // For Registry compatibility
         focus: metadata.description || "No description provided.",
+        domain: metadata.domain || 'SYSTEM_LOGISTICS',
         version: PROTOCOL_SCHEMA_VERSION, // Required for Validation
         requirements: requirements,
         category: 'PRIVATE',

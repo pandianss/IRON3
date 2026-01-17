@@ -82,6 +82,7 @@ export const ProtocolBuilderSurface = ({ embedded = false }) => {
     const [selectedNodeId, setSelectedNodeId] = useState(null);
     const [protocolTitle, setProtocolTitle] = useState("NEW PROTOCOL");
     const [protocolDescription, setProtocolDescription] = useState("Describe the sovereign intent...");
+    const [protocolDomain, setProtocolDomain] = useState("BIO_REGIME");
 
     const onConnect = useCallback((params) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: 'var(--iron-text-secondary)' } }, eds)), [setEdges]);
 
@@ -111,7 +112,8 @@ export const ProtocolBuilderSurface = ({ embedded = false }) => {
             // Compile to strictly validated Schema
             const protocol = compileGraphToProtocol(graph, {
                 title: protocolTitle,
-                description: protocolDescription
+                description: protocolDescription,
+                domain: protocolDomain
             });
 
             const jsonString = JSON.stringify(protocol, null, 2);
@@ -173,6 +175,29 @@ export const ProtocolBuilderSurface = ({ embedded = false }) => {
                             }}
                         />
                     </div>
+                    <select
+                        value={protocolDomain}
+                        onChange={(e) => setProtocolDomain(e.target.value)}
+                        style={{
+                            background: 'var(--iron-infra-panel)',
+                            border: '1px solid var(--iron-structure-border)',
+                            color: 'var(--iron-text-secondary)',
+                            fontFamily: 'var(--font-systemic)',
+                            fontSize: '0.8rem',
+                            padding: '5px',
+                            width: '200px',
+                            marginLeft: '20px'
+                        }}
+                    >
+                        <option value="BIO_REGIME">BIO-REGIME</option>
+                        <option value="CAPITAL_COMMAND">CAPITAL-COMMAND</option>
+                        <option value="PROFESSIONAL_WARFARE">PROFESSIONAL-WARFARE</option>
+                        <option value="COGNITIVE_SECURITY">COGNITIVE-SECURITY</option>
+                        <option value="SOCIAL_ALLIANCE">SOCIAL-ALLIANCE</option>
+                        <option value="SPIRIT_ANCHOR">SPIRIT-ANCHOR</option>
+                        <option value="SKILL_ACQUISITION">SKILL-ACQUISITION</option>
+                        <option value="SYSTEM_LOGISTICS">SYSTEM-LOGISTICS</option>
+                    </select>
                     <div style={toolbarStyle}>
                         <button style={btnStyle} onClick={() => addNode('TRIGGER')}>+ TRIGGER</button>
                         <button style={btnStyle} onClick={() => addNode('CONSTRAINT')}>+ CONSTRAINT</button>
@@ -204,129 +229,131 @@ export const ProtocolBuilderSurface = ({ embedded = false }) => {
             </div>
 
             {/* Inspector Panel (Right Side) */}
-            {selectedNode && (
-                <div style={{
-                    width: '300px',
-                    background: 'var(--iron-infra-panel)',
-                    borderLeft: '1px solid var(--iron-structure-border)',
-                    padding: '20px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '20px'
-                }}>
-                    <div style={{ fontFamily: 'var(--font-constitutional)', color: 'var(--iron-signal-active)', borderBottom: '1px solid var(--iron-structure-border)', paddingBottom: '10px' }}>
-                        NODE INSPECTOR
-                    </div>
-
-                    <div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>ID</div>
-                        <div style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{selectedNode.id}</div>
-                    </div>
-
-                    <div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>LABEL</div>
-                        <input
-                            type="text"
-                            value={selectedNode.data.label}
-                            onChange={(e) => updateLabel(e.target.value)}
-                            style={{
-                                width: '100%',
-                                background: 'var(--iron-infra-void)',
-                                border: '1px solid var(--iron-structure-border)',
-                                color: 'var(--iron-text-primary)',
-                                padding: '8px',
-                                fontFamily: 'var(--font-institutional)'
-                            }}
-                        />
-                    </div>
-
-                    <div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>SOVEREIGN SYMBOLS</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                            {emojiPalette.map(emoji => (
-                                <button
-                                    key={emoji}
-                                    onClick={() => appendEmoji(emoji)}
-                                    style={{
-                                        background: 'transparent',
-                                        border: '1px solid var(--iron-structure-border)',
-                                        color: '#fff',
-                                        cursor: 'pointer',
-                                        fontSize: '1.2rem',
-                                        padding: '5px',
-                                        borderRadius: '4px'
-                                    }}
-                                >
-                                    {emoji}
-                                </button>
-                            ))}
+            {
+                selectedNode && (
+                    <div style={{
+                        width: '300px',
+                        background: 'var(--iron-infra-panel)',
+                        borderLeft: '1px solid var(--iron-structure-border)',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '20px'
+                    }}>
+                        <div style={{ fontFamily: 'var(--font-constitutional)', color: 'var(--iron-signal-active)', borderBottom: '1px solid var(--iron-structure-border)', paddingBottom: '10px' }}>
+                            NODE INSPECTOR
                         </div>
-                    </div>
 
-                    {selectedNode.type === 'CONSTRAINT' && (
                         <div>
-                            <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>TYPE</div>
-                            <select
-                                value={selectedNode.data.constraintType}
-                                onChange={(e) => {
-                                    setNodes((nds) => nds.map((n) => {
-                                        if (n.id === selectedNode.id) return { ...n, data: { ...n.data, constraintType: e.target.value } };
-                                        return n;
-                                    }));
-                                }}
-                                style={{ width: '100%', background: 'var(--iron-infra-void)', color: '#fff', border: '1px solid var(--iron-structure-border)', padding: '5px', marginBottom: '10px' }}
-                            >
-                                <option value="TIME">TIME DEADLINE</option>
-                                <option value="GPS">GPS LOCATION</option>
-                                <option value="PHOTO">PHOTO EVIDENCE</option>
-                                <option value="INPUT">DATA INPUT</option>
-                                <option value="BLOCKER">APP BLOCKER</option>
-                            </select>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>ID</div>
+                            <div style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{selectedNode.id}</div>
+                        </div>
 
-                            {selectedNode.data.constraintType === 'INPUT' && (
-                                <div>
-                                    <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>DATA FORMAT</div>
-                                    <select
-                                        value={selectedNode.data.dataFormat || 'TEXT'}
-                                        onChange={(e) => {
-                                            setNodes((nds) => nds.map((n) => {
-                                                if (n.id === selectedNode.id) return { ...n, data: { ...n.data, dataFormat: e.target.value } };
-                                                return n;
-                                            }));
+                        <div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>LABEL</div>
+                            <input
+                                type="text"
+                                value={selectedNode.data.label}
+                                onChange={(e) => updateLabel(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    background: 'var(--iron-infra-void)',
+                                    border: '1px solid var(--iron-structure-border)',
+                                    color: 'var(--iron-text-primary)',
+                                    padding: '8px',
+                                    fontFamily: 'var(--font-institutional)'
+                                }}
+                            />
+                        </div>
+
+                        <div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>SOVEREIGN SYMBOLS</div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                                {emojiPalette.map(emoji => (
+                                    <button
+                                        key={emoji}
+                                        onClick={() => appendEmoji(emoji)}
+                                        style={{
+                                            background: 'transparent',
+                                            border: '1px solid var(--iron-structure-border)',
+                                            color: '#fff',
+                                            cursor: 'pointer',
+                                            fontSize: '1.2rem',
+                                            padding: '5px',
+                                            borderRadius: '4px'
                                         }}
-                                        style={{ width: '100%', background: 'var(--iron-infra-void)', color: 'var(--iron-signal-active)', border: '1px solid var(--iron-structure-border)', padding: '5px' }}
                                     >
-                                        <option value="TEXT">TEXT (Abc)</option>
-                                        <option value="NUMBER">NUMBER (123)</option>
-                                        <option value="CURRENCY">CURRENCY ($)</option>
-                                        <option value="DURATION">DURATION (h:mm)</option>
-                                        <option value="BOOLEAN">CHECKBOX (Yes/No)</option>
-                                    </select>
-                                </div>
-                            )}
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    )}
 
-                    {selectedNode.type === 'VERDICT' && (
-                        <div>
-                            <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>VERDICT</div>
-                            <select
-                                value={selectedNode.data.verdict}
-                                onChange={(e) => {
-                                    setNodes((nds) => nds.map((n) => {
-                                        if (n.id === selectedNode.id) return { ...n, data: { ...n.data, verdict: e.target.value } };
-                                        return n;
-                                    }));
-                                }}
-                                style={{ width: '100%', background: 'var(--iron-infra-void)', color: '#fff', border: '1px solid var(--iron-structure-border)', padding: '5px' }}
-                            >
-                                <option value="GRANT">GRANT (VALID)</option>
-                                <option value="DENY">DENY (INVALID)</option>
-                            </select>
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
+                        {selectedNode.type === 'CONSTRAINT' && (
+                            <div>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>TYPE</div>
+                                <select
+                                    value={selectedNode.data.constraintType}
+                                    onChange={(e) => {
+                                        setNodes((nds) => nds.map((n) => {
+                                            if (n.id === selectedNode.id) return { ...n, data: { ...n.data, constraintType: e.target.value } };
+                                            return n;
+                                        }));
+                                    }}
+                                    style={{ width: '100%', background: 'var(--iron-infra-void)', color: '#fff', border: '1px solid var(--iron-structure-border)', padding: '5px', marginBottom: '10px' }}
+                                >
+                                    <option value="TIME">TIME DEADLINE</option>
+                                    <option value="GPS">GPS LOCATION</option>
+                                    <option value="PHOTO">PHOTO EVIDENCE</option>
+                                    <option value="INPUT">DATA INPUT</option>
+                                    <option value="BLOCKER">APP BLOCKER</option>
+                                </select>
+
+                                {selectedNode.data.constraintType === 'INPUT' && (
+                                    <div>
+                                        <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>DATA FORMAT</div>
+                                        <select
+                                            value={selectedNode.data.dataFormat || 'TEXT'}
+                                            onChange={(e) => {
+                                                setNodes((nds) => nds.map((n) => {
+                                                    if (n.id === selectedNode.id) return { ...n, data: { ...n.data, dataFormat: e.target.value } };
+                                                    return n;
+                                                }));
+                                            }}
+                                            style={{ width: '100%', background: 'var(--iron-infra-void)', color: 'var(--iron-signal-active)', border: '1px solid var(--iron-structure-border)', padding: '5px' }}
+                                        >
+                                            <option value="TEXT">TEXT (Abc)</option>
+                                            <option value="NUMBER">NUMBER (123)</option>
+                                            <option value="CURRENCY">CURRENCY ($)</option>
+                                            <option value="DURATION">DURATION (h:mm)</option>
+                                            <option value="BOOLEAN">CHECKBOX (Yes/No)</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {selectedNode.type === 'VERDICT' && (
+                            <div>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>VERDICT</div>
+                                <select
+                                    value={selectedNode.data.verdict}
+                                    onChange={(e) => {
+                                        setNodes((nds) => nds.map((n) => {
+                                            if (n.id === selectedNode.id) return { ...n, data: { ...n.data, verdict: e.target.value } };
+                                            return n;
+                                        }));
+                                    }}
+                                    style={{ width: '100%', background: 'var(--iron-infra-void)', color: '#fff', border: '1px solid var(--iron-structure-border)', padding: '5px' }}
+                                >
+                                    <option value="GRANT">GRANT (VALID)</option>
+                                    <option value="DENY">DENY (INVALID)</option>
+                                </select>
+                            </div>
+                        )}
+                    </div>
+                )
+            }
+        </div >
     );
 };

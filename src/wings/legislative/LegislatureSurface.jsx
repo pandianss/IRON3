@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ProtocolBuilderSurface } from './builder/ProtocolBuilderSurface';
-import { getProtocolList, registerProtocol } from './ProtocolRegistry';
+import { getProtocolList, registerProtocol, SOVEREIGN_DOMAINS } from './ProtocolRegistry';
 import { validateProtocolJSON } from './builder/ProtocolCompiler';
 
 // IVC-01 Styles
@@ -62,12 +62,16 @@ export const LegislatureSurface = ({ onClose }) => {
     const [lastUpdate, setLastUpdate] = useState(Date.now());
 
     const protocols = getProtocolList();
-    const official = protocols.filter(p => p.category === 'OFFICIAL');
-    const popular = protocols.filter(p => p.category === 'POPULAR');
-    const privateLaws = protocols.filter(p => p.category === 'PRIVATE');
 
-    // Mock Favorites
-    const favorites = [];
+    // Group protocols by Domain
+    const protocolsByDomain = protocols
+        .filter(p => p && (p.domain || p.category)) // Safety Check
+        .reduce((acc, p) => {
+            const domain = p.domain || 'SYSTEM_LOGISTICS';
+            if (!acc[domain]) acc[domain] = [];
+            acc[domain].push(p);
+            return acc;
+        }, {});
 
     const handleImport = () => {
         const jsonStr = prompt("PASTE PROTOCOL MANIFEST (JSON):");
@@ -83,7 +87,7 @@ export const LegislatureSurface = ({ onClose }) => {
             }
 
             registerProtocol(protocol);
-            setLastUpdate(Date.now()); // Trigger refresh
+            setLastUpdate(Date.now());
             alert("PROTOCOL RATIFIED: " + protocol.title);
         } catch (e) {
             alert("INVALID MANIFEST: " + e.message);
@@ -111,67 +115,41 @@ export const LegislatureSurface = ({ onClose }) => {
                 </div>
             </div>
 
-            {/* Builder Zone (Prominent) */}
+            {/* Builder Zone at TOP */}
             <div style={{ height: '60vh', borderBottom: '4px solid var(--iron-structure-border)' }}>
                 <ProtocolBuilderSurface embedded={true} />
             </div>
 
-            {/* Marketplace */}
+            {/* Marketplace: Organized by Sovereign Domain */}
             <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
 
-                {/* Favorites */}
-                <div style={sectionTitle}>FAVORITE PROTOCOLS</div>
-                {favorites.length > 0 ? (
-                    <div style={gridStyle}>
-                        {/* Render favorites */}
-                    </div>
-                ) : (
-                    <div style={{ opacity: 0.5, border: '1px dashed var(--iron-infra-border)', padding: '20px', textAlign: 'center', fontSize: '0.8rem' }}>
-                        No protocols pinned to favorites.
-                    </div>
-                )}
+                {Object.values(SOVEREIGN_DOMAINS).map(domain => {
+                    const domainProtocols = protocolsByDomain[domain.id] || [];
+                    if (domainProtocols.length === 0) return null;
 
-                {/* Official */}
-                <div style={sectionTitle}>OFFICIAL PROTOCOLS</div>
-                <div style={gridStyle}>
-                    {official.map(p => (
-                        <div key={p.id} style={cardStyle} className="legislature-card">
-                            <span style={cardMetric}>USERS: {p.userCount.toLocaleString()}</span>
-                            <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: 'var(--iron-text-primary)' }}>{p.label}</h3>
-                            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--iron-text-secondary)', lineHeight: '1.5' }}>{p.focus}</p>
+                    return (
+                        <div key={domain.id} style={{ marginBottom: '40px' }}>
+                            <div style={sectionTitle}>
+                                {domain.label}
+                                <span style={{ marginLeft: '10px', fontSize: '0.8rem', color: 'var(--iron-text-tertiary)', fontFamily: 'var(--font-institutional)', textTransform: 'none' }}>
+                                    // {domain.description}
+                                </span>
+                            </div>
+                            <div style={gridStyle}>
+                                {domainProtocols.map(p => (
+                                    <div key={p.id} style={cardStyle} className="legislature-card">
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                            <span style={cardMetric}>{p.userCount.toLocaleString()} CITIZENS</span>
+                                            {p.isCustom && <span style={{ color: 'var(--iron-signal-active)', fontSize: '0.7rem' }}>CUSTOM</span>}
+                                        </div>
+                                        <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: 'var(--iron-text-primary)' }}>{p.title || p.label}</h3>
+                                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--iron-text-secondary)', lineHeight: '1.5' }}>{p.focus || p.description}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    ))}
-                </div>
-
-                {/* Private / Imported */}
-                {privateLaws.length > 0 && (
-                    <>
-                        <div style={sectionTitle}>PRIVATE LAWS (IMPORTED)</div>
-                        <div style={gridStyle}>
-                            {privateLaws.map(p => (
-                                <div key={p.id} style={cardStyle} className="legislature-card">
-                                    <span style={{ ...cardMetric, color: 'var(--iron-signal-risk)' }}>PRIVATE • CUSTOM</span>
-                                    <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: 'var(--iron-text-primary)' }}>{p.title || p.label}</h3>
-                                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--iron-text-secondary)', lineHeight: '1.5' }}>
-                                        {p.requirements?.length} Constraints
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                )}
-
-                {/* Popular */}
-                <div style={sectionTitle}>POPULAR BY CONSENSUS</div>
-                <div style={gridStyle}>
-                    {popular.map(p => (
-                        <div key={p.id} style={cardStyle} className="legislature-card">
-                            <span style={cardMetric}>USERS: {p.userCount.toLocaleString()}</span>
-                            <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: 'var(--iron-text-primary)' }}>{p.label}</h3>
-                            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--iron-text-secondary)', lineHeight: '1.5' }}>{p.focus}</p>
-                        </div>
-                    ))}
-                </div>
+                    );
+                })}
 
             </div>
         </div>

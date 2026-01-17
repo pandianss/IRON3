@@ -4,13 +4,24 @@
  * Defines the specialized protocols supported by the IRON platform.
  * Currently initialized to empty state for sovereign genesis.
  */
+export const SOVEREIGN_DOMAINS = {
+    BIO_REGIME: { id: 'BIO_REGIME', label: 'BIO-REGIME', description: 'Physicality & Health' },
+    CAPITAL_COMMAND: { id: 'CAPITAL_COMMAND', label: 'CAPITAL-COMMAND', description: 'Financial Sovereignty' },
+    PROFESSIONAL_WARFARE: { id: 'PROFESSIONAL_WARFARE', label: 'PROFESSIONAL-WARFARE', description: 'Career & Output' },
+    COGNITIVE_SECURITY: { id: 'COGNITIVE_SECURITY', label: 'COGNITIVE-SECURITY', description: 'Intellect & Focus' },
+    SOCIAL_ALLIANCE: { id: 'SOCIAL_ALLIANCE', label: 'SOCIAL-ALLIANCE', description: 'Tribe & Community' },
+    SPIRIT_ANCHOR: { id: 'SPIRIT_ANCHOR', label: 'SPIRIT-ANCHOR', description: 'Grounding & Faith' },
+    SKILL_ACQUISITION: { id: 'SKILL_ACQUISITION', label: 'SKILL-ACQUISITION', description: 'Growth & Craft' },
+    SYSTEM_LOGISTICS: { id: 'SYSTEM_LOGISTICS', label: 'SYSTEM-LOGISTICS', description: 'Environment & Admin' }
+};
+
 const BUILT_IN_PROTOCOLS = {
     DISCIPLINE_MORNING_DRILL: {
         id: 'DISCIPLINE_MORNING_DRILL',
         label: 'MORNING DRILL',
         focus: 'Early execution of physical obligations.',
         primaryMetric: 'STREAK',
-        category: 'OFFICIAL',
+        domain: 'BIO_REGIME',
         userCount: 12405,
         requirements: [
             { type: 'TIME', value: '06:00' },
@@ -22,7 +33,7 @@ const BUILT_IN_PROTOCOLS = {
         label: 'DEEP WORK',
         focus: 'Sovereign ownership of attention.',
         primaryMetric: 'HOURS',
-        category: 'POPULAR',
+        domain: 'PROFESSIONAL_WARFARE',
         userCount: 8932,
         requirements: [
             { type: 'BLOCKER', value: 'Social Media' },
@@ -34,7 +45,7 @@ const BUILT_IN_PROTOCOLS = {
         label: 'EVENING AUDIT',
         focus: 'Reconciliation of daily debt.',
         primaryMetric: 'COMPLETION',
-        category: 'OFFICIAL',
+        domain: 'SYSTEM_LOGISTICS',
         userCount: 5600,
         requirements: [
             { type: 'INPUT', value: 'Journal' }
@@ -45,7 +56,7 @@ const BUILT_IN_PROTOCOLS = {
         label: 'IRON FAST',
         focus: 'Metabolic sovereignty.',
         primaryMetric: 'HOURS',
-        category: 'POPULAR',
+        domain: 'BIO_REGIME',
         userCount: 3210,
         requirements: [
             { type: 'TIMER', value: '16h' }
@@ -93,7 +104,7 @@ export const registerProtocol = (protocol) => {
     // Save to memory
     privateProtocols[protocol.id] = {
         ...protocol,
-        category: 'PRIVATE', // Force private category for user imports
+        domain: protocol.domain || 'SYSTEM_LOGISTICS', // Default to Logistics if undefined
         userCount: 1, // Only you
         isCustom: true
     };
