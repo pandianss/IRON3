@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { SEOHead } from '../SEOHead';
 import { getProtocolList } from '../../wings/legislative/ProtocolRegistry';
 import { useSovereignKernel, useInstitutionalSnapshot } from '../../spine/context/SovereigntyContext';
 import { useAuth } from '../../spine/context/AuthContext';
+import '../../ui/styles/landing.css';
 
 // Floating Panels
 import { WhatIsIron } from './WhatIsIron';
@@ -12,8 +14,10 @@ import { PersonalInstitution } from './PersonalInstitution';
 import { DisciplineLawPanel } from './DisciplineLawPanel';
 
 import { ConstitutionPanel } from './ConstitutionPanel';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const LandingPage = () => {
+    const { t } = useTranslation();
     const disciplines = getProtocolList();
     const kernel = useSovereignKernel();
     const snapshot = useInstitutionalSnapshot();
@@ -68,7 +72,7 @@ export const LandingPage = () => {
             {activePanel && (
                 <div className="landing-overlay" onClick={closePanel}>
                     <div className="landing-panel" onClick={e => e.stopPropagation()}>
-                        <button onClick={closePanel} className="btn-close">CLOSE_SIG</button>
+                        <button onClick={closePanel} className="btn-close">{t('landing.action.close')}</button>
                         <div className="landing-panel-body">
                             {activePanel === 'PHILOSOPHY' && <WhatIsIron />}
                             {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
@@ -83,9 +87,13 @@ export const LandingPage = () => {
                             )}
                             {activePanel === 'AUTH_REQUIRED' && (
                                 <div style={{ textAlign: 'center', padding: '20px' }}>
-                                    <h2 style={{ fontFamily: 'var(--font-authority)', color: 'var(--iron-brand-stable)', letterSpacing: '2px' }}>AUTHORITY_REQUIRED</h2>
-                                    <p style={{ opacity: 0.7, margin: '20px 0' }}>Sovereign modules require an assertive identity. Initiate your sovereignty to begin.</p>
-                                    <button onClick={handleJoin} className="btn-action">INITIATE_SOVEREIGNTY</button>
+                                    <h2 style={{ fontFamily: 'var(--font-authority)', color: 'var(--iron-brand-stable)', letterSpacing: '2px' }}>
+                                        {t('landing.auth.required_title')}
+                                    </h2>
+                                    <p style={{ opacity: 0.7, margin: '20px 0' }}>
+                                        {t('landing.auth.required_text')}
+                                    </p>
+                                    <button onClick={handleJoin} className="btn-action">{t('landing.auth.initiate')}</button>
                                 </div>
                             )}
                         </div>
@@ -96,40 +104,44 @@ export const LandingPage = () => {
             <header className="landing-header">
                 <div className="landing-auth-container">
                     {currentUser ? (
-                        <button onClick={logout} className="btn-auth">Sovereign_{currentUser.uid.substring(0, 4)} [DISCONNECT]</button>
+                        <button onClick={logout} className="btn-auth">
+                            {t('landing.auth.disconnect', { id: currentUser.uid.substring(0, 4) })}
+                        </button>
                     ) : (
-                        <button onClick={handleJoin} className="btn-auth">INITIATE_SOVEREIGNTY</button>
+                        <button onClick={handleJoin} className="btn-auth">{t('landing.auth.initiate')}</button>
                     )}
                 </div>
-                <h1 className="landing-title">IRON</h1>
-                <p className="landing-subtitle">Sovereign Discipline System</p>
+                <h1 className="landing-title">{t('landing.title')}</h1>
+                <p className="landing-subtitle">{t('landing.subtitle')}</p>
             </header>
 
             <main>
                 <section className="landing-section-hero">
-                    <h2 className="landing-hero-head">Sovereignty is a technical problem.</h2>
+                    <h2 className="landing-hero-head">{t('landing.hero.head')}</h2>
                     <p className="landing-hero-text">
-                        Most productivity tools ask you to be motivated. IRON asks you to be governed.
-                        Activate specialized protocols to transform your commitments into sovereign law.
+                        {t('landing.hero.text')}
                     </p>
                 </section>
 
                 <section className="landing-section-registry">
                     <h2 className="landing-section-head">
-                        PROTOCOL REGISTRY
+                        {t('landing.registry.head')}
                     </h2>
 
                     {!currentUser ? (
                         <div className="landing-registry-lock">
                             <div className="landing-lock-icon">🔒</div>
-                            <div className="landing-lock-title">PROTOCOLS_CLASSIFIED</div>
+                            <div className="landing-lock-title">{t('landing.registry.classified_title')}</div>
                             <div className="landing-lock-text">
-                                Access to the Sovereign Protocol Registry is restricted to inducted sovereigns.
-                                <br />
-                                Initiate sovereignty to decrypt.
+                                {t('landing.registry.classified_text').split('\n').map((line, i) => (
+                                    <React.Fragment key={i}>
+                                        {line}
+                                        <br />
+                                    </React.Fragment>
+                                ))}
                             </div>
                             <button onClick={handleJoin} className="btn-action" style={{ marginTop: '20px', width: 'auto' }}>
-                                AUTHENTICATE_IDENTITY
+                                {t('landing.registry.authenticate')}
                             </button>
                         </div>
                     ) : (
@@ -156,8 +168,8 @@ export const LandingPage = () => {
                         ) : (
                             <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5, border: '1px dashed var(--iron-infra-border)' }}>
                                 <div style={{ fontSize: '2rem', marginBottom: '20px' }}>∅</div>
-                                <div style={{ fontFamily: 'var(--font-authority)', letterSpacing: '2px' }}>REGISTRY_EMPTY</div>
-                                <div style={{ marginTop: '10px' }}>Awaiting Sovereign Protocol Construction</div>
+                                <div style={{ fontFamily: 'var(--font-authority)', letterSpacing: '2px' }}>{t('landing.registry.empty_title')}</div>
+                                <div style={{ marginTop: '10px' }}>{t('landing.registry.empty_text')}</div>
                             </div>
                         )
                     )}
@@ -166,26 +178,27 @@ export const LandingPage = () => {
                 <nav className="landing-nav">
                     <div onClick={() => setActivePanel('PHILOSOPHY')} className="landing-nav-item">
                         <span className="landing-nav-label">01_PHILOSOPHY</span>
-                        What is IRON?
+                        {t('landing.nav.philosophy')}
                     </div>
                     <div onClick={() => setActivePanel('SYSTEMS')} className="landing-nav-item">
                         <span className="landing-nav-label">02_SYSTEMS</span>
-                        Industrial Strength Productivity?
+                        {t('landing.nav.systems')}
                     </div>
                     <div onClick={() => setActivePanel('SOVEREIGNTY')} className="landing-nav-item">
                         <span className="landing-nav-label">03_SOVEREIGNTY</span>
-                        What is a Private Discipline?
+                        {t('landing.nav.sovereignty')}
                     </div>
                     <div onClick={() => setActivePanel('CONSTITUTION')} className="landing-nav-item">
                         <span className="landing-nav-label">04_CONSTITUTION</span>
-                        The Iron Constitution
+                        {t('landing.nav.constitution')}
                     </div>
                 </nav>
 
-                <div className="landing-action-container">
-                    <Link to="/app" className="btn-action">GOTO_DASHBOARD</Link>
-                </div>
             </main>
+
+            <footer style={{ marginTop: '60px', paddingBottom: '40px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}>
+                <LanguageSwitcher />
+            </footer>
         </div>
     );
 };

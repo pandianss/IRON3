@@ -1,0 +1,95 @@
+{
+    "landing": {
+        "title": "IRON",
+        "subtitle": "Sovereign Discipline System",
+        "auth": {
+            "initiate": "INITIATE_SOVEREIGNTY",
+            "disconnect": "Sovereign_{{id}} [DISCONNECT]",
+            "required_title": "AUTHORITY_REQUIRED",
+            "required_text": "Sovereign modules require an assertive identity. Initiate your sovereignty to begin."
+        },
+        "hero": {
+            "head": "Sovereignty is a technical problem.",
+            "text": "Most productivity tools ask you to be motivated. IRON asks you to be governed. Activate specialized protocols to transform your commitments into sovereign law."
+        },
+        "registry": {
+            "head": "PROTOCOL REGISTRY",
+            "classified_title": "PROTOCOLS_CLASSIFIED",
+            "classified_text": "Access to the Sovereign Protocol Registry is restricted to inducted sovereigns.\nInitiate sovereignty to decrypt.",
+            "authenticate": "AUTHENTICATE_IDENTITY",
+            "empty_title": "REGISTRY_EMPTY",
+            "empty_text": "Awaiting Sovereign Protocol Construction"
+        },
+        "nav": {
+            "philosophy": "What is IRON?",
+            "systems": "Industrial Strength Productivity?",
+            "sovereignty": "What is a Private Discipline?",
+            "constitution": "The Iron Constitution"
+        },
+        "action": {
+            "dashboard": "GOTO_DASHBOARD",
+            "close": "CLOSE_SIG"
+        },
+        "panels": {
+            "philosophy": {
+                "title": "What is IRON?",
+                "intro": "IRON is not an app. It is a <1>Behavioral Governing System</1>.",
+                "p1": "Traditional apps are advisory. They provide lists, charts, and notifications. They depend on your mood to function.",
+                "p2": "IRON is <1>mandatory</1>. It utilizes an internal Institutional State to govern your access to information and features based on your actual performance. It turns your commitments into \"Laws\" that are monitored by the Institutional Kernel.",
+                "principles_title": "Core Principles",
+                "principle_1": "<1>Standing:</1> Your reputation within your own system.",
+                "principle_2": "<1>Contracts:</1> Explicit, code-enforced behavioral agreements.",
+                "principle_3": "<1>Consequences:</1> Real-time degradation of the experience when law is breached."
+            },
+            "constitution": {
+                "title": "The IRON Constitution",
+                "intro_1": "IRON is not a habit tracker. IRON is a behavioural institution.",
+                "intro_2": "Its purpose is to establish, govern, and preserve personal discipline through enforceable commitments, permanent records, and escalating accountability.",
+                "footer_1": "ESTABLISHED 2026",
+                "footer_2": "SOVEREIGN DISCIPLINE SYSTEM",
+                "articles": {
+                    "1": {
+                        "title": "Article I — Sovereignty of the Ledger",
+                        "content": "The Behavioural Ledger is the single source of truth. All user state must be derivable exclusively from ledger history. The ledger records only facts: events that have occurred under system authority."
+                    },
+                    "2": {
+                        "title": "Article II — Standing as Supreme Authority",
+                        "content": "Every user exists in exactly one Standing at any time. Standing governs what actions are permitted, what screens are accessible, and what tone the system adopts. If Standing cannot justify an experience, that experience must not exist."
+                    },
+                    "3": {
+                        "title": "Article III — Contractual Entry",
+                        "content": "Entry into IRON occurs only through Induction. A contract defines minimum obligations, evaluation rules, and failure conditions. Without a contract, no user is considered a member. "
+                    },
+                    "4": {
+                        "title": "Article IV — Daily Governance",
+                        "content": "IRON is organised around institutional days. Each day may create obligations. Every governed day must be closed by ledger entry. An open day is an unresolved institutional state."
+                    },
+                    "5": {
+                        "title": "Article V — Irreversibility",
+                        "content": "All institutional outcomes leave permanent record. Failures must produce historical facts. No mechanism may erase institutional history. Progress accumulates. Failure scars."
+                    },
+                    "6": {
+                        "title": "Article VI — Escalation of Commitment",
+                        "content": "Continued compliance must increase institutional weight. Stability must never reduce consequence. Time strengthens authority."
+                    },
+                    "7": {
+                        "title": "Article VII — Breach and Recovery",
+                        "content": "Breach is a formal institutional event. Recovery is not a reset; it is a governed process with defined cost. The system must always remember the difference between continuity and repair."
+                    },
+                    "8": {
+                        "title": "Article VIII — Experience Subordination",
+                        "content": "The interface exists to expose system reality. UI may not soften outcomes, conceal standing, or simulate progress. The interface is a window, not a playground."
+                    },
+                    "9": {
+                        "title": "Article IX — Institutional Voice",
+                        "content": "IRON communicates as a system, not a motivator. Language must be precise, non-sentimental, and consequence-oriented. Praise is replaced by confirmation."
+                    },
+                    "10": {
+                        "title": "Article X — Product Law",
+                        "content": "Retention is not a feature. It is the result of governance. Any component that does not strengthen behavioural authority violates this Constitution."
+                    }
+                }
+            }
+        }
+    }
+}

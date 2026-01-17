@@ -1,0 +1,53 @@
+{
+    "landing": {
+        "title": "IRON",
+        "subtitle": "主権規律システム (Sovereign Discipline System)",
+        "auth": {
+            "initiate": "主権を開始 (INITIATE)",
+            "disconnect": "Sovereign_{{id}} [切断]",
+            "required_title": "権限が必要です (AUTHORITY_REQUIRED)",
+            "required_text": "主権モジュールには、確固たるアイデンティティが必要です。開始するには主権を開始してください。"
+        },
+        "hero": {
+            "head": "主権は技術的な問題です。",
+            "text": "ほとんどの生産性向上ツールは、モチベーションを求めます。IRONは、統治されることを求めます。約束を主権法に変えるために、専門のプロトコルを有効にしてください。"
+        },
+        "registry": {
+            "head": "プロトコルレジストリ",
+            "classified_title": "プロトコル機密 (CLASSIFIED)",
+            "classified_text": "主権プロトコルレジストリへのアクセスは、加入した主権者に制限されています。\n復号化するには主権を開始してください。",
+            "authenticate": "本人確認 (AUTHENTICATE)",
+            "empty_title": "レジストリが空です",
+            "empty_text": "主権プロトコルの構築を待機中"
+        },
+        "nav": {
+            "philosophy": "IRONとは？",
+            "systems": "工業用強度の生産性？",
+            "sovereignty": "私的規律とは？",
+            "constitution": "IRON憲法"
+        },
+        "action": {
+            "dashboard": "ダッシュボードへ",
+            "close": "閉じる (CLOSE)"
+        },
+        "panels": {
+            "philosophy": {
+                "title": "IRONとは？",
+                "intro": "IRONはアプリではありません。<1>行動統治システム</1>です。",
+                "p1": "従来のアプリは助言的です。リスト、チャート、通知を提供します。それらは機能するためにあなたの気分に依存しています。",
+                "p2": "IRONは<1>強制的</1>です。内部の機関状態を利用して、実際のパフォーマンスに基づいて情報や機能へのアクセスを管理します。それはあなたの約束を機関カーネルによって監視される「法律」に変えます。",
+                "principles_title": "核心原則",
+                "principle_1": "<1>地位 (Standing):</1> 自身のシステム内での評判。",
+                "principle_2": "<1>契約 (Contracts):</1> 明示的で、コードによって強制される行動契約。",
+                "principle_3": "<1>結果 (Consequences):</1> 法律が破られたときの経験のリアルタイムな劣化。"
+            },
+            "constitution": {
+                "title": "IRON憲法",
+                "intro_1": "IRONは習慣トラッカーではありません。IRONは行動機関です。",
+                "intro_2": "その目的は、強制可能な約束、永久的な記録、および段階的な説明責任を通じて、個人の規律を確立、統治、および保存することです。",
+                "footer_1": "設立 2026",
+                "footer_2": "主権規律システム"
+            }
+        }
+    }
+}
