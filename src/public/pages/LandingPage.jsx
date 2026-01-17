@@ -15,6 +15,7 @@ import { DisciplineLawPanel } from './DisciplineLawPanel';
 
 import { ConstitutionPanel } from './ConstitutionPanel';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { LegislatureSurface } from '../../wings/legislative/LegislatureSurface';
 
 export const LandingPage = () => {
     const { t } = useTranslation();
@@ -23,14 +24,16 @@ export const LandingPage = () => {
     const snapshot = useInstitutionalSnapshot();
     const activeModules = snapshot?.activeModules || [];
 
-    const [activePanel, setActivePanel] = useState(null);
     const navigate = useNavigate();
+    const [activePanel, setActivePanel] = useState(null); // 'philosophy' | 'systems' | 'constitution'
+    const [showBuilder, setShowBuilder] = useState(false);
     const { currentUser, login, logout } = useAuth();
+    const isAuthenticated = !!currentUser;
 
     const handleToggleModule = async (e, id) => {
         if (e) e.stopPropagation();
 
-        if (!currentUser) {
+        if (!isAuthenticated) {
             setActivePanel('AUTH_REQUIRED');
             return;
         }
@@ -59,6 +62,14 @@ export const LandingPage = () => {
     };
 
     const closePanel = () => setActivePanel(null);
+
+    if (showBuilder) {
+        return (
+            <div style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'var(--iron-infra-void)' }}>
+                <LegislatureSurface onClose={() => setShowBuilder(false)} />
+            </div>
+        );
+    }
 
     return (
         <div className="landing-root">
@@ -188,10 +199,15 @@ export const LandingPage = () => {
                         <span className="landing-nav-label">03_SOVEREIGNTY</span>
                         {t('landing.nav.sovereignty')}
                     </div>
-                    <div onClick={() => setActivePanel('CONSTITUTION')} className="landing-nav-item">
+                    <a className="landing-nav-item" onClick={() => setActivePanel('CONSTITUTION')}>
                         <span className="landing-nav-label">04_CONSTITUTION</span>
                         {t('landing.nav.constitution')}
-                    </div>
+                    </a>
+
+                    <a className="landing-nav-item" onClick={() => setShowBuilder(true)} style={{ color: 'var(--iron-signal-active)' }}>
+                        <span className="landing-nav-label">LEGISLATURE</span>
+                        IX. PROTOCOL BUILDER
+                    </a>
                 </nav>
 
             </main>
