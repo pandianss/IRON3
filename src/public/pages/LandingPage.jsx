@@ -118,25 +118,49 @@ export const LandingPage = () => {
                     <h2 className="landing-section-head">
                         PROTOCOL REGISTRY
                     </h2>
-                    <div className="landing-registry-grid">
-                        {disciplines.map(d => {
-                            const isActive = activeModules.includes(d.id);
-                            const cardClass = isActive ? "landing-card active" : "landing-card";
-                            return (
-                                <div key={d.id}
-                                    onClick={() => handleCardClick(d)}
-                                    className={cardClass}>
-                                    <div className="landing-card-header">
-                                        <h3 className="landing-card-title">{d.label}</h3>
-                                        <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
-                                    </div>
-                                    <p className="landing-card-text">
-                                        {d.focus}
-                                    </p>
-                                </div>
-                            );
-                        })}
-                    </div>
+
+                    {!currentUser ? (
+                        <div className="landing-registry-lock">
+                            <div className="landing-lock-icon">🔒</div>
+                            <div className="landing-lock-title">PROTOCOLS_CLASSIFIED</div>
+                            <div className="landing-lock-text">
+                                Access to the Sovereign Protocol Registry is restricted to inducted sovereigns.
+                                <br />
+                                Initiate sovereignty to decrypt.
+                            </div>
+                            <button onClick={handleJoin} className="btn-action" style={{ marginTop: '20px', width: 'auto' }}>
+                                AUTHENTICATE_IDENTITY
+                            </button>
+                        </div>
+                    ) : (
+                        disciplines.length > 0 ? (
+                            <div className="landing-registry-grid">
+                                {disciplines.map(d => {
+                                    const isActive = activeModules.includes(d.id);
+                                    const cardClass = isActive ? "landing-card active" : "landing-card";
+                                    return (
+                                        <div key={d.id}
+                                            onClick={() => handleCardClick(d)}
+                                            className={cardClass}>
+                                            <div className="landing-card-header">
+                                                <h3 className="landing-card-title">{d.label}</h3>
+                                                <span className="landing-card-metric">{d.primaryMetric.toUpperCase()}</span>
+                                            </div>
+                                            <p className="landing-card-text">
+                                                {d.focus}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5, border: '1px dashed var(--iron-infra-border)' }}>
+                                <div style={{ fontSize: '2rem', marginBottom: '20px' }}>∅</div>
+                                <div style={{ fontFamily: 'var(--font-authority)', letterSpacing: '2px' }}>REGISTRY_EMPTY</div>
+                                <div style={{ marginTop: '10px' }}>Awaiting Sovereign Protocol Construction</div>
+                            </div>
+                        )
+                    )}
                 </section>
 
                 <nav className="landing-nav">
