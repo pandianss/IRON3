@@ -118,4 +118,9 @@ export class InstitutionalKernel {
     setState(domain, data) {
         this.complianceKernel.getMonitor().applyEvent(domain, data);
     }
+
+    dismantle() {
+        this.state.dismantle();
+        window.location.reload();
+    }
 }

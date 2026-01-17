@@ -74,6 +74,76 @@ async function runTests() {
         console.error(`! FAIL: Phase should be sovereign, got ${sovCtx.phase}`);
     }
 
+    // Test 6: Illegal Surface Blocked by Phase
+    console.log("\nTEST 6: Illegal Surface Blocked by Phase...");
+    const boundSnapshot = mockSnapshot({ authority: { level: 2 }, lifecycle: { stage: 'BOUND' } });
+    try {
+        ExperienceKernel.authorizeSurface("Archive", boundSnapshot);
+        console.error("! FAIL: Archive access allowed in BOUND phase.");
+    } catch (e) {
+        console.log(`√ PASS: Illegal access blocked: ${e.message}`);
+    }
+
+    // Test 7: Verdict Pending Blocks Non-Verdict Surfaces
+    console.log("\nTEST 7: Verdict Pending Blocks Non-Verdict Surfaces...");
+    const verdictPendingSnapshot = mockSnapshot({ verdictPending: true });
+    try {
+        ExperienceKernel.authorizeSurface("Standing", verdictPendingSnapshot);
+        console.error("! FAIL: Standing access allowed with verdict pending.");
+    } catch (e) {
+        console.log(`√ PASS: Blocked by pending verdict: ${e.message}`);
+    }
+
+    // Test 8: Failed Phase Cannot Access Active Surfaces
+    console.log("\nTEST 8: Failed Phase Cannot Access Active Surfaces...");
+    const failedSnapshot = mockSnapshot({ lifecycle: { stage: 'COLLAPSED' } });
+    try {
+        ExperienceKernel.authorizeSurface("Standing", failedSnapshot);
+        console.error("! FAIL: Standing access allowed in FAILED phase.");
+    } catch (e) {
+        console.log(`√ PASS: FAILED phase restriction enforced: ${e.message}`);
+    }
+
+    // Test 9: Standing Object Integrity
+    console.log("\nTEST 9: Standing Object Integrity...");
+    const standing = sovCtx.standing;
+    if (standing && standing.integrity && standing.health && standing.continuity) {
+        console.log("√ PASS: Standing object contains mandatory fields.");
+    } else {
+        console.error("! FAIL: Standing object is incomplete.");
+    }
+
+    // Test 10: Surface Contract Violation (Unsupported Phase)
+    console.log("\nTEST 10: Surface Contract Violation (Unsupported Phase)...");
+    const activeSnapshotForContract = mockSnapshot({ authority: { level: 3 }, lifecycle: { stage: 'ACTIVE' } });
+    const inductionContract = { supportedPhases: ['initiated'], authorityRange: [0, 1] };
+    try {
+        ExperienceKernel.validateSurfaceContract("Induction", inductionContract, activeSnapshotForContract);
+        console.error("! FAIL: Induction allowed in ACTIVE phase via contract.");
+    } catch (e) {
+        console.log(`√ PASS: Contract violation blocked: ${e.message}`);
+    }
+
+    // Test 11: Surface Contract Violation (Authority Range)
+    console.log("\nTEST 11: Surface Contract Violation (Authority Range)...");
+    const lowAuthSnapshot = mockSnapshot({ authority: { level: 1 }, lifecycle: { stage: 'ACTIVE' } });
+    const activeContract = { supportedPhases: ['active'], authorityRange: [3, 5] };
+    try {
+        ExperienceKernel.validateSurfaceContract("Dashboard", activeContract, lowAuthSnapshot);
+        console.error("! FAIL: Dashboard allowed with low authority via contract.");
+    } catch (e) {
+        console.log(`√ PASS: Authority violation blocked: ${e.message}`);
+    }
+
+    // Test 12: Missing Contract Assertion
+    console.log("\nTEST 12: Missing Contract Assertion...");
+    try {
+        ExperienceKernel.validateSurfaceContract("OrphanSurface", null, activeSnapshotForContract);
+        console.error("! FAIL: Surface without contract allowed.");
+    } catch (e) {
+        console.log(`√ PASS: Missing contract blocked: ${e.message}`);
+    }
+
     console.log("\n--- EXPERIENCE COMPLIANCE TESTS COMPLETE ---");
 }
 

@@ -63,11 +63,10 @@ const GovernedApp = () => {
     const [institution, setInstitution] = useState(null);
 
     return (
-        <IronAppShell institution={institution}>
-            <GovernanceProvider>
-                <InstitutionalBridge onStateSync={setInstitution} />
-            </GovernanceProvider>
-        </IronAppShell>
+        <GovernanceProvider>
+            <InstitutionalBridge onStateSync={setInstitution} />
+            <IronAppShell institution={institution} />
+        </GovernanceProvider>
     );
 };
 

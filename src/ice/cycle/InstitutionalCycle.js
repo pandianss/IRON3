@@ -23,7 +23,7 @@ export class InstitutionalCycle {
             const phase = this.kernel.phaseController.evaluatePhase();
 
             // Step 0.5: Session, Physiology & Specialized Standing
-            this.kernel.engines.session.process();
+            await this.kernel.engines.session.process();
             this.kernel.engines.physiology.process();
 
             if (this.kernel.engines.fitnessStanding) {

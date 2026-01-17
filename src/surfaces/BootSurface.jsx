@@ -8,3 +8,8 @@ export function BootSurface() {
         </div>
     )
 }
+
+BootSurface.contract = {
+    supportedPhases: ['pre_institutional', 'initiated'],
+    authorityRange: [0, 1]
+};

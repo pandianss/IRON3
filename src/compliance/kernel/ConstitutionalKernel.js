@@ -90,9 +90,15 @@ export class ConstitutionalKernel {
         this.ruleEngine.registerRule({
             id: 'R-SESS-01',
             logic: (context) => {
-                const current = context.state.session?.status || 'INACTIVE';
+                const current = context.state.session?.status || 'IDLE';
                 const target = context.action.payload.status;
-                const valid = { 'INACTIVE': ['ACTIVE'], 'ACTIVE': ['COOLDOWN', 'INACTIVE'], 'COOLDOWN': ['INACTIVE'] };
+                const valid = {
+                    'IDLE': ['PENDING', 'ACTIVE'],
+                    'PENDING': ['ACTIVE', 'IDLE'],
+                    'ACTIVE': ['INTERRUPTED', 'IDLE'],
+                    'INTERRUPTED': ['ACTIVE', 'IDLE'],
+                    'COOLDOWN': ['IDLE']
+                };
                 return valid[current]?.includes(target) || { allowed: false, reason: `Illegal transition ${current}->${target}` };
             }
         });
@@ -161,6 +167,9 @@ export class ConstitutionalKernel {
             id: 'R-STND-02',
             description: 'Monotonicity Law',
             logic: (context) => {
+                // Relax for GENESIS phase (initial calibration)
+                if (context.state.lifecycle?.stage === 'GENESIS') return true;
+
                 // Ensure no hidden integrity drops without documented evidence
                 if (context.action.payload.integrity < (context.state.standing?.integrity || 0) - 10) {
                     if (!context.action.payload.evidence) return { allowed: false, reason: 'Major integrity drop requires evidence.' };
@@ -190,7 +199,7 @@ export class ConstitutionalKernel {
             description: 'Interaction Level Adherence',
             logic: (context) => {
                 const level = context.action.payload.interactionLevel;
-                const allowed = ['OBSERVATIONAL', 'RESTRICTED', 'FULL', 'GOD_MODE'];
+                const allowed = ['OBSERVATIONAL', 'RESTRICTED', 'CALIBRATION', 'FULL', 'GOD_MODE'];
                 return allowed.includes(level) || { allowed: false, reason: `Invalid interaction level: ${level}` };
             }
         });

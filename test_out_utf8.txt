@@ -1,0 +1,321 @@
+﻿--- STARTING FITNESS ONBOARDING SIMULATION ---
+CONSTITUTIONAL KERNEL: Loaded 5 Principles.
+CONSTITUTIONAL KERNEL: All Rules Ratified.
+CONSTITUTIONAL KERNEL: Initialized.
+ICE: Kernel Initialized (v1.0 Sovereignty).
+
+ACT 1: Induction Initiation
+ICE: Event INIT_INDUCTION committed to Ledger [ID: 6h0qag8r]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> GENESIS
+  SESSION_ENGINE: Processing INIT_INDUCTION. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.46 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+node :   GATE: Action 
+STANDING_UPDATE_STATUS Blocked: 
+[R-STND-02] Major integrity drop 
+requires evidence.
+At line:1 char:1
++ node src/experience/tests/fitnessOnboa
+rding.test.js > test_out.txt 2> ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecif 
+   ied: (  GATE: Action ...uires evide  
+  nce.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCom 
+   mandError
+ 
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> PRE_INDUCTION (Streak: 0)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'HIDDEN',
+      EVIDENCE_CAPTURE: 'HIDDEN',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'OBSERVATIONAL'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.942Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.942Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.942Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:08:24.942Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:08:24.942Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'MAINTAIN THE STANDARD.',
+      timestamp: '2026-01-17T01:08:24.942Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+ICE: Standing Update Blocked Compliance 
+Violation: [R-STND-02] Major integrity 
+drop requires evidence.
+
+ACT 2: Induction Completion
+ICE: Event GENESIS_VERDICT_SUBMITTED committed to Ledger [ID: nc4l2jwo]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing GENESIS_VERDICT_SUBMITTED. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.46 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  GATE: Action STANDING_UPDATE_STATUS 
+Blocked: [R-STND-02] Major integrity 
+drop requires evidence.
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> INDUCTED (Streak: 0)
+  GATE: Action AUTHORITY_UPDATE_PROFILE 
+Blocked: [R-AUTH-01] Invalid 
+interaction level: CALIBRATION
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.944Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.944Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.944Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:08:24.944Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:08:24.944Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'WELCOME TO THE IRON.',
+      timestamp: '2026-01-17T01:08:24.944Z'
+    }
+  }
+ICE: Standing Update Blocked Compliance 
+Violation: [R-STND-02] Major integrity 
+drop requires evidence.
+ICE: Authority Resolution Blocked by 
+Constitution Compliance Violation: 
+[R-AUTH-01] Invalid interaction level: 
+CALIBRATION
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+ICE: Event MODULE_ACTIVATED committed to Ledger [ID: jf8evacy]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing MODULE_ACTIVATED. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.55 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> INDUCTED (Streak: 0)
+  GATE: Action AUTHORITY_UPDATE_PROFILE 
+Blocked: [R-AUTH-01] Invalid 
+interaction level: CALIBRATION
+ICE: Authority Resolution Blocked by 
+Constitution Compliance Violation: 
+[R-AUTH-01] Invalid interaction level: 
+CALIBRATION
+  GATE: Action SESSION_UPDATE_STATUS 
+Blocked: [R-SESS-01] Illegal transition 
+IDLE->PENDING
+  ICE: Session Update Blocked by 
+Constitution Compliance Violation: 
+[R-SESS-01] Illegal transition 
+IDLE->PENDING
+  ICE: Cycle Failure Error: Compliance 
+Violation: [R-SESS-01] Illegal 
+transition IDLE->PENDING
+      at ComplianceGate.govern (file:///
+C:/Users/Acer/Videos/20260116_iron3/IRON
+3/src/compliance/kernel/gate/ComplianceG
+ate.js:69:23)
+      at SessionEngine.updateSession (fi
+le:///C:/Users/Acer/Videos/20260116_iron
+3/IRON3/src/ice/engines/SessionEngine.js
+:76:55)
+      at SessionEngine.process (file:///
+C:/Users/Acer/Videos/20260116_iron3/IRON
+3/src/ice/engines/SessionEngine.js:32:35
+)
+      at InstitutionalCycle.run (file://
+/C:/Users/Acer/Videos/20260116_iron3/IRO
+N3/src/ice/cycle/InstitutionalCycle.js:2
+6:47)
+      at InstitutionalKernel.evaluate (f
+ile:///C:/Users/Acer/Videos/20260116_iro
+n3/IRON3/src/ice/InstitutionalKernel.js:
+83:45)
+      at file:///C:/Users/Acer/Videos/20
+260116_iron3/IRON3/src/ice/Institutional
+Kernel.js:77:25
+      at ComplianceGate.govern (file:///
+C:/Users/Acer/Videos/20260116_iron3/IRON
+3/src/compliance/kernel/gate/ComplianceG
+ate.js:73:34)
+      at InstitutionalKernel.ingest (fil
+e:///C:/Users/Acer/Videos/20260116_iron3
+/IRON3/src/ice/InstitutionalKernel.js:73
+:48)
+      at runOnboardingSimulation (file:/
+//C:/Users/Acer/Videos/20260116_iron3/IR
+ON3/src/experience/tests/fitnessOnboardi
+ng.test.js:31:18)
+ICE: Cycle Failure Error: Compliance 
+Violation: [R-SESS-01] Illegal 
+transition IDLE->PENDING
+    at ComplianceGate.govern (file:///C:
+/Users/Acer/Videos/20260116_iron3/IRON3/
+src/compliance/kernel/gate/ComplianceGat
+e.js:69:23)
+    at SessionEngine.updateSession (file
+:///C:/Users/Acer/Videos/20260116_iron3/
+IRON3/src/ice/engines/SessionEngine.js:7
+6:55)
+    at SessionEngine.process (file:///C:
+/Users/Acer/Videos/20260116_iron3/IRON3/
+src/ice/engines/SessionEngine.js:32:35)
+    at InstitutionalCycle.run (file:///C
+:/Users/Acer/Videos/20260116_iron3/IRON3
+/src/ice/cycle/InstitutionalCycle.js:26:
+47)
+    at InstitutionalKernel.evaluate (fil
+e:///C:/Users/Acer/Videos/20260116_iron3
+/IRON3/src/ice/InstitutionalKernel.js:83
+:45)
+    at file:///C:/Users/Acer/Videos/2026
+0116_iron3/IRON3/src/ice/InstitutionalKe
+rnel.js:77:25
+    at ComplianceGate.govern (file:///C:
+/Users/Acer/Videos/20260116_iron3/IRON3/
+src/compliance/kernel/gate/ComplianceGat
+e.js:73:34)
+    at InstitutionalKernel.ingest (file:
+///C:/Users/Acer/Videos/20260116_iron3/I
+RON3/src/ice/InstitutionalKernel.js:73:4
+8)
+    at runOnboardingSimulation (file:///
+C:/Users/Acer/Videos/20260116_iron3/IRON
+3/src/experience/tests/fitnessOnboarding
+.test.js:31:18)
+
+!!! SIMULATION FAILED !!!
+FAILED: INIT_RITUAL did not set session 
+to PENDING. Got IDLE
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.945Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.945Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:08:24.945Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:08:24.945Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:08:24.945Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'WELCOME TO THE IRON.',
+      timestamp: '2026-01-17T01:08:24.945Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+Phase: {
+  id: 'PROBATION',
+  label: 'PROBATION',
+  version: '1.0',
+  lastEvaluated: '2026-01-17T01:08:24.944Z'
+}
+Standing State: INDUCTED
+
+ACT 3: Threshold Entry -> Initiate Ritual
+ICE: Event INIT_RITUAL committed to Ledger [ID: 1kch9pfm]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing INIT_RITUAL. Current Status: IDLE
+STATE_LOCK: Applying event to domain [error]
+Session Status: IDLE

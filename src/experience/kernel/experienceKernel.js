@@ -19,21 +19,27 @@ import { buildStandingViewModel } from "./standingViewModel.js";
 /* -------------------------------------------------------------------------- */
 
 function resolveExperiencePhase(snapshot) {
-    const { state } = snapshot;
-    const lifecycle = state.lifecycle || {};
+    const { state, history } = snapshot;
 
-    if (!state) return EXPERIENCE_PHASES.PRE_INSTITUTIONAL;
+    // If we have no history and no identity, we are in the void
+    if (!history || history.length === 0) {
+        if (!state?.identity) return EXPERIENCE_PHASES.PRE_INSTITUTIONAL;
+    }
+
+    const lifecycle = state?.lifecycle || {};
+
     if (lifecycle.stage === 'COLLAPSED') return EXPERIENCE_PHASES.FAILED;
     if (lifecycle.stage === 'RECOVERING') return EXPERIENCE_PHASES.RECOVERING;
     if (lifecycle.stage === 'DEGRADING') return EXPERIENCE_PHASES.DEGRADING;
 
     // Authority levels (0-5)
-    const authorityLevel = state.authority?.level || 0;
+    const authorityLevel = state?.authority?.level || 0;
 
     if (authorityLevel >= 5) return EXPERIENCE_PHASES.SOVEREIGN;
     if (authorityLevel >= 3) return EXPERIENCE_PHASES.ACTIVE;
     if (authorityLevel >= 2) return EXPERIENCE_PHASES.BOUND;
 
+    // Default to INITIATED if we have history but haven't reached BOUND
     return EXPERIENCE_PHASES.INITIATED;
 }
 
@@ -87,6 +93,28 @@ function buildExperienceContext(snapshot) {
 /* -------------------------------------------------------------------------- */
 /*  Surface Authorization                                                     */
 /* -------------------------------------------------------------------------- */
+
+export function validateSurfaceContract(surfaceName, contract, snapshot) {
+    const ctx = buildExperienceContext(snapshot);
+
+    if (!contract) {
+        throw new Error(`[UX-KERNEL] Surface "${surfaceName}" is missing a Standing Supremacy Contract.`);
+    }
+
+    if (contract.supportedPhases && !contract.supportedPhases.includes(ctx.phase)) {
+        throw new Error(`[UX-KERNEL] Surface "${surfaceName}" does not support phase "${ctx.phase}".`);
+    }
+
+    const authorityLevel = snapshot.state?.authority?.level || 0;
+    if (contract.authorityRange) {
+        const [min, max] = contract.authorityRange;
+        if (authorityLevel < min || authorityLevel > max) {
+            throw new Error(`[UX-KERNEL] Surface "${surfaceName}" requires authority [${min}-${max}], current is ${authorityLevel}.`);
+        }
+    }
+
+    return true;
+}
 
 export function authorizeSurface(surfaceName, snapshot) {
     const ctx = buildExperienceContext(snapshot);
@@ -145,8 +173,13 @@ export function requireDailyRitual(snapshot) {
 /*  Experience Entry                                                          */
 /* -------------------------------------------------------------------------- */
 
-export function enterExperience(surfaceName, snapshot) {
+export function enterExperience(surfaceName, snapshot, contract = null) {
     const ctx = authorizeSurface(surfaceName, snapshot);
+
+    // CHOKE-POINT: Standing Supremacy Contract Validation
+    if (contract) {
+        validateSurfaceContract(surfaceName, contract, snapshot);
+    }
 
     return Object.freeze({
         surface: surfaceName,
@@ -167,6 +200,7 @@ export function enterExperience(surfaceName, snapshot) {
 export const ExperienceKernel = Object.freeze({
     enterExperience,
     authorizeSurface,
+    validateSurfaceContract,
     issueVerdict,
     requireDailyRitual,
     EXPERIENCE_PHASES

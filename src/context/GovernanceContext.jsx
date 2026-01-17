@@ -40,7 +40,8 @@ export const GovernanceProvider = ({ children }) => {
             kernel,
             institutionalState,
             loading,
-            declare
+            declare,
+            dismantle: () => kernel.dismantle()
         }}>
             {children}
         </GovernanceContext.Provider>

@@ -1,6 +1,12 @@
 import { transition } from '../../institution/logic/standing-engine/standingTransitions.js';
 import { PhaseGate } from '../governance/PhaseGate.js';
-// Note: We are reusing the pure transition logic for now, but wrapping it in the Engine class.
+
+const isSameDay = (d1, d2) => {
+    if (!d1 || !d2) return false;
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+    return date1.toDateString() === date2.toDateString();
+};
 
 /**
  * ICE Module 6: Standing Engine
@@ -18,7 +24,11 @@ export class StandingEngine {
             integrity: 100, // Entropy inverted? Or Integrity raw?
             entropy: 0,
             streak: 0,
-            lastPracticeDate: null
+            lastPracticeDate: null,
+            rituals: {
+                todayCompleted: false,
+                lastRitualAt: null
+            }
         };
     }
 
@@ -33,7 +43,11 @@ export class StandingEngine {
             state: 'PRE_INDUCTION',
             entropy: 0,
             streak: 0,
-            lastPracticeDate: null
+            lastPracticeDate: null,
+            rituals: {
+                todayCompleted: false,
+                lastRitualAt: null
+            }
         };
 
         // Replay
@@ -46,16 +60,25 @@ export class StandingEngine {
                 const guarded = PhaseGate.guardMutation(phase, next);
                 state = { ...state, ...guarded };
             }
+
+            // Track ritual completion
+            if (event.type === 'SESSION_ENDED' || event.type === 'PRACTICE_COMPLETE' || event.type === 'TRAINING_COMPLETED') {
+                if (isSameDay(event.meta?.timestamp || event.timestamp, new Date())) {
+                    state.rituals.todayCompleted = true;
+                    state.rituals.lastRitualAt = event.meta?.timestamp || event.timestamp;
+                }
+            }
         }
 
         // Update Internal Engine State
         this.currentState = state;
 
         // Update Institution State (Read Model)
+        this.kernel.setState('rituals', state.rituals);
         this.kernel.setState('standing', {
             state: state.state,
             integrity: 100 - state.entropy,
-            streak: 0, // derived ?
+            streak: state.streak,
             lastUpdated: new Date().toISOString(),
             lastPracticeDate: state.lastPracticeDate
         });

@@ -3,6 +3,8 @@ import { useGovernance } from '../../context/GovernanceContext';
 import '../../ui/styles/InstitutionalTheme.css';
 import { StandingBanner } from '../../ui/components/authority/StandingBanner';
 import { ComplianceControl } from '../../ui/components/obligation/ComplianceControl';
+import { DisciplineWindowKernel } from '../kernel/disciplineWindowKernel';
+import { WINDOW_STATES } from '../kernel/DisciplineWindow.schema';
 
 /**
  * Phase 2.5: Evidence Capture (Active Session Mode)
@@ -13,8 +15,21 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
     const { institutionalState, declare } = useGovernance();
     const sessionStatus = institutionalState.session.status; // 'PENDING' | 'ACTIVE'
 
-    // Internal UI State
-    const [mode, setMode] = useState(sessionStatus === 'ACTIVE' ? 'ACTIVE' : 'INTAKE');
+    // --- DISCIPLINE WINDOW STATE MACHINE (DISCIPLINE-WINDOW-01) ---
+    const [window, setWindow] = useState(
+        sessionStatus === 'ACTIVE'
+            ? { ...DisciplineWindowKernel.createDisciplineWindow(), state: WINDOW_STATES.ACTIVE, openedAt: new Date(startTime).getTime() }
+            : DisciplineWindowKernel.createDisciplineWindow()
+    );
+
+    // --- RITUAL SUB-PHASES (FIT-UX-01) ---
+    const [intakeStep, setIntakeStep] = useState('ORIENTATION'); // ORIENTATION | BEFORE_SELFIE | DECLARATION
+    const [outtakeStep, setOuttakeStep] = useState('CAPTURE'); // CAPTURE | VERDICT
+
+    // Declaration State
+    const [dayType, setDayType] = useState('STRENGTH');
+    const [bodyState, setBodyState] = useState('STABLE');
+    const [intent, setIntent] = useState('');
 
     // Intake State
     const [venue, setVenue] = useState(initialVenue || '');
@@ -46,21 +61,40 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
         setStagingDesc('');
     };
 
-    // Sync Mode with Backend Status
+    // 1. Sync State Machine with External Session Status
     useEffect(() => {
-        if (sessionStatus === 'ACTIVE' && mode === 'INTAKE') {
-            setMode('ACTIVE');
+        if (sessionStatus === 'ACTIVE' && window.state === WINDOW_STATES.IDLE) {
+            setWindow(prev => DisciplineWindowKernel.transition(prev, WINDOW_STATES.PRIMED));
+            setWindow(prev => DisciplineWindowKernel.transition(prev, WINDOW_STATES.OPEN));
         }
     }, [sessionStatus]);
 
-    // Timer Logic
+    // 2. Visibility / Interruption Detection
     useEffect(() => {
-        if (mode !== 'ACTIVE' || !startTime) return;
-        const start = new Date(startTime).getTime();
+        const handleVisibility = () => {
+            if (document.hidden) {
+                if (window.state === WINDOW_STATES.ACTIVE) {
+                    setWindow(prev => DisciplineWindowKernel.transition(prev, WINDOW_STATES.INTERRUPTED));
+                }
+            } else {
+                if (window.state === WINDOW_STATES.INTERRUPTED) {
+                    setWindow(prev => DisciplineWindowKernel.transition(prev, WINDOW_STATES.ACTIVE));
+                }
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibility);
+        return () => document.removeEventListener("visibilitychange", handleVisibility);
+    }, [window.state]);
+
+    // 3. Timer Logic
+    useEffect(() => {
+        if (window.state !== WINDOW_STATES.ACTIVE || !window.openedAt) return;
+        const start = window.openedAt;
 
         const interval = setInterval(() => {
-            const now = new Date().getTime();
-            const diff = now - start;
+            const now = Date.now();
+            const diff = now - start - (window.interruptionTimeMs || 0);
 
             const hours = Math.floor(diff / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -81,15 +115,44 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
             alert("PROTOCOL VIOLATION: VENUE AND VISUAL CHECK-IN REQUIRED.");
             return;
         }
+
+        // Transition through PRIMED and OPEN
+        const primed = DisciplineWindowKernel.transition(window, WINDOW_STATES.PRIMED);
+        const opened = DisciplineWindowKernel.transition(primed, WINDOW_STATES.OPEN);
+        setWindow(opened);
+
         await declare('SESSION_STARTED', {
             venue,
             evidence: intakePhoto,
+            windowId: opened.id,
             timestamp: new Date().toISOString()
         });
     };
 
     const handleTerminate = () => {
-        setMode('OUTTAKE');
+        if (window.state === WINDOW_STATES.ACTIVE || window.state === WINDOW_STATES.INTERRUPTED) {
+            setWindow(prev => DisciplineWindowKernel.transition(prev, WINDOW_STATES.CLOSED_VALID));
+        }
+    };
+
+    const handleAcknowledgeVerdict = async () => {
+        const validity = DisciplineWindowKernel.computeValidity(window);
+        const sealed = DisciplineWindowKernel.transition(window, WINDOW_STATES.SEALED);
+        setWindow(sealed);
+
+        await declare('SESSION_ENDED', {
+            tags: tags,
+            evidence: outtakePhoto,
+            additionalEvidence,
+            intent,
+            dayType,
+            window: {
+                id: window.id,
+                validity,
+                history: sealed.history
+            },
+            endedAt: new Date().toISOString()
+        });
     };
 
     const handleSubmit = async () => {
@@ -97,10 +160,20 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
             alert("PROTOCOL VIOLATION: VISUAL CHECK-OUT AND TAGS REQUIRED.");
             return;
         }
+
+        const validity = DisciplineWindowKernel.computeValidity(window);
+        const sealed = DisciplineWindowKernel.transition(window, WINDOW_STATES.SEALED);
+        setWindow(sealed);
+
         await declare('SESSION_ENDED', {
             tags: tags,
             evidence: outtakePhoto,
             additionalEvidence,
+            window: {
+                id: window.id,
+                validity,
+                history: sealed.history
+            },
             endedAt: new Date().toISOString()
         });
     };
@@ -131,57 +204,146 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
 
     // --- RENDERERS ---
 
-    const renderIntake = () => (
-        <div className="surface-obligation">
-            <div className="text-sm-caps" style={{ marginBottom: 'var(--iron-space-md)', color: 'var(--iron-brand-stable)' }}>
-                PHASE 1: PROTOCOL INITIATION
+    // --- ACT I: ORIENTATION ---
+    const renderOrientation = () => (
+        <div style={styles.ritualContainer}>
+            <div style={styles.phaseNotice}>RITUAL ACT I: ORIENTATION</div>
+            <h2 style={styles.ritualTitle}>SITUATE IDENTITY</h2>
+
+            <div style={styles.orientationBox}>
+                <div style={styles.statusRow}>
+                    <span style={styles.statusLabel}>INSTITUTIONAL STATUS</span>
+                    <span style={{ color: 'var(--iron-brand-stable)' }}>STABLE</span>
+                </div>
+                <div style={styles.statusRow}>
+                    <span style={styles.statusLabel}>STANDING BAND</span>
+                    <span>{orientation.standing.integrity.status}</span>
+                </div>
+                <div style={styles.statusRow}>
+                    <span style={styles.statusLabel}>CONTINUITY</span>
+                    <span>{orientation.standing.continuity.label}</span>
+                </div>
             </div>
 
-            <input
-                type="text"
-                placeholder="DECLARE VENUE (e.g. HOME GYM)"
-                value={venue}
-                onChange={e => setVenue(e.target.value)}
-                style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: '1px solid var(--iron-border)',
-                    padding: '8px 0',
-                    color: 'var(--iron-text-primary)',
-                    fontFamily: 'var(--font-primary)',
-                    marginBottom: 'var(--iron-space-lg)',
-                    textTransform: 'uppercase'
-                }}
-            />
-
-            <CameraButton
-                label="CAPTURE CHECK-IN SELFIE"
-                onCapture={setIntakePhoto}
-                value={intakePhoto}
-            />
+            <p style={styles.ritualInstruction}>
+                "The body must be situated within the institutional timeline before discipline can occur."
+            </p>
 
             <ComplianceControl
-                label="INITIATE PROTOCOL"
-                variant={intakePhoto && venue ? 'standard' : 'disabled'}
-                disabled={!intakePhoto || !venue}
+                label="BEGIN TODAY'S RECORD"
+                variant="standard"
+                onComplete={() => setIntakeStep('BEFORE_SELFIE')}
+            />
+        </div>
+    );
+
+    // --- ACT II: BEFORE SELFIE ---
+    const renderBeforeCapture = () => (
+        <div style={styles.ritualContainer}>
+            <div style={styles.phaseNotice}>RITUAL ACT II: PRE-STATE</div>
+            <h2 style={styles.ritualTitle}>ANCHOR REALITY</h2>
+
+            <div style={{ marginBottom: '24px' }}>
+                <CameraButton
+                    label="CAPTURE BEFORE SELFIE"
+                    onCapture={setIntakePhoto}
+                    value={intakePhoto}
+                />
+            </div>
+
+            <p style={styles.ritualInstruction}>
+                "This records the body as it stands today."
+            </p>
+
+            <ComplianceControl
+                label="SEAL PRE-STATE"
+                variant={intakePhoto ? 'standard' : 'disabled'}
+                disabled={!intakePhoto}
+                onComplete={() => setIntakeStep('DECLARATION')}
+            />
+        </div>
+    );
+
+    // --- ACT III: DECLARATION ---
+    const renderDeclaration = () => (
+        <div style={styles.ritualContainer}>
+            <div style={styles.phaseNotice}>RITUAL ACT III: COGNITIVE BINDING</div>
+            <h2 style={styles.ritualTitle}>DECLARE INTENT</h2>
+
+            <div style={styles.formSection}>
+                <label style={styles.inputLabel}>DAY TYPE</label>
+                <select
+                    value={dayType}
+                    onChange={e => setDayType(e.target.value)}
+                    style={styles.select}
+                >
+                    <option value="STRENGTH">STRENGTH</option>
+                    <option value="ENDURANCE">ENDURANCE</option>
+                    <option value="REPAIR">REPAIR</option>
+                    <option value="CORRECTION">CORRECTION</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                </select>
+            </div>
+
+            <div style={styles.formSection}>
+                <label style={styles.inputLabel}>BODY STATE</label>
+                <select
+                    value={bodyState}
+                    onChange={e => setBodyState(e.target.value)}
+                    style={styles.select}
+                >
+                    <option value="STABLE">STABLE</option>
+                    <option value="FATIGUED">FATIGUED</option>
+                    <option value="SORE">SORE</option>
+                    <option value="INFLAMED">INFLAMED</option>
+                    <option value="COMPROMISED">COMPROMISED</option>
+                </select>
+            </div>
+
+            <div style={styles.formSection}>
+                <label style={styles.inputLabel}>INSTITUTIONAL INTENT</label>
+                <textarea
+                    placeholder="E.G. Today this body will be subjected to controlled stress..."
+                    value={intent}
+                    onChange={e => setIntent(e.target.value)}
+                    style={styles.textarea}
+                />
+            </div>
+
+            <ComplianceControl
+                label="INITIATE DISCIPLINE"
+                variant={intent.length > 10 ? 'standard' : 'disabled'}
+                disabled={intent.length <= 10}
                 onComplete={handleInitiate}
             />
         </div>
     );
 
+    const renderIntake = () => {
+        if (intakeStep === 'ORIENTATION') return renderOrientation();
+        if (intakeStep === 'BEFORE_SELFIE') return renderBeforeCapture();
+        if (intakeStep === 'DECLARATION') return renderDeclaration();
+        return null;
+    };
+
     const renderActive = () => (
         <div style={{ textAlign: 'center' }}>
-            <div className="text-sm-caps" style={{ color: 'var(--iron-accent)', opacity: 0.8, marginBottom: 'var(--iron-space-md)' }}>
-                SESSION ACTIVE
+            <div className="text-sm-caps" style={{ color: window.state === WINDOW_STATES.INTERRUPTED ? 'var(--iron-brand-breach)' : 'var(--iron-accent)', opacity: 0.8, marginBottom: 'var(--iron-space-md)' }}>
+                {window.state === WINDOW_STATES.INTERRUPTED ? 'CONTINUITY INTERRUPTED' : 'SESSION ACTIVE'}
             </div>
 
-            <div className="font-numeric num-large" style={{ marginBottom: 'var(--iron-space-md)' }}>
+            <div className="font-numeric num-large" style={{ marginBottom: 'var(--iron-space-md)', color: window.state === WINDOW_STATES.INTERRUPTED ? 'var(--iron-brand-breach)' : 'inherit' }}>
                 {elapsed}
             </div>
 
+            {window.state === WINDOW_STATES.INTERRUPTED && (
+                <div style={{ background: 'rgba(255, 0, 0, 0.1)', border: '1px solid var(--iron-brand-breach)', padding: '10px', marginBottom: '20px', color: 'var(--iron-brand-breach)', fontSize: '0.8rem' }}>
+                    WARNING: Protocol continuity disrupted. Return to focus immediately.
+                </div>
+            )}
+
             <div className="text-sm-caps" style={{ opacity: 0.5, marginBottom: 'var(--iron-space-xl)' }}>
-                LOC: {venue || initialVenue}
+                LOC: {venue || initialVenue} • INTERRUPTIONS: {window.interruptionCount}
             </div>
 
             <div style={{ marginBottom: 'var(--iron-space-xl)', textAlign: 'left' }}>
@@ -250,6 +412,10 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
                 variant="standard"
                 onComplete={handleTerminate}
             />
+
+            <div style={{ marginTop: '20px', padding: '16px', border: '1px border var(--iron-border)', opacity: 0.5, fontSize: '0.7rem' }}>
+                INTENT: {intent}
+            </div>
         </div>
     );
 
@@ -265,86 +431,96 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
         setTags(tags.filter(t => t !== tagToRemove));
     };
 
-    const renderOuttake = () => (
-        <div className="surface-obligation">
-            <div className="text-sm-caps" style={{ marginBottom: 'var(--iron-space-md)', color: 'var(--iron-brand-breach)' }}>
-                PHASE 3: PROTOCOL CLOSURE
+    // --- ACT V: VERDICT ---
+    const renderVerdict = () => {
+        const validity = DisciplineWindowKernel.computeValidity(window);
+
+        return (
+            <div style={styles.ritualContainer}>
+                <div style={styles.phaseNotice}>RITUAL ACT V: VERDICT</div>
+                <h2 style={styles.ritualTitle}>INSTITUTIONAL FEEDBACK</h2>
+
+                <div style={styles.verdictBox}>
+                    <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+                        <div style={styles.photoStub}>BEFORE</div>
+                        <div style={styles.photoStub}>AFTER</div>
+                    </div>
+
+                    <div style={styles.verdictRow}>
+                        <span style={styles.statusLabel}>RECOGNITION</span>
+                        <span>DECLARED DISCIPLINE COMPLETED</span>
+                    </div>
+                    <div style={styles.verdictRow}>
+                        <span style={styles.statusLabel}>INTERPRETATION</span>
+                        <span>CONTINUITY PRESERVED. {validity.status.toUpperCase()}.</span>
+                    </div>
+                    <div style={styles.verdictRow}>
+                        <span style={styles.statusLabel}>STANDING</span>
+                        <span style={{ color: validity.valid ? 'var(--iron-brand-stable)' : 'var(--iron-brand-breach)' }}>
+                            {validity.valid ? 'INTEGRITY REINFORCED' : 'RISK ELEVATED'}
+                        </span>
+                    </div>
+                </div>
+
+                <p style={styles.ritualInstruction}>
+                    "Tomorrow requires recovery discipline. Authority remains."
+                </p>
+
+                <ComplianceControl
+                    label="ACKNOWLEDGE & SEAL"
+                    variant="standard"
+                    onComplete={handleAcknowledgeVerdict}
+                />
             </div>
+        );
+    };
 
-            <CameraButton
-                label="CAPTURE CHECK-OUT SELFIE"
-                onCapture={setOuttakePhoto}
-                value={outtakePhoto}
-            />
+    const renderOuttake = () => {
+        if (outtakeStep === 'CAPTURE') {
+            return (
+                <div className="surface-obligation">
+                    <div className="text-sm-caps" style={{ marginBottom: 'var(--iron-space-md)', color: window.state === WINDOW_STATES.CLOSED_INVALID ? 'var(--iron-brand-breach)' : 'var(--iron-brand-stable)' }}>
+                        {window.state === WINDOW_STATES.CLOSED_INVALID ? 'PROTOCOL INVALIDATED' : 'PHASE 3: PROTOCOL CLOSURE'}
+                    </div>
 
-            {/* Keyword Input Area */}
-            <div style={{ marginBottom: 'var(--iron-space-lg)' }}>
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                    <input
-                        type="text"
-                        placeholder="ADD TAG (e.g. LEGS)"
-                        value={currentTag}
-                        onChange={e => setCurrentTag(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' && handleAddTag()}
-                        style={{
-                            flex: 1,
-                            background: 'transparent',
-                            border: 'none',
-                            borderBottom: '1px solid var(--iron-border)',
-                            padding: '8px 0',
-                            color: 'var(--iron-text-primary)',
-                            fontFamily: 'var(--font-primary)',
-                            textTransform: 'uppercase'
-                        }}
+                    <div style={{ marginBottom: '20px', padding: '15px', background: 'var(--iron-surface-2)', border: '1px solid var(--iron-border)' }}>
+                        <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '5px' }}>DURATION RECORDED</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem' }}>{(window.elapsedMs / 1000 / 60).toFixed(1)} MINUTES</div>
+                        {window.state === WINDOW_STATES.CLOSED_INVALID && (
+                            <div style={{ color: 'var(--iron-brand-breach)', fontSize: '0.7rem', marginTop: '10px' }}>
+                                CRITICAL: Temporal integrity failed. Standing impact pending.
+                            </div>
+                        )}
+                    </div>
+
+                    <CameraButton
+                        label="CAPTURE CHECK-OUT SELFIE"
+                        onCapture={setOuttakePhoto}
+                        value={outtakePhoto}
                     />
-                    <button
-                        onClick={handleAddTag}
-                        style={{
-                            background: 'var(--iron-surface-2)',
-                            border: '1px solid var(--iron-border)',
-                            color: 'var(--iron-text-primary)',
-                            padding: '0 16px',
-                            cursor: 'pointer',
-                            fontFamily: 'var(--font-mono)'
-                        }}
-                    >
-                        +
-                    </button>
-                </div>
 
-                {/* Chips Container */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {tags.map(tag => (
-                        <div key={tag} style={{
-                            background: 'rgba(255,255,255,0.1)',
-                            border: '1px solid var(--iron-border)',
-                            padding: '4px 8px',
-                            fontSize: '0.7rem',
-                            fontFamily: 'var(--font-mono)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                        }}>
-                            {tag}
-                            <span
-                                onClick={() => handleRemoveTag(tag)}
-                                style={{ cursor: 'pointer', opacity: 0.5, fontWeight: 'bold' }}
-                            >
-                                x
-                            </span>
-                        </div>
-                    ))}
-                </div>
-            </div>
+                    {/* Keyword Input Area Removed for brevity, or kept if needed */}
+                    <div style={{ marginBottom: 'var(--iron-space-lg)' }}>
+                        <input
+                            type="text"
+                            placeholder="FINAL NOTES"
+                            value={currentTag}
+                            onChange={e => setCurrentTag(e.target.value)}
+                            style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid var(--iron-border)', padding: '8px 0', color: 'var(--iron-text-primary)' }}
+                        />
+                    </div>
 
-            <ComplianceControl
-                label="SUBMIT RECORDS"
-                variant={outtakePhoto && tags.length > 0 ? 'standard' : 'disabled'}
-                disabled={!outtakePhoto || tags.length === 0}
-                onComplete={handleSubmit}
-            />
-        </div>
-    );
+                    <ComplianceControl
+                        label="GENERATE VERDICT"
+                        variant={outtakePhoto ? 'standard' : 'disabled'}
+                        disabled={!outtakePhoto}
+                        onComplete={() => setOuttakeStep('VERDICT')}
+                    />
+                </div>
+            );
+        }
+        return renderVerdict();
+    };
 
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -357,10 +533,119 @@ export const EvidenceCapture = ({ startTime, venue: initialVenue }) => {
                 margin: '0 auto',
                 width: '100%'
             }}>
-                {mode === 'INTAKE' && renderIntake()}
-                {mode === 'ACTIVE' && renderActive()}
-                {mode === 'OUTTAKE' && renderOuttake()}
+                {window.state === WINDOW_STATES.IDLE && renderIntake()}
+                {(window.state === WINDOW_STATES.ACTIVE || window.state === WINDOW_STATES.INTERRUPTED) && renderActive()}
+                {(window.state === WINDOW_STATES.CLOSED_VALID || window.state === WINDOW_STATES.CLOSED_INVALID) && renderOuttake()}
+                {window.state === WINDOW_STATES.SEALED && (
+                    <div style={{ textAlign: 'center', padding: '40px' }}>
+                        <h2 style={{ color: 'var(--iron-brand-stable)' }}>SESSION SEALED</h2>
+                        <p style={{ opacity: 0.6 }}>Data committed to institutional archive.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
+};
+
+const styles = {
+    ritualContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '24px'
+    },
+    phaseNotice: {
+        fontSize: '0.65rem',
+        color: 'var(--iron-accent)',
+        letterSpacing: '2px',
+        opacity: 0.7,
+        fontFamily: 'var(--font-mono)'
+    },
+    ritualTitle: {
+        fontFamily: 'var(--font-authority)',
+        fontSize: '1.4rem',
+        textTransform: 'uppercase',
+        marginBottom: '8px'
+    },
+    orientationBox: {
+        background: 'var(--iron-surface-2)',
+        border: '1px solid var(--iron-border)',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+    },
+    statusRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: '0.85rem'
+    },
+    statusLabel: {
+        opacity: 0.5,
+        fontSize: '0.7rem',
+        fontFamily: 'var(--font-mono)'
+    },
+    ritualInstruction: {
+        fontSize: '0.9rem',
+        fontStyle: 'italic',
+        opacity: 0.6,
+        lineHeight: '1.4',
+        marginBottom: '20px'
+    },
+    formSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        marginBottom: '16px'
+    },
+    inputLabel: {
+        fontSize: '0.7rem',
+        opacity: 0.5,
+        fontFamily: 'var(--font-mono)',
+        textTransform: 'uppercase'
+    },
+    select: {
+        background: 'var(--iron-surface-2)',
+        border: '1px solid var(--iron-border)',
+        color: 'var(--iron-text-primary)',
+        padding: '12px',
+        fontFamily: 'var(--font-primary)',
+        fontSize: '0.9rem'
+    },
+    textarea: {
+        background: 'var(--iron-surface-2)',
+        border: '1px solid var(--iron-border)',
+        color: 'var(--iron-text-primary)',
+        padding: '12px',
+        fontFamily: 'var(--font-primary)',
+        fontSize: '0.9rem',
+        minHeight: '80px',
+        resize: 'none'
+    },
+    verdictBox: {
+        background: 'var(--iron-surface-2)',
+        border: '1px solid var(--iron-border)',
+        padding: '24px'
+    },
+    verdictRow: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px',
+        marginBottom: '16px'
+    },
+    photoStub: {
+        flex: 1,
+        height: '100px',
+        background: '#111',
+        border: '1px solid #333',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '0.6rem',
+        color: '#444'
+    }
+};
+
+EvidenceCapture.contract = {
+    supportedPhases: ['initiated', 'bound', 'active', 'degrading', 'recovering', 'sovereign'],
+    authorityRange: [1, 5]
 };

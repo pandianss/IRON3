@@ -138,6 +138,11 @@ export const Induction = () => {
     );
 };
 
+Induction.contract = {
+    supportedPhases: ['pre_institutional', 'initiated'],
+    authorityRange: [0, 1]
+};
+
 const containerStyle = {
     height: '100vh',
     background: 'radial-gradient(circle at center, #1a0a05 0%, #000 100%)',

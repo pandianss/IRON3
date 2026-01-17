@@ -14,7 +14,7 @@ export class InstitutionState {
             authority: { surfaces: {}, interactionLevel: 'RESTRICTED' },
             mandates: { narrative: { tone: 'GUIDANCE', message: 'SYSTEM BOOTING' }, motion: {}, surfaces: [] },
             phase: { id: 'GENESIS', label: 'GENESIS', version: '1.0' },
-            session: { status: 'INACTIVE', startTime: null, duration: 0 },
+            session: { status: 'IDLE', startTime: null, duration: 0 },
             physiology: { health: 100, capacity: 100, load: 0, status: 'OPTIMAL', era: 'PEAK' },
             foundation: { brokenPromise: '', anchorHabits: [], nonNegotiable: '', why: '' },
             lifecycle: { stage: 'GENESIS', history: [], baselineSI: null, baselineEstablishedAt: null }
@@ -99,6 +99,16 @@ export class InstitutionState {
         } catch (e) {
             console.error("ICE: State Load Failure", e);
             return null;
+        }
+    }
+
+    dismantle() {
+        try {
+            if (typeof localStorage === 'undefined') return;
+            localStorage.removeItem(this.STORAGE_KEY);
+            console.warn("ICE: Institutional State Dismantled.");
+        } catch (e) {
+            console.error("ICE: Dismantle Failure", e);
         }
     }
 }

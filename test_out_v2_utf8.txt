@@ -1,0 +1,431 @@
+﻿--- STARTING FITNESS ONBOARDING SIMULATION ---
+CONSTITUTIONAL KERNEL: Loaded 5 Principles.
+CONSTITUTIONAL KERNEL: All Rules Ratified.
+CONSTITUTIONAL KERNEL: Initialized.
+ICE: Kernel Initialized (v1.0 Sovereignty).
+
+ACT 1: Induction Initiation
+ICE: Event INIT_INDUCTION committed to Ledger [ID: jixd8d09]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> GENESIS
+  SESSION_ENGINE: Processing INIT_INDUCTION. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.46 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> PRE_INDUCTION (Streak: 0)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'HIDDEN',
+      EVIDENCE_CAPTURE: 'HIDDEN',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'OBSERVATIONAL'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.339Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.339Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.339Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:09:34.339Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:09:34.339Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'MAINTAIN THE STANDARD.',
+      timestamp: '2026-01-17T01:09:34.339Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+
+ACT 2: Induction Completion
+ICE: Event GENESIS_VERDICT_SUBMITTED committed to Ledger [ID: qqmnzbjx]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing GENESIS_VERDICT_SUBMITTED. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.46 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> INDUCTED (Streak: 0)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'FULL',
+      EVIDENCE_CAPTURE: 'HIDDEN',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'CALIBRATION'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'FULL',
+        timestamp: '2026-01-17T01:09:34.342Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.342Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.342Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:09:34.342Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:09:34.342Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'WELCOME TO THE IRON.',
+      timestamp: '2026-01-17T01:09:34.342Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+ICE: Event MODULE_ACTIVATED committed to Ledger [ID: wt4foyrn]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing MODULE_ACTIVATED. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.55 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> INDUCTED (Streak: 0)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'FULL',
+      EVIDENCE_CAPTURE: 'HIDDEN',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'CALIBRATION'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'FULL',
+        timestamp: '2026-01-17T01:09:34.344Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.344Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.344Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:09:34.344Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:09:34.344Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'WELCOME TO THE IRON.',
+      timestamp: '2026-01-17T01:09:34.344Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+Phase: {
+  id: 'PROBATION',
+  label: 'PROBATION',
+  version: '1.0',
+  lastEvaluated: '2026-01-17T01:09:34.342Z'
+}
+Standing State: INDUCTED
+
+ACT 3: Threshold Entry -> Initiate Ritual
+ICE: Event INIT_RITUAL committed to Ledger [ID: pxy4eitn]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing INIT_RITUAL. Current Status: IDLE
+  STATE_LOCK: Applying event to domain [session]
+  ICE: Session Update [PENDING] Governed.
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.55 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> INDUCTED (Streak: 0)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'HIDDEN',
+      EVIDENCE_CAPTURE: 'FULL',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'CALIBRATION'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.345Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'FULL',
+        timestamp: '2026-01-17T01:09:34.345Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.345Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:09:34.345Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:09:34.345Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'WELCOME TO THE IRON.',
+      timestamp: '2026-01-17T01:09:34.345Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+Session Status: PENDING
+
+ACT 4: Ritual Acts -> Session Started
+ICE: Event SESSION_STARTED committed to Ledger [ID: gs8rpppq]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing SESSION_STARTED. Current Status: PENDING
+  STATE_LOCK: Applying event to domain [session]
+  ICE: Session Update [ACTIVE] Governed.
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.55 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> INDUCTED (Streak: 0)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'HIDDEN',
+      EVIDENCE_CAPTURE: 'FULL',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'CALIBRATION'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.346Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'FULL',
+        timestamp: '2026-01-17T01:09:34.346Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.346Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:09:34.346Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:09:34.346Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'WELCOME TO THE IRON.',
+      timestamp: '2026-01-17T01:09:34.346Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+Session Status: ACTIVE
+
+ACT 5: Protocol Closure -> Session Ended
+ICE: Event SESSION_ENDED committed to Ledger [ID: yp25bqcv]
+ICE: Institutional Cycle Start
+  STATE_LOCK: Applying event to domain [phase]
+  ICE: Phase Evaluated -> PROBATION
+  SESSION_ENGINE: Processing SESSION_ENDED. Current Status: ACTIVE
+  STATE_LOCK: Applying event to domain [session]
+  ICE: Session Update [IDLE] Governed.
+  STATE_LOCK: Applying event to domain [physiology]
+  ICE: Fitness Engine Processing
+    ICE: SI=0.55 | Band=PRE_INDUCTION | Lifecycle=GENESIS
+  STATE_LOCK: Applying event to domain [fitnessStanding]
+  STATE_LOCK: Applying event to domain [standing]
+  STATE_LOCK: Applying event to domain [rituals]
+  STATE_LOCK: Applying event to domain [standing]
+  ICE: Standing Computed -> COMPLIANT (Streak: 1)
+  STATE_LOCK: Applying event to domain [authority]
+  ICE: Authority Resolved & Governed {
+    locks: [],
+    surfaces: {
+      OBLIGATION_CORRIDOR: 'FULL',
+      EVIDENCE_CAPTURE: 'HIDDEN',
+      LEDGER_CLOSURE: 'HIDDEN',
+      OBSERVATORY: 'VISIBLE'
+    },
+    interactionLevel: 'CALIBRATION'
+  }
+  STATE_LOCK: Applying event to domain [mandates]
+  ICE: Mandates Issued & Governed {
+    surfaces: [
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBLIGATION_CORRIDOR',
+        access: 'FULL',
+        timestamp: '2026-01-17T01:09:34.348Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'EVIDENCE_CAPTURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.348Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'LEDGER_CLOSURE',
+        access: 'HIDDEN',
+        timestamp: '2026-01-17T01:09:34.348Z'
+      },
+      {
+        type: 'SURFACE_MANDATE',
+        surfaceId: 'OBSERVATORY',
+        access: 'VISIBLE',
+        timestamp: '2026-01-17T01:09:34.348Z'
+      }
+    ],
+    motion: {
+      type: 'MOTION_MANDATE',
+      profile: 'FLUID',
+      timestamp: '2026-01-17T01:09:34.348Z'
+    },
+    narrative: {
+      type: 'NARRATIVE_MANDATE',
+      tone: 'GUIDANCE',
+      message: 'MAINTAIN THE STANDARD.',
+      timestamp: '2026-01-17T01:09:34.348Z'
+    }
+  }
+STATE_LOCK: Applying event to domain [error]
+ICE: Cycle Success. Authority Maintained.
+Session Status: IDLE
+Ritual Today Completed: true
+Streak: 1
+
+--- FITNESS ONBOARDING SIMULATION SUCCESSFUL ---

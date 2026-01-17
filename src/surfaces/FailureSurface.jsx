@@ -69,3 +69,8 @@ export function FailureSurface({ error, kernel }) {
     )
 }
 
+FailureSurface.contract = {
+    supportedPhases: ['failed', 'degrading'],
+    authorityRange: [0, 5]
+};
+
