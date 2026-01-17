@@ -13,12 +13,7 @@ export const GovernanceProvider = ({ children }) => {
     const snapshot = useInstitutionalSnapshot();
 
     // The 'institutionalState' expected by the Shell is the full snapshot
-    const institutionalState = React.useMemo(() => (!snapshot ? null : {
-        ...snapshot.state,
-        activeModules: snapshot.activeModules,
-        history: snapshot.history,
-        mandates: snapshot.mandates
-    }), [snapshot]);
+    const institutionalState = React.useMemo(() => (!snapshot ? null : snapshot), [snapshot]);
 
     const loading = !institutionalState;
 
@@ -52,4 +47,11 @@ export const GovernanceProvider = ({ children }) => {
     );
 };
 
-export const useGovernance = () => useContext(GovernanceContext);
+export const useGovernance = () => {
+    const context = useContext(GovernanceContext);
+    if (!context) {
+        console.warn("useGovernance used outside of Provider or Context is null");
+        return { kernel: null, institutionalState: null, loading: true };
+    }
+    return context;
+};

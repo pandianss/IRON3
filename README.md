@@ -34,16 +34,16 @@ Technical topology.
 **Code is the executing arm of the Constitution.**
 If documentation says one thing and code enforces another, the code is the *de facto* law (and the documentation is in violation).
 
-**The Kernel (`src/ice/`) is sovereign.**
-*   No module may query the Kernel directly (use Projections).
-*   No module may write to the Ledger directly (use Events).
+**The Kernel (`src/kernel/`) is sovereign.**
+*   No module (UI or Runtime) may import from the Kernel directly.
+*   All interactions must go through the **Sealed Interface Pack** (`src/interfaces/`).
 *   The UI is a read-only projection of constitutional state.
 
 ---
 
 ### III. ARCHITECTURAL MANDATES
 1.  **Sovereignty of the Ledger**: If it's not in the ledger, it didn't happen.
-2.  **Unidirectional Truth**: Event -> Ledger -> Engine -> Snapshot -> Projection -> UI.
+2.  **Unidirectional Truth**: Event -> Interface -> Kernel (IronCourt) -> Ledger -> Snapshot -> UI.
 3.  **No Simulation**: The UI must never display "happy paths" that do not exist in the Kernel.
 
 ---
@@ -56,4 +56,4 @@ All non-binding documents, research, and historical artifacts are stored here. T
 ### V. EXECUTION
 *   **Install**: `npm install`
 *   **Run**: `npm run dev`
-*   **Test**: `npm run test:kernel` (Coming soon)
+*   **Test**: `npm test`

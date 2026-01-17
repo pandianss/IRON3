@@ -1,36 +1,33 @@
 
 import { useState, useEffect } from 'react';
-import { ProjectionAuthority } from '../../ice/projection/ProjectionAuthority';
+import { createProjection, subscribeToState } from '@/interfaces';
 
 /**
  * useKernelProjection Hook
  * 
  * The standard way for UI components to read Institutional State.
- * Polls the Projection Authority (or subscribes if we add events later).
+ * Subscribes to the authoritative Interface Pack.
  * 
- * @returns {Object} { institution, sovereignty, refresh }
+ * @returns {Object} { institution: snapshot, sovereignty: snapshot, refresh }
  */
 export const useKernelProjection = () => {
-    const [institution, setInstitution] = useState(ProjectionAuthority.getInstitutionProjection());
-    const [sovereignty, setSovereignty] = useState(ProjectionAuthority.getSovereigntyProjection());
+    const [snapshot, setSnapshot] = useState(() => createProjection());
 
-    const refresh = () => {
-        setInstitution(ProjectionAuthority.getInstitutionProjection());
-        setSovereignty(ProjectionAuthority.getSovereigntyProjection());
-    };
-
-    // Initial Load
     useEffect(() => {
-        refresh();
+        // Initial Sync
+        setSnapshot(createProjection());
 
-        // Optional: Polling for updates if the kernel pushes changes async
-        const interval = setInterval(refresh, 1000);
-        return () => clearInterval(interval);
+        // Reactive Sync
+        const unsubscribe = subscribeToState((newSnapshot) => {
+            setSnapshot(newSnapshot);
+        });
+
+        return unsubscribe;
     }, []);
 
     return {
-        institution,
-        sovereignty,
-        refresh
+        institution: snapshot.domains, // Domain mapping
+        sovereignty: snapshot,
+        refresh: () => setSnapshot(createProjection())
     };
 };

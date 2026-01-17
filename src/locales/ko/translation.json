@@ -1,52 +1,62 @@
 {
     "landing": {
         "title": "IRON",
-        "subtitle": "주권 규율 시스템 (Sovereign Discipline System)",
+        "subtitle": "주권 척추 아키텍처 (Sovereign Spine Architecture)",
         "auth": {
-            "initiate": "주권 개시 (INITIATE)",
-            "disconnect": "Sovereign_{{id}} [연결 해제]",
-            "required_title": "권한 필요 (AUTHORITY_REQUIRED)",
-            "required_text": "주권 모듈에는 확고한 신원이 필요합니다. 시작하려면 주권을 개시하십시오."
+            "initiate": "주권 시작",
+            "disconnect": "주권자_{{id}} [연결 해제]",
+            "required_title": "권한 필요",
+            "required_text": "주권 모듈에는 확고한 신원이 필요합니다. 시작하려면 주권을 시작하십시오."
         },
         "hero": {
-            "head": "주권은 기술적인 문제입니다.",
-            "text": "대부분의 생산성 도구는 동기 부여를 요구합니다. IRON은 통제되기를 요구합니다. 약속을 주권법으로 변환하기 위해 특수 프로토콜을 활성화하십시오."
+            "head": "자기 통치의 구조",
+            "text": "진정한 주권은 감정이 아닙니다. 구조입니다. IRON은 헌법적 척추(법원, 입법부, 행정부)를 제공하여 제도적 등급의 권한으로 개인 제국을 통치합니다."
         },
         "registry": {
             "head": "프로토콜 레지스트리",
-            "classified_title": "프로토콜 기밀 (CLASSIFIED)",
-            "classified_text": "주권 프로토콜 레지스트리에 대한 액세스는 입문한 주권자로 제한됩니다.\n해독하려면 주권을 개시하십시오.",
-            "authenticate": "신원 인증 (AUTHENTICATE)",
+            "classified_title": "프로토콜 기밀",
+            "classified_text": "주권 프로토콜 레지스트리에 대한 액세스는 입회한 주권자로 제한됩니다.\n암호화를 해제하려면 주권을 시작하십시오.",
+            "authenticate": "신원 인증",
             "empty_title": "레지스트리 비어 있음",
-            "empty_text": "주권 프로토콜 구성을 기다리는 중"
+            "empty_text": "주권 프로토콜 구축 대기 중"
         },
         "nav": {
             "philosophy": "IRON이란 무엇인가?",
             "systems": "산업적 강도의 생산성?",
-            "sovereignty": "사적 규율이란 무엇인가?",
-            "constitution": "IRON 헌법"
+            "sovereignty": "사적 규율이란?",
+            "constitution": "철의 헌법"
         },
         "action": {
             "dashboard": "대시보드로 이동",
-            "close": "닫기 (CLOSE)"
+            "close": "닫기"
         },
         "panels": {
             "philosophy": {
                 "title": "IRON이란 무엇인가?",
-                "intro": "IRON은 앱이 아닙니다. <1>행동 관리 시스템</1>입니다.",
-                "p1": "전통적인 앱은 조언을 제공할 뿐입니다. 목록, 차트 및 알림을 제공합니다. 그것들은 기능하기 위해 당신의 기분에 의존합니다.",
-                "p2": "IRON은 <1>의무적</1>입니다. 내부 기관 상태를 활용하여 실제 성과에 따라 정보 및 기능에 대한 액세스를 관리합니다. 이는 당신의 약속을 기관 커널이 모니터링하는 \"법\"으로 바꿉니다.",
+                "intro": "IRON은 앱이 아닙니다. <1>행동 통치 시스템</1>입니다.",
+                "p1": "기존 앱은 조언을 제공합니다. 목록, 차트 및 알림을 제공합니다. 그들은 기능하기 위해 당신의 기분에 의존합니다.",
+                "p2": "IRON은 <1>의무적(Mandatory)</1>입니다. 내부 '제도적 상태'를 사용하여 실제 성과에 따라 정보 및 기능에 대한 액세스를 통치합니다. 약속을 '제도적 커널'이 감시하는 \"법률\"로 바꿉니다.",
                 "principles_title": "핵심 원칙",
-                "principle_1": "<1>위상 (Standing):</1> 자신의 시스템 내에서의 평판.",
-                "principle_2": "<1>계약 (Contracts):</1> 명시적이고 코드로 강제되는 행동 계약.",
-                "principle_3": "<1>결과 (Consequences):</1> 법이 위반될 때 경험의 실시간 저하."
+                "principle_1": "<1>Standing (평판):</1> 자체 시스템 내에서의 평판.",
+                "principle_2": "<1>Contracts (계약):</1> 명시적이고 코드로 강제되는 행동 계약.",
+                "principle_3": "<1>Consequences (결과):</1> 법이 위반될 때 경험의 실시간 저하."
             },
             "constitution": {
-                "title": "IRON 헌법",
+                "title": "철의 헌법",
                 "intro_1": "IRON은 습관 추적기가 아닙니다. IRON은 행동 기관입니다.",
-                "intro_2": "그 목적은 집행 가능한 약속, 영구 기록 및 점진적인 책임을 통해 개인 규율을 수립, 관리 및 보존하는 것입니다.",
-                "footer_1": "설립 2026",
-                "footer_2": "주권 규율 시스템"
+                "intro_2": "그 목적은 집행 가능한 약속, 영구 기록 및 점진적인 책임 조치를 통해 개인의 규율을 수립, 통치 및 보존하는 것입니다.",
+                "footer_1": "2026년 설립",
+                "footer_2": "주권 규율 시스템",
+                "articles": {
+                    "1": {
+                        "title": "제1조 — 원장의 주권",
+                        "content": "행동 원장(Ledger)은 진실의 유일한 원천입니다. 모든 사용자 상태는 원장 기록에서만 파생되어야 합니다. 원장은 사실만 기록합니다: 시스템 권한 하에 발생한 이벤트."
+                    }
+                }
+            },
+            "charter": {
+                "title": "IRON 공공 제도 헌장",
+                "subtitle": "주권적 자기 통치 헌장"
             }
         }
     }

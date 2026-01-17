@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getProtocols, getDomains, submitEvent, createProjection, subscribeToState } from '@/interfaces';
 import { SEOHead } from '../SEOHead';
-import { getProtocolList, SOVEREIGN_DOMAINS } from '../../wings/legislative/ProtocolRegistry';
-import { useSovereignKernel } from '../../spine/context/SovereigntyContext'; // Still needed for writes
-import { useKernelProjection } from '../projection/useKernelProjection'; // NEW: KPL Read
 import { useAuth } from '../../spine/context/AuthContext';
 import '../../ui/styles/landing.css';
 
@@ -13,23 +11,33 @@ import { WhatIsIron } from './WhatIsIron';
 import { InstitutionalProductivity } from './InstitutionalProductivity';
 import { PersonalInstitution } from './PersonalInstitution';
 import { DisciplineLawPanel } from './DisciplineLawPanel';
+import { CharterPanel } from './CharterPanel';
 
 import { ConstitutionPanel } from './ConstitutionPanel';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { SpineVisualizer } from '../../ui/components/visuals/SpineVisualizer'; // [NEW]
+
+// Ceremonies (Authoritative)
+import { ActiveProtocolSurface } from '../../ui/ceremonies/ActiveProtocolSurface';
 import { LegislatureSurface } from '../../wings/legislative/LegislatureSurface';
-import { ActiveProtocolSurface } from '../wings/executive/ActiveProtocolSurface';
 
 export const LandingPage = () => {
     const { t } = useTranslation();
-    const disciplines = getProtocolList();
-    const kernel = useSovereignKernel();  // Command Channel (Write)
+    const disciplines = getProtocols();
+    const domains = getDomains();
 
-    // KPL Consumption (Read-Only)
-    const { institution, sovereignty } = useKernelProjection();
-    const activeModules = sovereignty.activeLaws || [];
+    // Sovereign State (Read-Only)
+    const [snapshot, setSnapshot] = useState(() => createProjection());
+
+    useEffect(() => {
+        const unsubscribe = subscribeToState((newSnap) => setSnapshot(newSnap));
+        return unsubscribe;
+    }, []);
+
+    const activeModules = snapshot.activeLaws || [];
 
     const navigate = useNavigate();
-    const [activePanel, setActivePanel] = useState(null); // 'philosophy' | 'systems' | 'constitution'
+    const [activePanel, setActivePanel] = useState(null); // 'philosophy' | 'systems' | 'constitution' | 'CHARTER'
     const [activeTag, setActiveTag] = useState('ALL'); // 'ALL' | DomainID
     const [showBuilder, setShowBuilder] = useState(false);
     const [executionMode, setExecutionMode] = useState(null); // Protocol Object if executing
@@ -49,9 +57,9 @@ export const LandingPage = () => {
         try {
             if (isActive) {
                 console.log("Deactivating Module:", id);
-                await kernel.ingest('MODULE_DEACTIVATED', { moduleId: id }, 'USER_HOST');
+                await submitEvent({ type: 'MODULE_DEACTIVATED', payload: { moduleId: id }, actor: 'USER_HOST' });
             } else {
-                await kernel.ingest('MODULE_ACTIVATED', { moduleId: id }, 'USER_HOST');
+                await submitEvent({ type: 'MODULE_ACTIVATED', payload: { moduleId: id }, actor: 'USER_HOST' });
             }
         } catch (e) {
             console.error("Module Toggle Failure:", e);
@@ -102,7 +110,8 @@ export const LandingPage = () => {
                     <div className="landing-panel" onClick={e => e.stopPropagation()}>
                         <button onClick={closePanel} className="btn-close">{t('landing.action.close')}</button>
                         <div className="landing-panel-body">
-                            {activePanel === 'PHILOSOPHY' && <WhatIsIron />}
+                            {activePanel === 'PHILOSOPHY' && <WhatIsIron onOpenCharter={() => setActivePanel('CHARTER')} />}
+                            {activePanel === 'CHARTER' && <CharterPanel />}
                             {activePanel === 'SYSTEMS' && <InstitutionalProductivity />}
                             {activePanel === 'SOVEREIGNTY' && <PersonalInstitution />}
                             {activePanel === 'CONSTITUTION' && <ConstitutionPanel />}
@@ -148,7 +157,21 @@ export const LandingPage = () => {
                             {t('landing.auth.disconnect', { id: currentUser.uid.substring(0, 4) })}
                         </button>
                     ) : (
-                        <button onClick={handleJoin} className="btn-auth">{t('landing.auth.initiate')}</button>
+                        <>
+                            <button onClick={handleJoin} className="btn-auth">{t('landing.auth.initiate')}</button>
+                            {import.meta.env.DEV && (
+                                <button
+                                    onClick={() => {
+                                        login({ type: 'ENTERPRISE_TEST', enterpriseId: 'ENT-DEMO-01' });
+                                        setTimeout(() => navigate('/enterprise'), 100);
+                                    }}
+                                    className="btn-auth"
+                                    style={{ borderColor: '#ff9800', color: '#ff9800' }}
+                                >
+                                    [TEST] ENTERPRISE USER
+                                </button>
+                            )}
+                        </>
                     )}
                 </div>
                 <h1 className="landing-title">{t('landing.title')}</h1>
@@ -156,9 +179,15 @@ export const LandingPage = () => {
             </header>
 
             <main>
-                <section className="landing-section-hero">
-                    <h2 className="landing-hero-head">{t('landing.hero.head')}</h2>
-                    <p className="landing-hero-text">
+                <section className="landing-section-hero" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h2 className="landing-hero-head" style={{ marginBottom: '40px' }}>{t('landing.hero.head')}</h2>
+
+                    {/* VISUAL SPINE */}
+                    <div style={{ width: '80%', height: '500px', marginBottom: '40px', border: '1px solid var(--iron-structure-border)', background: 'rgba(0,0,0,0.3)' }}>
+                        <SpineVisualizer />
+                    </div>
+
+                    <p className="landing-hero-text" style={{ maxWidth: '700px', textAlign: 'center' }}>
                         {t('landing.hero.text')}
                     </p>
                     <div style={{ marginTop: '30px' }}>
@@ -221,7 +250,7 @@ export const LandingPage = () => {
                                 >
                                     ALL DOMAINS
                                 </button>
-                                {Object.values(SOVEREIGN_DOMAINS).map(domain => (
+                                {Object.values(domains).map(domain => (
                                     <button
                                         key={domain.id}
                                         onClick={() => setActiveTag(domain.id)}
@@ -258,7 +287,7 @@ export const LandingPage = () => {
                                                         <h3 className="landing-card-title">{d.label}</h3>
                                                         <span className="landing-card-metric">{(d.primaryMetric || 'UNKNOWN').toUpperCase()}</span>
                                                     </div>
-                                                    <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                    <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{domains[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
                                                     <p className="landing-card-text">{d.focus || d.description}</p>
                                                 </div>
                                                 <button
@@ -298,7 +327,7 @@ export const LandingPage = () => {
                                                     <h3 className="landing-card-title">{d.label}</h3>
                                                     <span className="landing-card-metric">{(d.primaryMetric || 'UNKNOWN').toUpperCase()}</span>
                                                 </div>
-                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{domains[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
                                                 <p className="landing-card-text">{d.focus || d.description}</p>
                                             </div>
                                         ))}
@@ -320,7 +349,7 @@ export const LandingPage = () => {
                                                     <h3 className="landing-card-title">{d.label}</h3>
                                                     <span className="landing-card-metric">{(d.primaryMetric || 'UNKNOWN').toUpperCase()}</span>
                                                 </div>
-                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{SOVEREIGN_DOMAINS[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
+                                                <div className="landing-card-tag" style={{ fontSize: '0.6rem', color: 'var(--iron-text-tertiary)', marginBottom: '5px' }}>{domains[d.domain || 'SYSTEM_LOGISTICS']?.label}</div>
                                                 <p className="landing-card-text">{d.focus || d.description}</p>
                                             </div>
                                         ))}

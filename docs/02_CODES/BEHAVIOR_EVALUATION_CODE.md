@@ -41,10 +41,11 @@ The UI must recognize exactly five Standing Bands. All engine outputs map to one
 ### ARTICLE II — EVALUATION TRIGGERS
 The following Engine Events must trigger immediate UI mutation:
 
-*   **`ON_DAILY_EVALUATION`** → Full Authority Sweep + Verdict Panel.
-*   **`STANDING_DELTA`** → Chromatic retint + Numeric Authority update.
-*   **`RISK_THRESHOLD`** → Decay indicators activate.
-*   **`BREACH_DECLARED`** → Instant Authority takeover + Motion interruption.
+*   **`DAILY_EVALUATION`** → Full Authority Sweep + Verdict Panel.
+*   **`EVIDENCE_SUBMITTED`** → Automatic investigation + Verification status.
+*   **`SESSION_STARTED`** → Transition to active ceremony.
+*   **`BREACH_RISK`** → Decay indicators activate.
+*   **`VIOLATED`** → Instant Authority takeover + Motion interruption.
 
 ### ARTICLE III — COMPONENT OBLIGATIONS
 

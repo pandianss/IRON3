@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
-import { SovereignKernel } from '../../wings/executive/SovereignKernel.js';
+import { initializeCourt, subscribeToState, createProjection, submitEvent } from '@/interfaces';
 
 // The Context holds the specific instance of the Engine
 const SovereigntyContext = createContext(null);
@@ -8,12 +8,9 @@ export const SovereigntyProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     // 1. Boot the Sovereign (Singleton within the App Lifecycle)
-    const kernel = useMemo(() => {
+    const court = useMemo(() => {
         try {
-            return new SovereignKernel({
-                // In a real app, we'd hydrate from persistence here
-                initialEvents: []
-            });
+            return initializeCourt([]);
         } catch (e) {
             console.error("SOVEREIGN KERNEL BOOT FAILURE:", e);
             setError(e);
@@ -23,26 +20,26 @@ export const SovereigntyProvider = ({ children }) => {
 
     // 2. Reactive State (The React View of the Sovereignty)
     const [snapshot, setSnapshot] = useState(() =>
-        kernel ? kernel.getSnapshot() : { mandates: null }
+        court ? createProjection() : { mandates: null }
     );
 
     useEffect(() => {
-        if (!kernel) return;
+        if (!court) return;
 
         // Sync initial snapshot
-        setSnapshot(kernel.getSnapshot());
+        setSnapshot(createProjection());
 
-        // Subscribe to Engine Updates
-        const unsubscribe = kernel.subscribe((newSnapshot) => {
+        // Subscribe to Court Updates
+        const unsubscribe = subscribeToState((newSnapshot) => {
             console.log("SOVEREIGN: State Update Detected", newSnapshot);
             setSnapshot(newSnapshot);
         });
 
         return unsubscribe;
-    }, [kernel]);
+    }, [court]);
 
     const value = {
-        kernel,
+        court,
         snapshot
     };
 
@@ -56,7 +53,7 @@ export const SovereigntyProvider = ({ children }) => {
         );
     }
 
-    if (!kernel) {
+    if (!court) {
         return (
             <div style={{ padding: 40, fontFamily: 'monospace', color: '#666' }}>
                 SOVEREIGN KERNEL BOOTING...
@@ -76,19 +73,12 @@ export const SovereigntyProvider = ({ children }) => {
 export const useSovereignKernel = () => {
     const context = useContext(SovereigntyContext);
     if (!context) throw new Error("useSovereignKernel must be used within SovereigntyProvider");
-    return context.kernel;
-};
-
-export const useInstitutionalMandate = (type) => { // Kept for backward compat during refactor
-    const context = useContext(SovereigntyContext);
-    if (!context) throw new Error("useInstitutionalMandate must be used within SovereigntyProvider");
-    if (!context.snapshot || !context.snapshot.mandates) return null;
-
-    if (type === 'NARRATIVE') return context.snapshot.mandates.narrative;
-    if (type === 'MOTION') return context.snapshot.mandates.motion;
-    if (type === 'SURFACE') return context.snapshot.mandates.surfaces;
-
-    return context.snapshot.mandates;
+    // Return a wrapped ingest for backward compatibility or the court itself
+    return {
+        ingest: (type, payload, actor) => {
+            return submitEvent({ type, payload, actor });
+        }
+    };
 };
 
 export const useSovereignSnapshot = () => {
@@ -97,5 +87,4 @@ export const useSovereignSnapshot = () => {
     return context.snapshot;
 };
 
-// Also export as old name if needed for very quick refactor, but better to fix
 export const useInstitutionalSnapshot = useSovereignSnapshot;

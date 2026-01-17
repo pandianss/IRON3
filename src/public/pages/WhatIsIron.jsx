@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
-export const WhatIsIron = () => {
+export const WhatIsIron = ({ onOpenCharter }) => {
     const { t } = useTranslation();
 
     return (
@@ -43,6 +43,15 @@ export const WhatIsIron = () => {
                     </li>
                 </ul>
             </section>
+
+            <section style={sectionStyle}>
+                <button
+                    onClick={() => onOpenCharter && onOpenCharter()}
+                    style={charterButtonStyle}
+                >
+                    {t('landing.panels.charter.title')}
+                </button>
+            </section>
         </div>
     );
 };
@@ -51,3 +60,17 @@ const panelBodyStyle = { color: '#f0f0f0', maxWidth: '100%' };
 const titleStyle = { fontFamily: 'var(--font-authority)', fontSize: '2rem', borderBottom: '2px solid var(--iron-brand-stable)', paddingBottom: '10px', marginTop: 0 };
 const sectionStyle = { lineHeight: '1.7', margin: '20px 0' };
 
+const charterButtonStyle = {
+    background: 'transparent',
+    border: '1px solid var(--iron-signal-active)',
+    color: 'var(--iron-signal-active)',
+    padding: '10px 20px',
+    fontFamily: 'var(--font-systemic)',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    letterSpacing: '1px',
+    marginTop: '20px',
+    transition: 'all 0.3s ease',
+    width: '100%',
+    textAlign: 'center'
+};

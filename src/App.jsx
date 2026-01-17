@@ -7,6 +7,7 @@ import { SovereignShell } from './wings/experiential/shell/SovereignShell';
 
 // Public Pages
 import { LandingPage } from './public/pages/LandingPage';
+import { EnterprisePortal } from './ui/components/enterprise/EnterprisePortal';
 
 /**
  * THE SOVEREIGN SPINE CONNECTOR
@@ -47,6 +48,13 @@ export default function App() {
 
                     {/* Governed Application Spine */}
                     <Route path="/app/*" element={<GovernedApp />} />
+
+                    {/* Enterprise Portal (Restricted) */}
+                    <Route path="/enterprise" element={
+                        <GovernanceProvider>
+                            <EnterprisePortal />
+                        </GovernanceProvider>
+                    } />
 
                     {/* Redirects */}
                     <Route path="*" element={<Navigate to="/" replace />} />

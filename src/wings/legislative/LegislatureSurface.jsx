@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ProtocolBuilderSurface } from './builder/ProtocolBuilderSurface';
-import { getProtocolList, registerProtocol, SOVEREIGN_DOMAINS } from './ProtocolRegistry';
-import { validateProtocolJSON } from './builder/ProtocolCompiler';
+import { ProtocolBuilderSurface } from '../../runtime/legislative-tools/ProtocolBuilderSurface';
+import { getProtocolList, registerProtocol, SOVEREIGN_DOMAINS } from '../../kernel/constitution/ProtocolRegistry';
+import { validateProtocolJSON } from '../../runtime/legislative-tools/ProtocolCompiler';
 
 // IVC-01 Styles
 const containerStyle = {

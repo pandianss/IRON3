@@ -1,7 +1,7 @@
 {
     "landing": {
         "title": "IRON",
-        "subtitle": "Sovereign Discipline System",
+        "subtitle": "Sovereign Spine Architecture",
         "auth": {
             "initiate": "INITIATE_SOVEREIGNTY",
             "disconnect": "Sovereign_{{id}} [DISCONNECT]",
@@ -9,8 +9,8 @@
             "required_text": "Sovereign modules require an assertive identity. Initiate your sovereignty to begin."
         },
         "hero": {
-            "head": "Sovereignty is a technical problem.",
-            "text": "Most productivity tools ask you to be motivated. IRON asks you to be governed. Activate specialized protocols to transform your commitments into sovereign law."
+            "head": "The Architecture of Self-Rule",
+            "text": "True sovereignty is not a feeling. It is a structure. IRON provides the Constitutional Spine—Court, Legislature, and Executive—to govern your personal empire with institutional grade authority."
         },
         "registry": {
             "head": "PROTOCOL REGISTRY",
@@ -33,7 +33,7 @@
         "panels": {
             "philosophy": {
                 "title": "What is IRON?",
-                "intro": "IRON is not an app. It is a <1>Behavioral Governing System</1>.",
+                "intro": "IRON is not an app. It is a <1>Behavourial Governing System</1>.",
                 "p1": "Traditional apps are advisory. They provide lists, charts, and notifications. They depend on your mood to function.",
                 "p2": "IRON is <1>mandatory</1>. It utilizes an internal Institutional State to govern your access to information and features based on your actual performance. It turns your commitments into \"Laws\" that are monitored by the Institutional Kernel.",
                 "principles_title": "Core Principles",
@@ -88,6 +88,138 @@
                         "title": "Article X — Product Law",
                         "content": "Retention is not a feature. It is the result of governance. Any component that does not strengthen behavioural authority violates this Constitution."
                     }
+                }
+            },
+            "charter": {
+                "title": "THE IRON PUBLIC INSTITUTIONAL CHARTER",
+                "subtitle": "Charter of Sovereign Self-Governance",
+                "preamble": {
+                    "line1": "IRON is not an application.",
+                    "line2": "IRON is an institution.",
+                    "line3": "It exists to restore sovereignty of action to the individual in an era of behavioral erosion, algorithmic dependency, and motivational decay.",
+                    "line4": "Where modern systems optimize comfort, IRON enforces coherence.",
+                    "line5": "Where platforms extract attention, IRON demands standing.",
+                    "line6": "Where tools assist behavior, IRON governs it.",
+                    "line7": "IRON was founded on the premise that will without structure collapses, and that freedom without law decays into drift.",
+                    "line8": "This charter establishes IRON as a sovereign self-governance system: a formal authority under which an individual may bind themselves to discipline, consequence, and irreversible personal law."
+                },
+                "articles": {
+                    "1": {
+                        "title": "ARTICLE I — NATURE OF THE INSTITUTION",
+                        "content": "IRON is a constitutional behavioral institution. It does not motivate. It does not coach. It does not persuade. It registers commitments, records actions, delivers verdicts, and assigns standing.",
+                        "functions": [
+                            "A ledger of action",
+                            "A court of consequence",
+                            "A registry of standing",
+                            "A framework for institutional identity"
+                        ],
+                        "footer": "Within IRON, behavior is not tracked. Behavior is adjudicated."
+                    },
+                    "2": {
+                        "title": "ARTICLE II — JURISDICTION",
+                        "content": "IRON’s jurisdiction applies to any individual who voluntarily enters its authority. Upon entry, the individual ceases to act merely as a user and is instead recognized as a subject of the institution.",
+                        "rules": [
+                            "Commitments become binding declarations",
+                            "Actions become recorded events",
+                            "Outcomes become verdicts",
+                            "Consistency becomes standing",
+                            "Failure becomes institutional fact"
+                        ],
+                        "footer": "IRON does not erase. IRON does not forget. IRON does not negotiate with history. IRON maintains a continuous, append-only record of conduct under its authority."
+                    },
+                    "3": {
+                        "title": "ARTICLE III — SOVEREIGN PRINCIPLES",
+                        "content": "IRON is governed by the following non-negotiable principles:",
+                        "principles": [
+                            "**Supremacy of Law**: All behavior within IRON is subordinate to its constitutional codes.",
+                            "**Event Sovereignty**: State changes only through recorded events. Nothing becomes true unless it is written.",
+                            "**Irreversibility**: What is entered into the ledger cannot be undone.",
+                            "**Standing**: An individual’s position within IRON is not claimed. It is accumulated, degraded, restored, or lost.",
+                            "**Consequence**: Every sustained action pattern produces institutional outcome.",
+                            "**Separation of Powers**: The engine governs. The ledger remembers. The interface only projects."
+                        ]
+                    },
+                    "4": {
+                        "title": "ARTICLE IV — ENTRY",
+                        "content": "Entry into IRON is not sign-up. It is initiation.",
+                        "to_enter": [
+                            "Declare an initial domain of sovereignty",
+                            "Accept institutional authority over that domain",
+                            "Bind one’s actions to record",
+                            "Accept the permanence of outcome"
+                        ],
+                        "issued": [
+                            "An institutional identity",
+                            "A founding record",
+                            "A standing baseline",
+                            "A jurisdictional scope"
+                        ],
+                        "footer": "From this moment forward, conduct within that scope is no longer private intent. It is institutional history."
+                    },
+                    "5": {
+                        "title": "ARTICLE V — THE LEDGER",
+                        "content": "The IRON Ledger is the institutional memory. It records declarations, commitments, actions, failures, verdicts, standing transitions, collapses, and recoveries.",
+                        "nature": [
+                            "Append-only",
+                            "Non-negotiable",
+                            "Internally consistent"
+                        ],
+                        "footer": "The ledger does not interpret. The ledger witnesses."
+                    },
+                    "6": {
+                        "title": "ARTICLE VI — VERDICTS AND STANDING",
+                        "content": "IRON does not reward. IRON issues verdicts based on recorded events, constitutional law, and institutional codes.",
+                        "standing": {
+                            "represents": [
+                                "Reliability of conduct",
+                                "Continuity of will",
+                                "Institutional trust",
+                                "Eligibility within the system"
+                            ],
+                            "states": [
+                                "Elevated",
+                                "Stabilized",
+                                "Degraded",
+                                "Collapsed"
+                            ]
+                        },
+                        "footer": "Standing is never cosmetic. Standing alters what the institution will recognize, permit, or register."
+                    },
+                    "7": {
+                        "title": "ARTICLE VII — COLLAPSE AND RECOVERY",
+                        "content": "When sustained contradiction between commitment and conduct is detected, IRON may declare collapse. Collapse is institutional acknowledgment of structural failure.",
+                        "recovery": [
+                            "Formal re-declaration",
+                            "Re-entry conditions",
+                            "Recorded restitution",
+                            "Reconstructed standing"
+                        ],
+                        "footer": "This ensures that sovereignty is not performative. It is earned."
+                    },
+                    "8": {
+                        "title": "ARTICLE VIII — CHARTERED INSTITUTIONS",
+                        "content": "IRON itself is the core institution. Within it may exist chartered institutions governing specific domains (Physical, Cognitive, Recovery, etc.).",
+                        "footer": "Each chartered institution operates under IRON’s supremacy, maintains its own codes, and issues its own verdicts — but all share the same sovereign ledger."
+                    },
+                    "9": {
+                        "title": "ARTICLE IX — LIMITATIONS",
+                        "content": "IRON does not claim ownership of the individual, dictate values, or replace medicine, law, or therapy. IRON governs only what is formally placed under its jurisdiction. Everything else remains outside its authority."
+                    },
+                    "10": {
+                        "title": "ARTICLE X — DECLARATION",
+                        "content": "IRON exists to restore what modern systems dissolved: Continuity, Consequence, Structure, Identity under law.",
+                        "purpose": [
+                            "Those who enter IRON do so not to be assisted — but to be held.",
+                            "Not to be motivated — but to be bound.",
+                            "Not to feel empowered — but to become institutionally accountable."
+                        ]
+                    }
+                },
+                "closing": {
+                    "line1": "IRON is a system for those who no longer seek tools, but law.",
+                    "line2": "Not optimization, but order.",
+                    "line3": "Not encouragement, but structure.",
+                    "line4": "It is not built to grow fast. It is built to stand."
                 }
             }
         }
