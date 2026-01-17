@@ -1,17 +1,17 @@
 /**
- * THE INSTITUTIONAL REGISTRY
+ * THE PROTOCOL REGISTRY
  * 
- * Defines the specialized domains supported by the IRON platform.
+ * Defines the specialized protocols supported by the IRON platform.
  * Each template dictates specific Standing rules, Breach conditions, and Mandates.
  */
-export const DisciplineRegistry = {
+export const ProtocolRegistry = {
     PERSONAL_DISCIPLINE: {
         id: 'PERSONAL_DISCIPLINE',
-        label: 'Core Discipline',
+        label: 'Core Protocol',
         focus: 'Individual willpower and habit lock-in.',
         primaryMetric: 'Consistency',
         law: {
-            title: 'IRON — Personal Discipline v1',
+            title: 'IRON — Personal Protocol v1',
             preamble: 'To establish a sovereign command over one\'s own actions through order and accountability.',
             articles: [
                 { title: 'The Daily Start', content: 'Each day begins with the activation of the sovereign intent.' },
@@ -21,12 +21,12 @@ export const DisciplineRegistry = {
     },
     FITNESS_RECOVERY: {
         id: 'FITNESS_RECOVERY',
-        label: 'Fitness & Recovery',
+        label: 'Bio-Sovereignty',
         focus: 'Physical performance and biological rest cycles.',
         primaryMetric: 'Capacity',
         law: {
-            title: 'IRON — Fitness Constitution v1',
-            preamble: 'To protect physical integrity and institutionalize recovery discipline.',
+            title: 'IRON — Bio-Constitution v1',
+            preamble: 'To protect physical integrity and protocolize recovery discipline.',
             articles: [
                 { title: 'Continuity', content: 'Long-term participation outweighs short-term extremes.' },
                 { title: 'Recovery as Law', content: 'Rest is a governed behavior, not a suggestion.' }
@@ -35,7 +35,7 @@ export const DisciplineRegistry = {
     },
     FOUNDER_OPERATING: {
         id: 'FOUNDER_OPERATING',
-        label: 'Founder Performance',
+        label: 'Founder Protocol',
         focus: 'Strategic output and decision quality.',
         primaryMetric: 'Velocity',
         law: {
@@ -49,7 +49,7 @@ export const DisciplineRegistry = {
     },
     LEARNING_MASTERY: {
         id: 'LEARNING_MASTERY',
-        label: 'Skill Mastery',
+        label: 'Cognitive Protocol',
         focus: 'Cognitive depth and knowledge retention.',
         primaryMetric: 'Legibility',
         law: {
@@ -63,7 +63,7 @@ export const DisciplineRegistry = {
     },
     CREATIVE_OUTPUT: {
         id: 'CREATIVE_OUTPUT',
-        label: 'Creative Volume',
+        label: 'Generator Protocol',
         focus: 'Generator cycles and creative output volume.',
         primaryMetric: 'Volume',
         law: {
@@ -77,7 +77,7 @@ export const DisciplineRegistry = {
     },
     TEAM_ACCOUNTABILITY: {
         id: 'TEAM_ACCOUNTABILITY',
-        label: 'Group Accountability',
+        label: 'Collective Protocol',
         focus: 'Shared obligations and team momentum.',
         primaryMetric: 'Trust',
         law: {
@@ -91,7 +91,7 @@ export const DisciplineRegistry = {
     },
     STUDENT_PERFORMANCE: {
         id: 'STUDENT_PERFORMANCE',
-        label: 'Academic Performance',
+        label: 'Academic Protocol',
         focus: 'Resource discipline and intellectual growth.',
         primaryMetric: 'Proficiency',
         law: {
@@ -105,7 +105,7 @@ export const DisciplineRegistry = {
     },
     REHABILITATION: {
         id: 'REHABILITATION',
-        label: 'Recovery Protocol',
+        label: 'Reconstitution Protocol',
         focus: 'Behavioral re-alignment and restraint.',
         primaryMetric: 'Integrity',
         law: {
@@ -119,7 +119,7 @@ export const DisciplineRegistry = {
     },
     FINANCIAL_CONDUCT: {
         id: 'FINANCIAL_CONDUCT',
-        label: 'Financial Discipline',
+        label: 'Fiscal Protocol',
         focus: 'Resource management and fiscal law.',
         primaryMetric: 'Preservation',
         law: {
@@ -133,5 +133,5 @@ export const DisciplineRegistry = {
     }
 };
 
-export const getDisciplineList = () => Object.values(DisciplineRegistry);
+export const getProtocolList = () => Object.values(ProtocolRegistry);
 

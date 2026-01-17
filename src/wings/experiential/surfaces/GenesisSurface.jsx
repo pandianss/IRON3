@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../../ui/styles/sovereign.css';
 
 /**
  * GENESIS SURFACE
@@ -35,52 +36,17 @@ export const GenesisSurface = ({ kernel, status }) => {
     }, [status]);
 
     return (
-        <div style={styles.container}>
-            <div style={styles.terminal}>
+        <div className="genesis-container">
+            <div className="genesis-terminal">
                 {terminalLines.map((line, i) => (
-                    <div key={i} style={styles.line}>{line}</div>
+                    <div key={i} className="genesis-line">{line}</div>
                 ))}
-                <div style={styles.cursor}>_</div>
+                <div className="genesis-cursor">_</div>
             </div>
 
-            <div style={styles.status}>
-                STATUS: <span style={{ color: 'var(--iron-brand-ascending)' }}>{status}</span>
+            <div className="genesis-status">
+                STATUS: <span className="genesis-status-value">{status}</span>
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        height: '100vh',
-        width: '100vw',
-        background: 'var(--iron-infra-void)',
-        color: 'var(--iron-text-primary)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontFamily: 'var(--font-authority)',
-        padding: '40px'
-    },
-    terminal: {
-        maxWidth: '600px',
-        width: '100%',
-        textAlign: 'left'
-    },
-    line: {
-        marginBottom: '12px',
-        opacity: 0.8,
-        fontSize: '1rem',
-        letterSpacing: '1px'
-    },
-    cursor: {
-        animation: 'blink 1s step-end infinite'
-    },
-    status: {
-        marginTop: '60px',
-        fontSize: '0.8rem',
-        opacity: 0.5,
-        letterSpacing: '2px'
-    }
 };
