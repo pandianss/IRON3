@@ -1,120 +1,130 @@
+/* IRON VISUAL CONSTITUTION (IVC-01) IMPLEMENTATION */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
 :root {
-    /* ------------------------------------------------------------------
-       1. CHROMATIC SYSTEM (COLOR LAW)
-       ------------------------------------------------------------------ */
+    /* ==================================================================
+       ARTICLE I — CHROMATIC ORDER
+       ================================================================== */
 
-    /* 1.1 CORE NEUTRALS (Infrastructure Layer) */
-    /* Dark, cold, low-saturation. The building. */
-    --iron-infra-void: #0a0a0a;
-    /* Deepest background */
-    --iron-infra-base: #111111;
-    /* Standard background */
-    --iron-infra-panel: #161616;
-    /* Surface level 1 */
-    --iron-infra-raised: #1c1c1c;
-    /* Surface level 2 */
+    /* 1. INFRASTRUCTURE (The Void) */
+    /* Purpose: Substrate, silence, permanence. */
+    --iron-infra-void: #050608;
+    /* Global background */
+    --iron-infra-base: #0A0D12;
+    /* Deepest container */
+    --iron-infra-panel: #0E1116;
+    /* Standard surface */
+    --iron-infra-raised: #14181F;
+    /* Elevated surface */
 
-    /* GRADIENTS */
-    --iron-gradient-void: radial-gradient(circle at 50% 0%, #2a2a2a 0%, #0a0a0a 80%);
-    --iron-gradient-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
-    --iron-gradient-glow: radial-gradient(circle at 50% 50%, rgba(91, 192, 222, 0.05) 0%, transparent 70%);
+    /* 2. STRUCTURE (The Material) */
+    /* Purpose: Containment, separation. */
+    --iron-structure-border: #252A33;
+    /* Standard boundary */
+    --iron-structure-border-dim: #1A1E24;
+    /* Subtle division */
+    --iron-structure-rail: #1C2129;
+    /* Anchored zones */
 
-    --iron-infra-border: #333333;
-    /* Structural dividers */
-    --iron-infra-border-dim: #222222;
-    /* Subtle dividers */
+    /* 3. SIGNAL (The Law Ink) */
+    /* Purpose: Meaning, status, law. Never decorative. */
 
-    --iron-text-primary: #e0e0e0;
-    /* High legibility */
-    --iron-text-secondary: #909090;
-    /* Supporting data */
-    --iron-text-tertiary: #505050;
-    /* De-emphasized */
+    /* Sovereignty / Active (Cold Cyan) */
+    --iron-signal-active: #5BC0DE;
+    --iron-signal-active-dim: rgba(91, 192, 222, 0.15);
 
-    /* 1.2 STANDING OVERLAYS (State Layer) */
-    /* These define the "mood" of the institution. 
-       Used for accents, glows, and key indicators. */
+    /* Breach / Degradation (Constrained Crimson) */
+    --iron-signal-breach: #CF4444;
+    /* Desaturated red */
+    --iron-signal-breach-dim: rgba(207, 68, 68, 0.15);
 
-    /* STABLE: Cool, controlled (Cyan/Teal) */
-    --iron-brand-stable: #5bc0de;
-    --iron-brand-stable-dim: rgba(91, 192, 222, 0.15);
+    /* Recovery / Integrity (Restrained Viridian) */
+    --iron-signal-integrity: #4E9F83;
+    --iron-signal-integrity-dim: rgba(78, 159, 131, 0.15);
 
-    /* ASCENDING: Fresh, luminous (White/Mint) */
-    --iron-brand-ascending: #e0f7fa;
-    --iron-brand-ascending-dim: rgba(224, 247, 250, 0.15);
+    /* System / Warning (Cold Amber) */
+    --iron-signal-risk: #D9A036;
+    --iron-signal-risk-dim: rgba(217, 160, 54, 0.15);
 
-    /* RISK: Heated, unstable (Amber/Orange) */
-    --iron-brand-risk: #f0ad4e;
-    --iron-brand-risk-dim: rgba(240, 173, 78, 0.15);
+    /* 4. FIELD (The Institutional Light) */
+    /* Purpose: Atmospheric presence. Extremely low opacity. */
+    --iron-field-void: radial-gradient(circle at 50% 0%, #1A2129 0%, #050608 80%);
+    --iron-field-active: radial-gradient(circle at 50% 50%, rgba(91, 192, 222, 0.03) 0%, transparent 60%);
 
-    /* BREACH: Sharp, high contrast (Red) */
-    --iron-brand-breach: #d9534f;
-    --iron-brand-breach-dim: rgba(217, 83, 79, 0.2);
+    /* TEXT LAYERS (Strict Hierarchy) */
+    --iron-text-primary: #E6E8EB;
+    /* Declaration */
+    --iron-text-secondary: #9CA3AF;
+    /* Explanation */
+    --iron-text-tertiary: #4B5563;
+    /* Metadata / Scar tissue */
 
-    /* RECOVERY: Dim, reconstructive (Purple/Grey) */
-    --iron-brand-recovery: #a29bfe;
-    --iron-brand-recovery-dim: rgba(162, 155, 254, 0.1);
 
-    /* 1.3 SEMANTIC CHANNELS */
-    --iron-signal-success: #5cb85c;
-    --iron-signal-scar: #555555;
-    /* Scars are dead matter */
-    --iron-signal-obligation: #ffffff;
-    /* Pure white demand */
+    /* ==================================================================
+       ARTICLE II — LUMINANCE & DEPTH
+       ================================================================== */
+    /* No Brightness. Only Depth. */
+    --iron-shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --iron-shadow-depth: 0 20px 40px rgba(0, 0, 0, 0.6);
 
-    /* ------------------------------------------------------------------
-       2. GEOMETRY & SPACING
-       ------------------------------------------------------------------ */
-    --iron-radius-sm: 2px;
+
+    /* ==================================================================
+       ARTICLE III — TYPOGRAPHIC CONSTITUTION
+       ================================================================== */
+
+    /* 1. CONSTITUTIONAL (Authority) */
+    /* Serif. Vertical stress. High legibility. */
+    --font-constitutional: 'Cormorant Garamond', 'Times New Roman', serif;
+
+    /* 2. INSTITUTIONAL (Explanation) */
+    /* Neutral humanist sans. Engineering tone. */
+    --font-institutional: 'Inter', -apple-system, system-ui, sans-serif;
+
+    /* 3. SYSTEMIC (Telemetry) */
+    /* Monospaced. Technically precise. */
+    --font-systemic: 'JetBrains Mono', 'Courier New', monospace;
+
+
+    /* ==================================================================
+       ARTICLE V — GEOMETRY & SPACING
+       ================================================================== */
+    --iron-radius-sm: 1px;
+    /* Sharp, machine-like */
     --iron-radius-md: 2px;
-    /* Controlled radius (no bubbly) */
+    /* Engineered */
     --iron-radius-lg: 4px;
+    /* Structural */
 
     --iron-space-xs: 4px;
     --iron-space-sm: 8px;
     --iron-space-md: 16px;
-    --iron-space-lg: 24px;
-    --iron-space-xl: 48px;
-    --iron-space-xxl: 96px;
-
-    /* ------------------------------------------------------------------
-       3. TYPOGRAPHY BASE
-       ------------------------------------------------------------------ */
-    --font-authority: 'Roboto Mono', 'Courier New', monospace;
-    /* Tech/Code/Inst */
-    --font-human: 'Inter', -apple-system, sans-serif;
-    /* Readable/Soft */
+    --iron-space-lg: 32px;
+    --iron-space-xl: 64px;
 }
 
-/* THEME MAPPINGS */
-.theme-stable {
-    --theme-accent: var(--iron-brand-stable);
-    --theme-accent-dim: var(--iron-brand-stable-dim);
+/* COMPATIBILITY ALIASES (Migration Layer) */
+/* These map the old "Brand" tokens to the new "Signal" laws to prevent breakage during shift */
+:root {
+    --iron-brand-stable: var(--iron-signal-active);
+    --iron-brand-stable-dim: var(--iron-signal-active-dim);
+
+    --iron-brand-breach: var(--iron-signal-breach);
+    --iron-brand-breach-dim: var(--iron-signal-breach-dim);
+
+    --iron-brand-recovery: var(--iron-signal-integrity);
+    --iron-brand-recovery-dim: var(--iron-signal-integrity-dim);
+
+    --iron-infra-border: var(--iron-structure-border);
+    --font-authority: var(--font-constitutional);
+    /* Now Serif! */
+    --font-human: var(--font-institutional);
+    --font-mono: var(--font-systemic);
 }
 
-.theme-ascending {
-    --theme-accent: var(--iron-brand-ascending);
-    --theme-accent-dim: var(--iron-brand-ascending-dim);
-}
-
-.theme-risk {
-    --theme-accent: var(--iron-brand-risk);
-    --theme-accent-dim: var(--iron-brand-risk-dim);
-}
-
-.theme-breach {
-    --theme-accent: var(--iron-brand-breach);
-    --theme-accent-dim: var(--iron-brand-breach-dim);
-}
-
-.theme-recovery {
-    --theme-accent: var(--iron-brand-recovery);
-    --theme-accent-dim: var(--iron-brand-recovery-dim);
-}
-
-/* Global Tint */
-.app-shell {
-    min-height: 100vh;
-    border-top: 4px solid var(--theme-accent, var(--iron-brand-stable));
-    transition: border-color 0.5s ease;
+/* Global Reset for Constitutional Tone */
+body {
+    background-color: var(--iron-infra-void);
+    color: var(--iron-text-primary);
+    font-family: var(--font-institutional);
+    -webkit-font-smoothing: antialiased;
 }
